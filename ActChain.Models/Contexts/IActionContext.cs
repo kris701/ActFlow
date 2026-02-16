@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace ActChain.Models.Contexts
+﻿namespace ActChain.Models.Contexts
 {
 	public interface IActionContext
 	{

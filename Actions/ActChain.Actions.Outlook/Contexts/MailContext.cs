@@ -1,9 +1,10 @@
-﻿using HtmlAgilityPack;
+﻿using ActChain.Models.Contexts;
+using HtmlAgilityPack;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace ActChain.Models.Contexts
+namespace ActChain.Actions.Outlook.Contexts
 {
 	[JsonDerivedType(typeof(MailContext), typeDiscriminator: nameof(MailContext))]
 	public class MailContext : IActionContext

@@ -1,5 +1,4 @@
-﻿using ActChain.Models.Contexts;
-using Microsoft.Graph;
+﻿using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Kiota.Abstractions.Authentication;
 
