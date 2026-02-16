@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.JSON.Actions
 {
-	public class ExtractValueFromJSONAction : IActivity
+	public class ExtractValueFromJSONActivity : IActivity
 	{
 		public string Name { get; set; } = "extractasinglevaluefromjsontext";
 		public string WorkerID { get; set; } = "default";
@@ -12,14 +12,14 @@ namespace ActChain.Actions.JSON.Actions
 		[JsonPropertyName("jsonPath")]
 		public string JSONPath { get; set; }
 
-		public ExtractValueFromJSONAction(string name, string executorId, string text, string jsonPath)
+		public ExtractValueFromJSONActivity(string name, string workerId, string text, string jsonPath)
 		{
 			Name = name;
-			WorkerID = executorId;
+			WorkerID = workerId;
 			Text = text;
 			JSONPath = jsonPath;
 		}
 
-		public IActivity Clone() => new ExtractValueFromJSONAction(Name, WorkerID, Text, JSONPath);
+		public IActivity Clone() => new ExtractValueFromJSONActivity(Name, WorkerID, Text, JSONPath);
 	}
 }

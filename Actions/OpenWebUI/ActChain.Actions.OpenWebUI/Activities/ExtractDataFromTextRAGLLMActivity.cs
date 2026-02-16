@@ -1,9 +1,9 @@
 ﻿using ActChain.Models.Activities;
 using System.Text.Json.Serialization;
 
-namespace ActChain.Actions.OpenWebUI.Actions
+namespace ActChain.Actions.OpenWebUI.Activities
 {
-	public class ExtractDataFromTextRAGLLMAction : IActivity
+	public class ExtractDataFromTextRAGLLMActivity : IActivity
 	{
 		public string Name { get; set; } = "extractdatawithllmrag";
 		public string WorkerID { get; set; } = "default";
@@ -13,16 +13,16 @@ namespace ActChain.Actions.OpenWebUI.Actions
 		public string Prompt { get; set; }
 		public string Model { get; set; }
 
-		public ExtractDataFromTextRAGLLMAction(string name, string executorId, string text, List<string> collections, string prompt, string model)
+		public ExtractDataFromTextRAGLLMActivity(string name, string workerId, string text, List<string> collections, string prompt, string model)
 		{
 			Name = name;
-			WorkerID = executorId;
+			WorkerID = workerId;
 			Text = text;
 			Collections = collections;
 			Prompt = prompt;
 			Model = model;
 		}
 
-		public IActivity Clone() => new ExtractDataFromTextRAGLLMAction(Name, WorkerID, Text, new List<string>(Collections), Prompt, Model);
+		public IActivity Clone() => new ExtractDataFromTextRAGLLMActivity(Name, WorkerID, Text, new List<string>(Collections), Prompt, Model);
 	}
 }

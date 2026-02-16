@@ -4,19 +4,19 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.EMail.Actions
 {
-	public class SendEmailAction : IActivity
+	public class SendEmailActivity : IActivity
 	{
 		public string Name { get; set; } = "sendanemail";
 		public string WorkerID { get; set; } = "default";
 		public IContext Answer { get; set; }
 
-		public SendEmailAction(string name, string executorId, IContext answer)
+		public SendEmailActivity(string name, string workerId, IContext answer)
 		{
 			Name = name;
-			WorkerID = executorId;
+			WorkerID = workerId;
 			Answer = answer;
 		}
 
-		public IActivity Clone() => new SendEmailAction(Name, WorkerID, Answer.Clone());
+		public IActivity Clone() => new SendEmailActivity(Name, WorkerID, Answer.Clone());
 	}
 }

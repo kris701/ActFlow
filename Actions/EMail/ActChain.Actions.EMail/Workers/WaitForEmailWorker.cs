@@ -5,18 +5,18 @@ using ActChain.Models.Scripts;
 
 namespace ActChain.Actions.EMail.Executors
 {
-	public class WaitForEmailExecutor : BaseWorker<WaitForEmailAction>
+	public class WaitForEmailWorker : BaseWorker<WaitForEmailActivity>
 	{
 		public int WaitDelayMs { get; set; }
 		public OutlookMailService MailService { get; set; }
 
-		public WaitForEmailExecutor(string iD, int waitDelayMs, OutlookMailService mailService) : base(iD)
+		public WaitForEmailWorker(string iD, int waitDelayMs, OutlookMailService mailService) : base(iD)
 		{
 			WaitDelayMs = waitDelayMs;
 			MailService = mailService;
 		}
 
-		public override async Task<WorkerResult> Execute(WaitForEmailAction act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(WaitForEmailActivity act, ActScriptState state, CancellationToken token)
 		{
 			var startTime = DateTime.UtcNow;
 			while (true)

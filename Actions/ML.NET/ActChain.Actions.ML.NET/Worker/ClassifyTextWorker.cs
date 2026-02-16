@@ -8,15 +8,15 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.ML.NET.Executors
 {
-	public class ClassifyTextExecutor : BaseWorker<ClassifyTextAction>
+	public class ClassifyTextWorker : BaseWorker<ClassifyTextActivity>
 	{
 		private readonly TextClassifier _classifier = new TextClassifier();
 
-		public ClassifyTextExecutor(string iD) : base(iD)
+		public ClassifyTextWorker(string iD) : base(iD)
 		{
 		}
 
-		public override async Task<WorkerResult> Execute(ClassifyTextAction act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(ClassifyTextActivity act, ActScriptState state, CancellationToken token)
 		{
 			var predict = _classifier.Predict(new ModelInput() { Value = act.Text }, act.Model);
 			return new WorkerResult(

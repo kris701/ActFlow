@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.ML.NET.Actions
 {
-	public class ClassifyTextAction : IActivity
+	public class ClassifyTextActivity : IActivity
 	{
 		public string Name { get; set; } = "extractdatawithllm";
 		public string WorkerID { get; set; } = "default";
@@ -11,14 +11,14 @@ namespace ActChain.Actions.ML.NET.Actions
 		public string Text { get; set; }
 		public string Model { get; set; }
 
-		public ClassifyTextAction(string name, string executorID, string text, string model)
+		public ClassifyTextActivity(string name, string workerId, string text, string model)
 		{
 			Name = name;
-			WorkerID = executorID;
+			WorkerID = workerId;
 			Text = text;
 			Model = model;
 		}
 
-		public IActivity Clone() => new ClassifyTextAction(Name, WorkerID, Text, Model);
+		public IActivity Clone() => new ClassifyTextActivity(Name, WorkerID, Text, Model);
 	}
 }

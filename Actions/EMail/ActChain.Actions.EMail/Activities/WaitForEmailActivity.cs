@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.EMail.Actions
 {
-	public class WaitForEmailAction : IActivity, IAwaitInputActivity
+	public class WaitForEmailActivity : IActivity, IAwaitInputActivity
 	{
 		public string Name { get; set; } = "waitforemail";
 		public string WorkerID { get; set; } = "default";
@@ -11,15 +11,15 @@ namespace ActChain.Actions.EMail.Actions
 		public string RecieverEmail { get; set; }
 		public string ConversationID { get; set; }
 
-		public WaitForEmailAction(string name, string executorId, string senderEmail, string recieverEmail, string conversationID)
+		public WaitForEmailActivity(string name, string workerId, string senderEmail, string recieverEmail, string conversationID)
 		{
 			Name = name;
-			WorkerID = executorId;
+			WorkerID = workerId;
 			SenderEmail = senderEmail;
 			RecieverEmail = recieverEmail;
 			ConversationID = conversationID;
 		}
 
-		public IActivity Clone() => new WaitForEmailAction(Name, WorkerID, SenderEmail, RecieverEmail, ConversationID);
+		public IActivity Clone() => new WaitForEmailActivity(Name, WorkerID, SenderEmail, RecieverEmail, ConversationID);
 	}
 }

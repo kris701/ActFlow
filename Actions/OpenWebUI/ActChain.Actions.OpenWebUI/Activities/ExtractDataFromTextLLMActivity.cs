@@ -1,9 +1,9 @@
 ﻿using ActChain.Models.Activities;
 using System.Text.Json.Serialization;
 
-namespace ActChain.Actions.OpenWebUI.Actions
+namespace ActChain.Actions.OpenWebUI.Activities
 {
-	public class ExtractDataFromTextLLMAction : IActivity
+	public class ExtractDataFromTextLLMActivity : IActivity
 	{
 		public string Name { get; set; } = "extractdatawithllm";
 		public string WorkerID { get; set; } = "default";
@@ -12,15 +12,15 @@ namespace ActChain.Actions.OpenWebUI.Actions
 		public string Prompt { get; set; }
 		public string Model { get; set; }
 
-		public ExtractDataFromTextLLMAction(string name, string executorId, string text, string prompt, string model)
+		public ExtractDataFromTextLLMActivity(string name, string workerId, string text, string prompt, string model)
 		{
 			Name = name;
-			WorkerID = executorId;
+			WorkerID = workerId;
 			Text = text;
 			Prompt = prompt;
 			Model = model;
 		}
 
-		public IActivity Clone() => new ExtractDataFromTextLLMAction(Name, WorkerID, Text, Prompt, Model);
+		public IActivity Clone() => new ExtractDataFromTextLLMActivity(Name, WorkerID, Text, Prompt, Model);
 	}
 }

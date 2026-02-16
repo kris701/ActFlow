@@ -1,4 +1,4 @@
-﻿using ActChain.Actions.OpenWebUI.Actions;
+﻿using ActChain.Actions.OpenWebUI.Activities;
 using ActChain.Actions.OpenWebUI.OpenWebUI;
 using ActChain.Models.Contexts;
 using ActChain.Models.Workers;
@@ -6,18 +6,18 @@ using ActChain.Models.Scripts;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace ActChain.Actions.OpenWebUI.Executors
+namespace ActChain.Actions.OpenWebUI.Workers
 {
-	public class ExtractDataFromTextRAGLLMExecutor : BaseWorker<ExtractDataFromTextRAGLLMAction>
+	public class ExtractDataFromTextRAGLLMWorker : BaseWorker<ExtractDataFromTextRAGLLMActivity>
 	{
 		public IOpenWebUIService OpenWebUIService { get; set; }
 
-		public ExtractDataFromTextRAGLLMExecutor(string iD, IOpenWebUIService openWebUIService) : base(iD)
+		public ExtractDataFromTextRAGLLMWorker(string iD, IOpenWebUIService openWebUIService) : base(iD)
 		{
 			OpenWebUIService = openWebUIService;
 		}
 
-		public override async Task<WorkerResult> Execute(ExtractDataFromTextRAGLLMAction act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(ExtractDataFromTextRAGLLMActivity act, ActScriptState state, CancellationToken token)
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine(act.Prompt);

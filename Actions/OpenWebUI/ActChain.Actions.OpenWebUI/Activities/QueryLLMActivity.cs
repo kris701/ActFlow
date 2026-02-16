@@ -1,9 +1,9 @@
 ﻿using ActChain.Models.Activities;
 using System.Text.Json.Serialization;
 
-namespace ActChain.Actions.OpenWebUI.Actions
+namespace ActChain.Actions.OpenWebUI.Activities
 {
-	public class QueryLLMAction : IActivity
+	public class QueryLLMActivity : IActivity
 	{
 		public string Name { get; set; } = "queryllm";
 		public string WorkerID { get; set; } = "default";
@@ -11,14 +11,14 @@ namespace ActChain.Actions.OpenWebUI.Actions
 		public string Prompt { get; set; }
 		public string Model { get; set; }
 
-		public QueryLLMAction(string name, string executorId, string prompt, string model)
+		public QueryLLMActivity(string name, string workerId, string prompt, string model)
 		{
 			Name = name;
-			WorkerID = executorId;
+			WorkerID = workerId;
 			Prompt = prompt;
 			Model = model;
 		}
 
-		public IActivity Clone() => new QueryLLMAction(Name, WorkerID, Prompt, Model);
+		public IActivity Clone() => new QueryLLMActivity(Name, WorkerID, Prompt, Model);
 	}
 }

@@ -8,13 +8,13 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.JSON.Executors
 {
-	public class ExtractValueFromJSONExecutor : BaseWorker<ExtractValueFromJSONAction>
+	public class ExtractValueFromJSONWorker : BaseWorker<ExtractValueFromJSONActivity>
 	{
-		public ExtractValueFromJSONExecutor(string iD) : base(iD)
+		public ExtractValueFromJSONWorker(string iD) : base(iD)
 		{
 		}
 
-		public override async Task<WorkerResult> Execute(ExtractValueFromJSONAction act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(ExtractValueFromJSONActivity act, ActScriptState state, CancellationToken token)
 		{
 			var path = JsonPath.Parse(act.JSONPath.ToLower());
 			var instance = JsonNode.Parse(act.Text.ToLower());

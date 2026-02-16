@@ -3,21 +3,21 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.ML.NET.Actions
 {
-	public class TrainTextClassifierAction : IActivity
+	public class TrainTextClassifierActivity : IActivity
 	{
 		public string Name { get; set; } = "trainatextclassifier";
 		public string WorkerID { get; set; } = "default";
 		public string ModelName { get; set; }
 		public string Data { get; set; }
 
-		public TrainTextClassifierAction(string name, string executorId, string modelName, string data)
+		public TrainTextClassifierActivity(string name, string workerId, string modelName, string data)
 		{
 			Name = name;
-			WorkerID = executorId;
+			WorkerID = workerId;
 			ModelName = modelName;
 			Data = data;
 		}
 
-		public IActivity Clone() => new TrainTextClassifierAction(Name, WorkerID, ModelName, Data);
+		public IActivity Clone() => new TrainTextClassifierActivity(Name, WorkerID, ModelName, Data);
 	}
 }
