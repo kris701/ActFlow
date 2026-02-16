@@ -1,4 +1,4 @@
-﻿using ActChain.Models.Actions;
+﻿using ActChain.Models.Activities;
 
 namespace ActChain.Models.Scripts
 {
@@ -6,7 +6,7 @@ namespace ActChain.Models.Scripts
 	{
 		public string Name { get; set; }
 		public Dictionary<string, string> Globals { get; set; } = new Dictionary<string, string>();
-		public List<IAIAction> Stages { get; set; } = new List<IAIAction>();
+		public List<IActivity> Stages { get; set; } = new List<IActivity>();
 
 
 	}

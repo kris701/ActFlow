@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Models.Contexts
 {
-	public class ListContext : IActionContext
+	public class ListContext : IContext
 	{
 		public List<string> Values { get; set; } = new List<string>();
 
@@ -20,7 +20,7 @@ namespace ActChain.Models.Contexts
 
 		public Dictionary<string, string> GetContextValues() => new Dictionary<string, string>() { { "$type", nameof(ListContext) } };
 
-		public IActionContext Clone() => new ListContext() { Values = new List<string>(Values) };
+		public IContext Clone() => new ListContext() { Values = new List<string>(Values) };
 
 		public override string ToString() => JsonSerializer.Serialize(this);
 	}

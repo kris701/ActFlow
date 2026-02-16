@@ -1,14 +1,14 @@
 ﻿using ActChain.Actions.OpenWebUI.Actions;
 using ActChain.Actions.OpenWebUI.OpenWebUI;
 using ActChain.Models.Contexts;
-using ActChain.Models.Executors;
+using ActChain.Models.Workers;
 using ActChain.Models.Scripts;
 using System.Text;
 using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.OpenWebUI.Executors
 {
-	public class ExtractDataFromTextLLMExecutor : BaseActionExecutor<ExtractDataFromTextLLMAction>
+	public class ExtractDataFromTextLLMExecutor : BaseWorker<ExtractDataFromTextLLMAction>
 	{
 		public IOpenWebUIService OpenWebUIService { get; set; }
 		public ExtractDataFromTextLLMExecutor(string iD, IOpenWebUIService openWebUIService) : base(iD)
@@ -16,7 +16,7 @@ namespace ActChain.Actions.OpenWebUI.Executors
 			OpenWebUIService = openWebUIService;
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(ExtractDataFromTextLLMAction act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(ExtractDataFromTextLLMAction act, ActScriptState state, CancellationToken token)
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine(act.Prompt);
@@ -24,7 +24,7 @@ namespace ActChain.Actions.OpenWebUI.Executors
 			sb.AppendLine($"Text: {act.Text}");
 
 			var result = await OpenWebUIService.QueryToJsonObject<Dictionary<string, string>>(sb.ToString(), act.Model);
-			return new ExecutorResult(new DictionaryContext() { Values = result });
+			return new WorkerResult(new DictionaryContext() { Values = result });
 		}
 	}
 }

@@ -20,22 +20,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestFiles\Actions\FetchItemsFromDatabaseAction_Serialization_Expected.json">
+    <None Update="TestFiles\Activities\FetchItemsFromDatabaseAction_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Actions\InsertChainFromDatabaseAction_Serialization_Expected.json">
+    <None Update="TestFiles\Activities\InsertChainFromDatabaseAction_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Actions\InsertItemToDatabaseAction_Serialization_Expected.json">
+    <None Update="TestFiles\Activities\InsertItemToDatabaseAction_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Executors\FetchItemsFromDatabaseExecutor_Serialization_Expected.json">
+    <None Update="TestFiles\Workers\FetchItemsFromDatabaseExecutor_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Executors\InsertItemToDatabaseExecutor_Serialization_Expected.json">
+    <None Update="TestFiles\Workers\InsertItemToDatabaseExecutor_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Executors\InsertChainFromDatabaseExecutor_Serialization_Expected.json">
+    <None Update="TestFiles\Workers\InsertChainFromDatabaseExecutor_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

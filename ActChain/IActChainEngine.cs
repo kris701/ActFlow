@@ -1,11 +1,11 @@
-﻿using ActChain.Models.Executors;
+﻿using ActChain.Models.Workers;
 using ActChain.Models.Scripts;
 
 namespace ActChain
 {
 	public interface IActChainEngine
 	{
-		public List<IActionExecutor> Executors { get; }
+		public List<IWorker> Workers { get; }
 		public List<ActScriptState> ActiveScripts { get; }
 		public int StageLimiter { get; set; }
 

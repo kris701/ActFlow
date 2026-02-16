@@ -1,6 +1,6 @@
 ﻿using ActChain.Models;
-using ActChain.Models.Actions;
-using ActChain.Models.Executors;
+using ActChain.Models.Activities;
+using ActChain.Models.Workers;
 using ActChain.Models.Scripts;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
@@ -10,27 +10,27 @@ namespace ActChain
 {
 	public class ActChainEngine : IActChainEngine
 	{
-		public List<IActionExecutor> Executors { get; } = new List<IActionExecutor>();
+		public List<IWorker> Workers { get; } = new List<IWorker>();
 		public List<ActScriptState> ActiveScripts { get; } = new List<ActScriptState>();
 		public int StageLimiter { get; set; } = 100;
 		public int RemoveDelay { get; set; } = 60000;
 
-		private readonly Dictionary<ServiceKey, IActionExecutor> _serviceCache = new Dictionary<ServiceKey, IActionExecutor>();
+		private readonly Dictionary<ServiceKey, IWorker> _serviceCache = new Dictionary<ServiceKey, IWorker>();
 		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);
 		private readonly ILogger _logger;
 
-		public ActChainEngine(List<IActionExecutor> executors, ILogger logger)
+		public ActChainEngine(List<IWorker> workers, ILogger logger)
 		{
 			_logger = logger;
-			Executors = executors;
-			foreach (var executor in executors)
+			Workers = workers;
+			foreach (var worker in workers)
 			{
-				var tpy = executor.GetType();
+				var tpy = worker.GetType();
 				var baseType = tpy.BaseType;
 				var typeArg = baseType?.GenericTypeArguments[0].Name;
-				var key = new ServiceKey(executor.ID, typeArg);
+				var key = new ServiceKey(worker.ID, typeArg);
 				if (!_serviceCache.ContainsKey(key))
-					_serviceCache.Add(key, executor);
+					_serviceCache.Add(key, worker);
 				else
 					_logger.LogWarning($"Multiple services with the key '{key}' exists! Ignoring all but the first...");
 			}
@@ -70,21 +70,21 @@ namespace ActChain
 				try
 				{
 					var stage = item.Script.Stages[item.Stage].Clone();
-					item.AppendToLog($"\tInitializing action {stage.Name}");
+					item.AppendToLog($"\tInitializing activity {stage.Name}");
 
 					stage = ApplyContexts(item, stage);
 
-					item.AppendToLog($"\tExecuting action");
-					if (item.Status != ScriptStatus.Canceled && stage is IAwaitInputAction)
+					item.AppendToLog($"\tExecuting activity");
+					if (item.Status != ScriptStatus.Canceled && stage is IAwaitInputActivity)
 						item.Status = ScriptStatus.AwaitingInput;
 					await item.Update();
-					var executionResult = await ExecuteActionAsync(stage, item, item.TokenSource.Token);
+					var executionResult = await ExecuteActivityAsync(stage, item, item.TokenSource.Token);
 					if (item.Status != ScriptStatus.Canceled)
 						item.Status = ScriptStatus.Running;
 					if (item.TokenSource.IsCancellationRequested)
 						break;
-					item.AppendToLog($"\tResulting action context is a {executionResult.Context.GetType()}");
-					item.AppendToLog($"\tResulting action context content is {executionResult.Context.ToString()}");
+					item.AppendToLog($"\tResulting activity context is a {executionResult.Context.GetType()}");
+					item.AppendToLog($"\tResulting activity context content is {executionResult.Context.ToString()}");
 
 					InsertResultIntoContextStore(item, stage.Name, executionResult);
 
@@ -117,7 +117,7 @@ namespace ActChain
 			return item;
 		}
 
-		private IAIAction ApplyContexts(ActScriptState state, IAIAction stage)
+		private IActivity ApplyContexts(ActScriptState state, IActivity stage)
 		{
 			var text = JsonSerializer.Serialize(stage);
 			var matches = _variableRegex.Matches(text);
@@ -129,32 +129,32 @@ namespace ActChain
 				else
 					throw new Exception($"Variable '{key}' was not found in the current state!");
 			}
-			var deStage = JsonSerializer.Deserialize<IAIAction>(text);
+			var deStage = JsonSerializer.Deserialize<IActivity>(text);
 			if (deStage == null)
-				throw new ArgumentNullException("Could not deserialize the action stage!");
+				throw new ArgumentNullException("Could not deserialize the activity stage!");
 			return deStage;
 		}
 
-		private int FindNextStageIndex(ActScriptState state, ExecutorResult executionResult)
+		private int FindNextStageIndex(ActScriptState state, WorkerResult executionResult)
 		{
 			var nextStageIndex = state.Stage + 1;
-			if (executionResult.TargetAction != "")
+			if (executionResult.TargetActivity != "")
 			{
-				state.AppendToLog($"\tNext target action is named {executionResult.TargetAction}");
-				nextStageIndex = state.Script.Stages.FindIndex(x => x.Name == executionResult.TargetAction);
+				state.AppendToLog($"\tNext target activity is named {executionResult.TargetActivity}");
+				nextStageIndex = state.Script.Stages.FindIndex(x => x.Name == executionResult.TargetActivity);
 				if (nextStageIndex == -1)
-					throw new Exception($"Could not find a action named '{executionResult.TargetAction}'");
-				if (state.Script.Stages.Count(x => x.Name == executionResult.TargetAction) > 1)
-					state.AppendToLog($"Warning, multiple actions with the name '{executionResult.TargetAction}' found! Using the first one...");
+					throw new Exception($"Could not find a activity named '{executionResult.TargetActivity}'");
+				if (state.Script.Stages.Count(x => x.Name == executionResult.TargetActivity) > 1)
+					state.AppendToLog($"Warning, multiple activities with the name '{executionResult.TargetActivity}' found! Using the first one...");
 			}
 			return nextStageIndex;
 		}
 
-		private void InsertResultIntoContextStore(ActScriptState state, string actionName, ExecutorResult executionResult)
+		private void InsertResultIntoContextStore(ActScriptState state, string activityName, WorkerResult executionResult)
 		{
 			var values = executionResult.Context.GetContextValues();
 			foreach (var valueKey in values.Keys)
-				state.AddContext($"{actionName}.{valueKey}".ToLower(), values[valueKey]);
+				state.AddContext($"{activityName}.{valueKey}".ToLower(), values[valueKey]);
 		}
 
 		private async Task ProcessCompleted(ActScriptState state)
@@ -196,20 +196,20 @@ namespace ActChain
 				await CancelScript(item.ID);
 		}
 
-		private async Task<ExecutorResult> ExecuteActionAsync(IAIAction act, ActScriptState state, CancellationToken token)
+		private async Task<WorkerResult> ExecuteActivityAsync(IActivity act, ActScriptState state, CancellationToken token)
 		{
-			var targetKey = new ServiceKey(act.ExecutorID, act.GetType().Name);
+			var targetKey = new ServiceKey(act.WorkerID, act.GetType().Name);
 			if (_serviceCache.ContainsKey(targetKey))
 			{
 				var executor = _serviceCache[targetKey];
-				return await ExecuteActionAsync((dynamic)executor, (dynamic)act, state, token);
+				return await ExecuteActivityAsync((dynamic)executor, (dynamic)act, state, token);
 			}
-			throw new Exception($"Unknown target action executor '{targetKey}'! This probably means that the backend have not been set up to accept this type of action!");
+			throw new Exception($"Unknown target activity executor '{targetKey}'! This probably means that the backend have not been set up to accept this type of action!");
 		}
 
-		private async Task<ExecutorResult> ExecuteActionAsync<T>(BaseActionExecutor<T> executor, T act, ActScriptState state, CancellationToken token) where T : IAIAction
+		private async Task<WorkerResult> ExecuteActivityAsync<T>(BaseWorker<T> worker, T act, ActScriptState state, CancellationToken token) where T : IActivity
 		{
-			return await executor.ExecuteActionAsync(act, state, token);
+			return await worker.Execute(act, state, token);
 		}
 
 		public async Task<ActScriptState> UserInput(Guid chainID, ActScriptState newState)

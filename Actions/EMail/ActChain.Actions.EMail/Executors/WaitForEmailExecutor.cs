@@ -1,11 +1,11 @@
 ﻿using ActChain.Actions.EMail.Actions;
 using ActChain.Actions.EMail.EMail;
-using ActChain.Models.Executors;
+using ActChain.Models.Workers;
 using ActChain.Models.Scripts;
 
 namespace ActChain.Actions.EMail.Executors
 {
-	public class WaitForEmailExecutor : BaseActionExecutor<WaitForEmailAction>
+	public class WaitForEmailExecutor : BaseWorker<WaitForEmailAction>
 	{
 		public int WaitDelayMs { get; set; }
 		public OutlookMailService MailService { get; set; }
@@ -16,7 +16,7 @@ namespace ActChain.Actions.EMail.Executors
 			MailService = mailService;
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(WaitForEmailAction act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(WaitForEmailAction act, ActScriptState state, CancellationToken token)
 		{
 			var startTime = DateTime.UtcNow;
 			while (true)
@@ -26,11 +26,11 @@ namespace ActChain.Actions.EMail.Executors
 				mails.RemoveAll(x => x.Sender != act.SenderEmail);
 				foreach (var mail in mails)
 					if (mail.ConversationID == act.ConversationID)
-						return new ExecutorResult(mail);
+						return new WorkerResult(mail);
 
 				await Task.Delay(WaitDelayMs, token);
 				if (token.IsCancellationRequested)
-					return new ExecutorResult();
+					return new WorkerResult();
 			}
 		}
 	}

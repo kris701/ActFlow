@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Models.Contexts
 {
-	public class DictionaryContext : IActionContext
+	public class DictionaryContext : IContext
 	{
 		public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();
 
@@ -27,7 +27,7 @@ namespace ActChain.Models.Contexts
 			return newDict;
 		}
 
-		public IActionContext Clone()
+		public IContext Clone()
 		{
 			var newAct = new DictionaryContext();
 

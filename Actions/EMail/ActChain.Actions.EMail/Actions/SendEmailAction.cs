@@ -1,22 +1,22 @@
-﻿using ActChain.Models.Actions;
+﻿using ActChain.Models.Activities;
 using ActChain.Models.Contexts;
 using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.EMail.Actions
 {
-	public class SendEmailAction : IAIAction
+	public class SendEmailAction : IActivity
 	{
 		public string Name { get; set; } = "sendanemail";
-		public string ExecutorID { get; set; } = "default";
-		public IActionContext Answer { get; set; }
+		public string WorkerID { get; set; } = "default";
+		public IContext Answer { get; set; }
 
-		public SendEmailAction(string name, string executorId, IActionContext answer)
+		public SendEmailAction(string name, string executorId, IContext answer)
 		{
 			Name = name;
-			ExecutorID = executorId;
+			WorkerID = executorId;
 			Answer = answer;
 		}
 
-		public IAIAction Clone() => new SendEmailAction(Name, ExecutorID, Answer.Clone());
+		public IActivity Clone() => new SendEmailAction(Name, WorkerID, Answer.Clone());
 	}
 }

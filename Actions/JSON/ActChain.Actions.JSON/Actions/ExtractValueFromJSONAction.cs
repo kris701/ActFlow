@@ -1,12 +1,12 @@
-﻿using ActChain.Models.Actions;
+﻿using ActChain.Models.Activities;
 using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.JSON.Actions
 {
-	public class ExtractValueFromJSONAction : IAIAction
+	public class ExtractValueFromJSONAction : IActivity
 	{
 		public string Name { get; set; } = "extractasinglevaluefromjsontext";
-		public string ExecutorID { get; set; } = "default";
+		public string WorkerID { get; set; } = "default";
 
 		public string Text { get; set; }
 		[JsonPropertyName("jsonPath")]
@@ -15,11 +15,11 @@ namespace ActChain.Actions.JSON.Actions
 		public ExtractValueFromJSONAction(string name, string executorId, string text, string jsonPath)
 		{
 			Name = name;
-			ExecutorID = executorId;
+			WorkerID = executorId;
 			Text = text;
 			JSONPath = jsonPath;
 		}
 
-		public IAIAction Clone() => new ExtractValueFromJSONAction(Name, ExecutorID, Text, JSONPath);
+		public IActivity Clone() => new ExtractValueFromJSONAction(Name, WorkerID, Text, JSONPath);
 	}
 }

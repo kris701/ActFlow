@@ -1,6 +1,6 @@
-﻿using ActChain.Models.Actions;
+﻿using ActChain.Models.Activities;
 using ActChain.Models.Contexts;
-using ActChain.Models.Executors;
+using ActChain.Models.Workers;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
@@ -10,12 +10,12 @@ namespace ActChain.Tools.Extensions
 	{
 		public static void AddNativePolymorphicTypInfo(JsonTypeInfo jsonTypeInfo)
 		{
-			if (jsonTypeInfo.Type == typeof(IAIAction))
-				UpdateTypeInfo<IAIAction>(jsonTypeInfo);
-			if (jsonTypeInfo.Type == typeof(IActionContext))
-				UpdateTypeInfo<IActionContext>(jsonTypeInfo);
-			if (jsonTypeInfo.Type == typeof(IActionExecutor))
-				UpdateTypeInfo<IActionExecutor>(jsonTypeInfo);
+			if (jsonTypeInfo.Type == typeof(IActivity))
+				UpdateTypeInfo<IActivity>(jsonTypeInfo);
+			if (jsonTypeInfo.Type == typeof(IContext))
+				UpdateTypeInfo<IContext>(jsonTypeInfo);
+			if (jsonTypeInfo.Type == typeof(IWorker))
+				UpdateTypeInfo<IWorker>(jsonTypeInfo);
 		}
 
 		private static void UpdateTypeInfo<T>(JsonTypeInfo jsonTypeInfo)

@@ -1,12 +1,12 @@
-﻿using ActChain.Models.Actions;
+﻿using ActChain.Models.Activities;
 using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.EMail.Actions
 {
-	public class WaitForEmailAction : IAIAction, IAwaitInputAction
+	public class WaitForEmailAction : IActivity, IAwaitInputActivity
 	{
 		public string Name { get; set; } = "waitforemail";
-		public string ExecutorID { get; set; } = "default";
+		public string WorkerID { get; set; } = "default";
 		public string SenderEmail { get; set; }
 		public string RecieverEmail { get; set; }
 		public string ConversationID { get; set; }
@@ -14,12 +14,12 @@ namespace ActChain.Actions.EMail.Actions
 		public WaitForEmailAction(string name, string executorId, string senderEmail, string recieverEmail, string conversationID)
 		{
 			Name = name;
-			ExecutorID = executorId;
+			WorkerID = executorId;
 			SenderEmail = senderEmail;
 			RecieverEmail = recieverEmail;
 			ConversationID = conversationID;
 		}
 
-		public IAIAction Clone() => new WaitForEmailAction(Name, ExecutorID, SenderEmail, RecieverEmail, ConversationID);
+		public IActivity Clone() => new WaitForEmailAction(Name, WorkerID, SenderEmail, RecieverEmail, ConversationID);
 	}
 }

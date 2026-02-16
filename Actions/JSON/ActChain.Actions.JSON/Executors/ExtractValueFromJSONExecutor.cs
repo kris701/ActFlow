@@ -1,6 +1,6 @@
 ﻿using ActChain.Actions.JSON.Actions;
 using ActChain.Models.Contexts;
-using ActChain.Models.Executors;
+using ActChain.Models.Workers;
 using ActChain.Models.Scripts;
 using Json.Path;
 using System.Text.Json.Nodes;
@@ -8,13 +8,13 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.JSON.Executors
 {
-	public class ExtractValueFromJSONExecutor : BaseActionExecutor<ExtractValueFromJSONAction>
+	public class ExtractValueFromJSONExecutor : BaseWorker<ExtractValueFromJSONAction>
 	{
 		public ExtractValueFromJSONExecutor(string iD) : base(iD)
 		{
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(ExtractValueFromJSONAction act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(ExtractValueFromJSONAction act, ActScriptState state, CancellationToken token)
 		{
 			var path = JsonPath.Parse(act.JSONPath.ToLower());
 			var instance = JsonNode.Parse(act.Text.ToLower());
@@ -25,7 +25,7 @@ namespace ActChain.Actions.JSON.Executors
 				throw new Exception("Could not find any match for the JSON Path!");
 			var value = results.Matches[0].Value.ToString().ToLower();
 
-			return new ExecutorResult(new StringContext() { Text = value });
+			return new WorkerResult(new StringContext() { Text = value });
 		}
 	}
 }

@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.EMail.Contexts
 {
-	public class MailContext : IActionContext
+	public class MailContext : IContext
 	{
 		public string MessageID { get; set; }
 		public string ConversationID { get; set; }
@@ -101,7 +101,7 @@ namespace ActChain.Actions.EMail.Contexts
 			return newDict;
 		}
 
-		public IActionContext Clone() => new MailContext(this);
+		public IContext Clone() => new MailContext(this);
 
 		public string GetBodyAsPlaintext() => HTMLHelper.ConvertToPlainText(Body);
 

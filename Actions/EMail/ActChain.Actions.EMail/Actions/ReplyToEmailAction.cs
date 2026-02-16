@@ -1,24 +1,24 @@
-﻿using ActChain.Models.Actions;
+﻿using ActChain.Models.Activities;
 using ActChain.Models.Contexts;
 using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.EMail.Actions
 {
-	public class ReplyToEmailAction : IAIAction
+	public class ReplyToEmailAction : IActivity
 	{
 		public string Name { get; set; } = "replytoemail";
-		public string ExecutorID { get; set; } = "default";
+		public string WorkerID { get; set; } = "default";
 		public string ToMessageID { get; set; }
-		public IActionContext Answer { get; set; }
+		public IContext Answer { get; set; }
 
-		public ReplyToEmailAction(string name, string executorId, string toMessageID, IActionContext answer)
+		public ReplyToEmailAction(string name, string executorId, string toMessageID, IContext answer)
 		{
 			Name = name;
-			ExecutorID = executorId;
+			WorkerID = executorId;
 			ToMessageID = toMessageID;
 			Answer = answer;
 		}
 
-		public IAIAction Clone() => new ReplyToEmailAction(Name, ExecutorID, ToMessageID, Answer.Clone());
+		public IActivity Clone() => new ReplyToEmailAction(Name, WorkerID, ToMessageID, Answer.Clone());
 	}
 }

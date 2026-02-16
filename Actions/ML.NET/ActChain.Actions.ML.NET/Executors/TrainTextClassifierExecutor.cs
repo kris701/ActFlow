@@ -2,14 +2,14 @@
 using ActChain.Actions.ML.NET.Classifiers.ML.NET;
 using ActChain.Actions.ML.NET.Classifiers.ML.NET.Models;
 using ActChain.Models.Contexts;
-using ActChain.Models.Executors;
+using ActChain.Models.Workers;
 using ActChain.Models.Scripts;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.ML.NET.Executors
 {
-	public class TrainTextClassifierExecutor : BaseActionExecutor<TrainTextClassifierAction>
+	public class TrainTextClassifierExecutor : BaseWorker<TrainTextClassifierAction>
 	{
 		private readonly TextClassifier _classifier = new TextClassifier();
 
@@ -17,7 +17,7 @@ namespace ActChain.Actions.ML.NET.Executors
 		{
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(TrainTextClassifierAction act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(TrainTextClassifierAction act, ActScriptState state, CancellationToken token)
 		{
 			var data = JsonSerializer.Deserialize<List<ModelInput>>(act.Data);
 			if (data != null)
@@ -27,7 +27,7 @@ namespace ActChain.Actions.ML.NET.Executors
 				state.AppendToLog(_classifier.ClassifierLog);
 			}
 
-			return new ExecutorResult(new EmptyContext());
+			return new WorkerResult(new EmptyContext());
 		}
 	}
 }

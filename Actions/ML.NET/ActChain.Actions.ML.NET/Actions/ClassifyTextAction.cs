@@ -1,12 +1,12 @@
-﻿using ActChain.Models.Actions;
+﻿using ActChain.Models.Activities;
 using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.ML.NET.Actions
 {
-	public class ClassifyTextAction : IAIAction
+	public class ClassifyTextAction : IActivity
 	{
 		public string Name { get; set; } = "extractdatawithllm";
-		public string ExecutorID { get; set; } = "default";
+		public string WorkerID { get; set; } = "default";
 
 		public string Text { get; set; }
 		public string Model { get; set; }
@@ -14,11 +14,11 @@ namespace ActChain.Actions.ML.NET.Actions
 		public ClassifyTextAction(string name, string executorID, string text, string model)
 		{
 			Name = name;
-			ExecutorID = executorID;
+			WorkerID = executorID;
 			Text = text;
 			Model = model;
 		}
 
-		public IAIAction Clone() => new ClassifyTextAction(Name, ExecutorID, Text, Model);
+		public IActivity Clone() => new ClassifyTextAction(Name, WorkerID, Text, Model);
 	}
 }
