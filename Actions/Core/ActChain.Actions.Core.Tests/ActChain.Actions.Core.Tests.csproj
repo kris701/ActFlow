@@ -20,34 +20,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestFiles\Activities\ConditionalIfAction_Serialization_Expected.json">
+    <None Update="TestFiles\Activities\ConditionalIfActivity_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Activities\ConditionalUserAction_Serialization_Expected.json">
+    <None Update="TestFiles\Activities\ConditionalUserActivity_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Activities\CreateContextAction_Serialization_Expected.json">
+    <None Update="TestFiles\Activities\CreateContextActivity_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Activities\InsertGlobalsAction_Serialization_Expected.json">
+    <None Update="TestFiles\Activities\InsertGlobalsActivity_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Activities\NoAction_Serialization_Expected.json">
+    <None Update="TestFiles\Activities\NoActivity_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Workers\NoActionExecutor_Serialization_Expected.json">
+    <None Update="TestFiles\Workers\NoActionWorker_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Workers\InsertGlobalsExecutor_Serialization_Expected.json">
+    <None Update="TestFiles\Workers\InsertGlobalsWorker_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Workers\CreateContextExecutor_Serialization_Expected.json">
+    <None Update="TestFiles\Workers\CreateContextWorker_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Workers\ConditionalUserExecutor_Serialization_Expected.json">
+    <None Update="TestFiles\Workers\ConditionalUserWorker_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Workers\ConditionalIfExecutor_Serialization_Expected.json">
+    <None Update="TestFiles\Workers\ConditionalIfWorker_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

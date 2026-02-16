@@ -12,14 +12,14 @@ namespace ActChain.Actions.DatabaseSharp.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new FetchItemsFromDatabaseExecutor("a", ""),
-				"TestFiles/Workers/FetchItemsFromDatabaseExecutor_Serialization_Expected.json" };
+				new FetchItemsFromDatabaseWorker("a", ""),
+				"TestFiles/Workers/FetchItemsFromDatabaseWorker_Serialization_Expected.json" };
 			yield return new object[] {
-				new InsertChainFromDatabaseExecutor("a", ""),
-				"TestFiles/Workers/InsertChainFromDatabaseExecutor_Serialization_Expected.json" };
+				new InsertChainFromDatabaseWorker("a", ""),
+				"TestFiles/Workers/InsertChainFromDatabaseWorker_Serialization_Expected.json" };
 			yield return new object[] {
-				new InsertItemToDatabaseExecutor("a", ""),
-				"TestFiles/Workers/InsertItemToDatabaseExecutor_Serialization_Expected.json" };
+				new InsertItemToDatabaseWorker("a", ""),
+				"TestFiles/Workers/InsertItemToDatabaseWorker_Serialization_Expected.json" };
 		}
 
 		[TestMethod]

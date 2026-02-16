@@ -1,0 +1,6 @@
+{
+  "$type": "CreateContextActivity",
+  "Name": "abc",
+  "WorkerID": "a",
+  "Context": { "$type": "EmptyContext" }
+}

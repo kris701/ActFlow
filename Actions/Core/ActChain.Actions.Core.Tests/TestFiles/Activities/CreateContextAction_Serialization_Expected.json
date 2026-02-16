@@ -1,6 +1,0 @@
-{
-  "$type": "CreateContextAction",
-  "Name": "abc",
-  "ExecutorID": "a",
-  "Context": { "$type": "EmptyContext" }
-}

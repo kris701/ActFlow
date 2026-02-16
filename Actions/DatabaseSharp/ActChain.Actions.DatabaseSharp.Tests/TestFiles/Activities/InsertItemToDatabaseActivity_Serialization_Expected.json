@@ -1,0 +1,7 @@
+{
+  "$type": "InsertItemToDatabaseActivity",
+  "Name": "abc",
+  "WorkerID": "a",
+  "TargetSTP": "sp_a",
+  "Arguments": {}
+}

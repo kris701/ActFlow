@@ -17,20 +17,20 @@ namespace ActChain.Actions.Core.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new NoAction("abc", "a"),
-				"TestFiles/Activities/NoAction_Serialization_Expected.json" };
+				new NoActivity("abc", "a"),
+				"TestFiles/Activities/NoActivity_Serialization_Expected.json" };
 			yield return new object[] {
-				new ConditionalIfAction("abc", "a", "a", "b", ConditionalComparerTypes.NotEqual, "abc", "abc"),
-				"TestFiles/Activities/ConditionalIfAction_Serialization_Expected.json" };
+				new ConditionalIfActivity("abc", "a", "a", "b", ConditionalComparerTypes.NotEqual, "abc", "abc"),
+				"TestFiles/Activities/ConditionalIfActivity_Serialization_Expected.json" };
 			yield return new object[] {
-				new ConditionalUserAction("abc", "a", "a", "b", ConditionalComparerTypes.NotEqual, "abc", "abc"),
-				"TestFiles/Activities/ConditionalUserAction_Serialization_Expected.json" };
+				new ConditionalUserActivity("abc", "a", "a", "b", ConditionalComparerTypes.NotEqual, "abc", "abc"),
+				"TestFiles/Activities/ConditionalUserActivity_Serialization_Expected.json" };
 			yield return new object[] {
-				new CreateContextAction("abc", "a", new EmptyContext()),
-				"TestFiles/Activities/CreateContextAction_Serialization_Expected.json" };
+				new CreateContextActivity("abc", "a", new EmptyContext()),
+				"TestFiles/Activities/CreateContextActivity_Serialization_Expected.json" };
 			yield return new object[] {
-				new InsertGlobalsAction("abc", "a", new Dictionary<string, string>() { { "a", "asdasdad" } }),
-				"TestFiles/Activities/InsertGlobalsAction_Serialization_Expected.json" };
+				new InsertGlobalsActivity("abc", "a", new Dictionary<string, string>() { { "a", "asdasdad" } }),
+				"TestFiles/Activities/InsertGlobalsActivity_Serialization_Expected.json" };
 		}
 
 		[TestMethod]

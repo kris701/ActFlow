@@ -1,0 +1,7 @@
+{
+  "$type": "InsertChainFromDatabaseActivity",
+  "Name": "abc",
+  "WorkerID": "a",
+  "TargetSTP": "sp_a",
+  "Arguments": {}
+}

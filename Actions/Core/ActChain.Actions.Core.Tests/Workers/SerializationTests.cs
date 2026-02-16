@@ -19,20 +19,20 @@ namespace ActChain.Actions.Core.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ConditionalIfExecutor("a"),
-				"TestFiles/Workers/ConditionalIfExecutor_Serialization_Expected.json" };
+				new ConditionalIfWorker("a"),
+				"TestFiles/Workers/ConditionalIfWorker_Serialization_Expected.json" };
 			yield return new object[] {
-				new ConditionalUserExecutor("a", 1000),
-				"TestFiles/Workers/ConditionalUserExecutor_Serialization_Expected.json" };
+				new ConditionalUserWorker("a", 1000),
+				"TestFiles/Workers/ConditionalUserWorker_Serialization_Expected.json" };
 			yield return new object[] {
-				new CreateContextExecutor("a"),
-				"TestFiles/Workers/CreateContextExecutor_Serialization_Expected.json" };
+				new CreateContextWorker("a"),
+				"TestFiles/Workers/CreateContextWorker_Serialization_Expected.json" };
 			yield return new object[] {
-				new InsertGlobalsExecutor("a"),
-				"TestFiles/Workers/InsertGlobalsExecutor_Serialization_Expected.json" };
+				new InsertGlobalsWorker("a"),
+				"TestFiles/Workers/InsertGlobalsWorker_Serialization_Expected.json" };
 			yield return new object[] {
-				new NoActionExecutor("a"),
-				"TestFiles/Workers/NoActionExecutor_Serialization_Expected.json" };
+				new NoActionWorker("a"),
+				"TestFiles/Workers/NoActionWorker_Serialization_Expected.json" };
 		}
 
 		[TestMethod]

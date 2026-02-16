@@ -1,0 +1,10 @@
+{
+  "$type": "ConditionalUserActivity",
+  "Name": "abc",
+  "WorkerID": "default",
+  "UserInput": "a",
+  "Condition": "b",
+  "Comparer": 1,
+  "TrueActivityName": "abc",
+  "FalseActivityName": "abc"
+}

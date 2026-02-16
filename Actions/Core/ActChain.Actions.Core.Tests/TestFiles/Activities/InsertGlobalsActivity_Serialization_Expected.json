@@ -1,0 +1,6 @@
+{
+  "$type": "InsertGlobalsActivity",
+  "Name": "abc",
+  "WorkerID": "a",
+  "Arguments": { "a": "asdasdad" }
+}

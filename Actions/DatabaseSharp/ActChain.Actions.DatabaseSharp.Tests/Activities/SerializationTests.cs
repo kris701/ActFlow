@@ -13,14 +13,14 @@ namespace ActChain.Actions.DatabaseSharp.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new FetchItemsFromDatabaseAction("abc", "a", "sp_a", new Dictionary<string, string>(), "FetchItemsFromDatabaseAction"),
-				"TestFiles/Activities/FetchItemsFromDatabaseAction_Serialization_Expected.json" };
+				new FetchItemsFromDatabaseActivity("abc", "a", "sp_a", new Dictionary<string, string>(), "FetchItemsFromDatabaseActivity"),
+				"TestFiles/Activities/FetchItemsFromDatabaseActivity_Serialization_Expected.json" };
 			yield return new object[] {
-				new InsertChainFromDatabaseAction("abc", "a", "sp_a", new Dictionary<string, string>()),
-				"TestFiles/Activities/InsertChainFromDatabaseAction_Serialization_Expected.json" };
+				new InsertChainFromDatabaseActivity("abc", "a", "sp_a", new Dictionary<string, string>()),
+				"TestFiles/Activities/InsertChainFromDatabaseActivity_Serialization_Expected.json" };
 			yield return new object[] {
-				new InsertItemToDatabaseAction("abc", "a", "sp_a", new Dictionary<string, string>()),
-				"TestFiles/Activities/InsertItemToDatabaseAction_Serialization_Expected.json" };
+				new InsertItemToDatabaseActivity("abc", "a", "sp_a", new Dictionary<string, string>()),
+				"TestFiles/Activities/InsertItemToDatabaseActivity_Serialization_Expected.json" };
 		}
 
 		[TestMethod]
