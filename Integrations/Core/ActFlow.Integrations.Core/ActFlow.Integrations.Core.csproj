@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ActChain.Models\ActChain.Models.csproj" />
-    <ProjectReference Include="..\..\..\ActChain.Tools\ActChain.Tools.csproj" />
+    <ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj" />
+    <ProjectReference Include="..\..\..\ActFlow.Tools\ActFlow.Tools.csproj" />
   </ItemGroup>
 
 </Project>

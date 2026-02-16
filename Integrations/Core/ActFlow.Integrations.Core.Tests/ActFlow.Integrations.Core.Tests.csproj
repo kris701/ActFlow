@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ActChain.Integrations.Core\ActChain.Integrations.Core.csproj" />
+    <ProjectReference Include="..\ActFlow.Integrations.Core\ActFlow.Integrations.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

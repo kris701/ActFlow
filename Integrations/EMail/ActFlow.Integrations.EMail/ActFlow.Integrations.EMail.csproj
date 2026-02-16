@@ -13,7 +13,7 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ActChain.Models\ActChain.Models.csproj" />
+    <ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj" />
   </ItemGroup>
 
 </Project>

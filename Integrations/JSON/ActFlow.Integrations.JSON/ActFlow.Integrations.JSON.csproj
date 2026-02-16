@@ -6,8 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ActChain.Models\ActChain.Models.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="JsonPath.Net" Version="3.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj" />
+	</ItemGroup>
 
 </Project>

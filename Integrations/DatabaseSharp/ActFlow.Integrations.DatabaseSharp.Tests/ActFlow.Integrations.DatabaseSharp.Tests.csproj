@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ActChain.Integrations.DatabaseSharp\ActChain.Integrations.DatabaseSharp.csproj" />
+    <ProjectReference Include="..\ActFlow.Integrations.DatabaseSharp\ActFlow.Integrations.DatabaseSharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

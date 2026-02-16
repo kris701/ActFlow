@@ -7,12 +7,12 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.ML" Version="5.0.0" />
-		<PackageReference Include="Microsoft.ML.TorchSharp" Version="0.23.0" />
+		<PackageReference Include="DatabaseSharp" Version="1.6.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\ActChain.Models\ActChain.Models.csproj" />
-	</ItemGroup>
+    <ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj" />
+    <ProjectReference Include="..\..\..\ActFlow.Tools\ActFlow.Tools.csproj" />
+  </ItemGroup>
 
 </Project>

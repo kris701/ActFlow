@@ -7,11 +7,12 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="OpenWebUISharp" Version="1.2.8" />
+		<PackageReference Include="Microsoft.ML" Version="5.0.0" />
+		<PackageReference Include="Microsoft.ML.TorchSharp" Version="0.23.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\ActChain.Models\ActChain.Models.csproj" />
+	  <ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj" />
 	</ItemGroup>
 
 </Project>
