@@ -1,6 +1,5 @@
 ﻿using ActChain.Models.Attributes;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace ActChain.Models.Activities
 {

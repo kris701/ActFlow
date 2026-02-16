@@ -1,0 +1,21 @@
+﻿using ActChain.Models.Activities;
+using ActChain.Models.Contexts;
+
+namespace ActChain.Integrations.EMail.Activities
+{
+	public class SendEmailActivity : IActivity
+	{
+		public string Name { get; set; } = "sendanemail";
+		public string WorkerID { get; set; } = "default";
+		public IContext Answer { get; set; }
+
+		public SendEmailActivity(string name, string workerId, IContext answer)
+		{
+			Name = name;
+			WorkerID = workerId;
+			Answer = answer;
+		}
+
+		public IActivity Clone() => new SendEmailActivity(Name, WorkerID, Answer.Clone());
+	}
+}

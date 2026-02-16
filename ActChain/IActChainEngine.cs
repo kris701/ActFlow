@@ -1,5 +1,5 @@
-﻿using ActChain.Models.Workers;
-using ActChain.Models.Scripts;
+﻿using ActChain.Models.Scripts;
+using ActChain.Models.Workers;
 
 namespace ActChain
 {
