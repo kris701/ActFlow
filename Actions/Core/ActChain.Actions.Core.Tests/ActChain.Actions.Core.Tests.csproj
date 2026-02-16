@@ -20,19 +20,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestFiles\ConditionalIfAction_Serialization_Expected.json">
+    <None Update="TestFiles\Actions\ConditionalIfAction_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\ConditionalUserAction_Serialization_Expected.json">
+    <None Update="TestFiles\Actions\ConditionalUserAction_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\CreateContextAction_Serialization_Expected.json">
+    <None Update="TestFiles\Actions\CreateContextAction_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\InsertGlobalsAction_Serialization_Expected.json">
+    <None Update="TestFiles\Actions\InsertGlobalsAction_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\NoAction_Serialization_Expected.json">
+    <None Update="TestFiles\Actions\NoAction_Serialization_Expected.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Executors\NoActionExecutor_Serialization_Expected.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Executors\InsertGlobalsExecutor_Serialization_Expected.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Executors\CreateContextExecutor_Serialization_Expected.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Executors\ConditionalUserExecutor_Serialization_Expected.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\Executors\ConditionalIfExecutor_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

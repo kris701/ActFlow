@@ -1,0 +1,5 @@
+{
+  "$type": "ConditionalUserExecutor",
+  "WaitDelayMs": 1000,
+  "id": "a"
+}

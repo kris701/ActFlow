@@ -14,6 +14,14 @@ namespace ActChain.Models.Executors
 			ID = iD;
 		}
 
+
 		public abstract Task<ExecutorResult> ExecuteActionAsync(T act, ActScriptState state, CancellationToken token);
+
+		public async Task<ExecutorResult> ExecuteActionAsync(dynamic act, ActScriptState state, CancellationToken token)
+		{
+			if (act is T actualAct)
+				return await ExecuteActionAsync(actualAct, state, token);
+			throw new Exception("Invalid action input to executor!");
+		}
 	}
 }

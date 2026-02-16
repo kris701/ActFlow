@@ -22,13 +22,13 @@ namespace ActChain.Tools.Extensions
 		{
 			var actionTypes = AppDomain.CurrentDomain.GetAssemblies()
 					.SelectMany(s => s.GetTypes())
-					.Where(p => typeof(T).IsAssignableFrom(p) && p.IsClass);
+					.Where(p => typeof(T).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
 
 			jsonTypeInfo.PolymorphismOptions = new JsonPolymorphismOptions
 			{
 				TypeDiscriminatorPropertyName = "$type",
 				IgnoreUnrecognizedTypeDiscriminators = true,
-				UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization,
+				UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor,
 				DerivedTypes =
 					{
 					}
