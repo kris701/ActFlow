@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.DatabaseSharp.Actions
 {
-	[JsonDerivedType(typeof(InsertChainFromDatabaseAction), typeDiscriminator: nameof(InsertChainFromDatabaseAction))]
 	public class InsertChainFromDatabaseAction : IAIAction
 	{
 		public string Name { get; set; } = "insertchain";
@@ -11,8 +10,6 @@ namespace ActChain.Actions.DatabaseSharp.Actions
 
 		public string TargetSTP { get; set; }
 		public Dictionary<string, string> Arguments { get; set; }
-		[JsonIgnore]
-		public CancellationToken? Token { get; set; }
 
 		public InsertChainFromDatabaseAction(string name, string executorID, string targetSTP, Dictionary<string, string> arguments)
 		{

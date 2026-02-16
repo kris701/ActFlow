@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.OpenWebUI.Actions
 {
-	[JsonDerivedType(typeof(ExtractDataFromTextRAGLLMAction), typeDiscriminator: nameof(ExtractDataFromTextRAGLLMAction))]
 	public class ExtractDataFromTextRAGLLMAction : IAIAction
 	{
 		public string Name { get; set; } = "extractdatawithllmrag";
@@ -13,8 +12,6 @@ namespace ActChain.Actions.OpenWebUI.Actions
 		public List<string> Collections { get; set; }
 		public string Prompt { get; set; }
 		public string Model { get; set; }
-		[JsonIgnore]
-		public CancellationToken? Token { get; set; }
 
 		public ExtractDataFromTextRAGLLMAction(string name, string executorId, string text, List<string> collections, string prompt, string model)
 		{

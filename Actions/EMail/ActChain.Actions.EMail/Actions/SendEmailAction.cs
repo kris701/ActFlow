@@ -9,8 +9,6 @@ namespace ActChain.Actions.EMail.Actions
 		public string Name { get; set; } = "sendanemail";
 		public string ExecutorID { get; set; } = "default";
 		public IActionContext Answer { get; set; }
-		[JsonIgnore]
-		public CancellationToken? Token { get; set; }
 
 		public SendEmailAction(string name, string executorId, IActionContext answer)
 		{

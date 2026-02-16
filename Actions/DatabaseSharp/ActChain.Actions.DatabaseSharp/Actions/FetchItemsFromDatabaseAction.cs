@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.DatabaseSharp.Actions
 {
-	[JsonDerivedType(typeof(FetchItemsFromDatabaseAction), typeDiscriminator: nameof(FetchItemsFromDatabaseAction))]
 	public class FetchItemsFromDatabaseAction : IAIAction
 	{
 		public string Name { get; set; } = "fetchitemsfromdatabases";
@@ -11,9 +10,6 @@ namespace ActChain.Actions.DatabaseSharp.Actions
 		public string TargetSTP { get; set; }
 		public Dictionary<string, string> Arguments { get; set; }
 		public string TargetDeserializationType { get; set; }
-
-		[JsonIgnore]
-		public CancellationToken? Token { get; set; }
 
 		public FetchItemsFromDatabaseAction(string name, string executorId, string targetSTP, Dictionary<string, string> arguments, string targetDeserializationType)
 		{

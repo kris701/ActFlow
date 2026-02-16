@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Models.Contexts
 {
-	[JsonDerivedType(typeof(DictionaryListContext), typeDiscriminator: nameof(DictionaryListContext))]
 	public class DictionaryListContext : IActionContext
 	{
 		public Dictionary<string, List<string>> Values { get; set; } = new Dictionary<string, List<string>>();

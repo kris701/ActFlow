@@ -7,7 +7,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.OpenWebUI.Executors
 {
-	[JsonDerivedType(typeof(QueryLLMExecutor), typeDiscriminator: nameof(QueryLLMExecutor))]
 	public class QueryLLMExecutor : BaseActionExecutor<QueryLLMAction>
 	{
 		public IOpenWebUIService OpenWebUIService { get; set; }
@@ -16,7 +15,7 @@ namespace ActChain.Actions.OpenWebUI.Executors
 			OpenWebUIService = openWebUIService;
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(QueryLLMAction act, ActScriptState state)
+		public override async Task<ExecutorResult> ExecuteActionAsync(QueryLLMAction act, ActScriptState state, CancellationToken token)
 		{
 			var result = await OpenWebUIService.Query(act.Prompt, act.Model);
 			return new ExecutorResult(new StringContext() { Text = result });

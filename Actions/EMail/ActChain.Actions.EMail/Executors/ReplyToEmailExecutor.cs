@@ -15,7 +15,7 @@ namespace ActChain.Actions.EMail.Executors
 			MailService = mailService;
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(ReplyToEmailAction act, ActScriptState state)
+		public override async Task<ExecutorResult> ExecuteActionAsync(ReplyToEmailAction act, ActScriptState state, CancellationToken token)
 		{
 			if (act.Answer is MailContext answer)
 				await MailService.ReplyAsync(answer, act.ToMessageID);

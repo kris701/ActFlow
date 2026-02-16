@@ -16,7 +16,7 @@ namespace ActChain.Actions.EMail.Executors
 			MailService = mailService;
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(WaitForEmailAction act, ActScriptState state)
+		public override async Task<ExecutorResult> ExecuteActionAsync(WaitForEmailAction act, ActScriptState state, CancellationToken token)
 		{
 			var startTime = DateTime.UtcNow;
 			while (true)
@@ -28,14 +28,9 @@ namespace ActChain.Actions.EMail.Executors
 					if (mail.ConversationID == act.ConversationID)
 						return new ExecutorResult(mail);
 
-				if (act.Token != null)
-				{
-					await Task.Delay(WaitDelayMs, (CancellationToken)act.Token);
-					if (act.Token.Value.IsCancellationRequested)
-						return new ExecutorResult();
-				}
-				else
-					await Task.Delay(WaitDelayMs);
+				await Task.Delay(WaitDelayMs, token);
+				if (token.IsCancellationRequested)
+					return new ExecutorResult();
 			}
 		}
 	}

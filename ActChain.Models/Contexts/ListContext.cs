@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Models.Contexts
 {
-	[JsonDerivedType(typeof(ListContext), typeDiscriminator: nameof(ListContext))]
 	public class ListContext : IActionContext
 	{
 		public List<string> Values { get; set; } = new List<string>();

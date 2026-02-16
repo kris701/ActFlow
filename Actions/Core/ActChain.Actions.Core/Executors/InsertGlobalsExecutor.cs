@@ -5,14 +5,13 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.Core.Executors
 {
-	[JsonDerivedType(typeof(InsertGlobalsExecutor), typeDiscriminator: nameof(InsertGlobalsExecutor))]
 	public class InsertGlobalsExecutor : BaseActionExecutor<InsertGlobalsAction>
 	{
 		public InsertGlobalsExecutor(string iD) : base(iD)
 		{
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(InsertGlobalsAction act, ActScriptState state)
+		public override async Task<ExecutorResult> ExecuteActionAsync(InsertGlobalsAction act, ActScriptState state, CancellationToken token)
 		{
 			state.AddContexts(act.Arguments);
 			return new ExecutorResult();

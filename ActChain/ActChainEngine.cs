@@ -75,11 +75,10 @@ namespace ActChain
 					stage = ApplyContexts(item, stage);
 
 					item.AppendToLog($"\tExecuting action");
-					stage.Token = item.TokenSource.Token;
 					if (item.Status != ScriptStatus.Canceled && stage is IAwaitInputAction)
 						item.Status = ScriptStatus.AwaitingInput;
 					await item.Update();
-					var executionResult = await ExecuteActionAsync(stage, item);
+					var executionResult = await ExecuteActionAsync(stage, item, item.TokenSource.Token);
 					if (item.Status != ScriptStatus.Canceled)
 						item.Status = ScriptStatus.Running;
 					if (item.TokenSource.IsCancellationRequested)
@@ -197,20 +196,20 @@ namespace ActChain
 				await CancelScript(item.ID);
 		}
 
-		private async Task<ExecutorResult> ExecuteActionAsync(IAIAction act, ActScriptState state)
+		private async Task<ExecutorResult> ExecuteActionAsync(IAIAction act, ActScriptState state, CancellationToken token)
 		{
 			var targetKey = new ServiceKey(act.ExecutorID, act.GetType().Name);
 			if (_serviceCache.ContainsKey(targetKey))
 			{
 				var executor = _serviceCache[targetKey];
-				return await ExecuteActionAsync((dynamic)executor, (dynamic)act, state);
+				return await ExecuteActionAsync((dynamic)executor, (dynamic)act, state, token);
 			}
 			throw new Exception($"Unknown target action executor '{targetKey}'! This probably means that the backend have not been set up to accept this type of action!");
 		}
 
-		private async Task<ExecutorResult> ExecuteActionAsync<T>(BaseActionExecutor<T> executor, T act, ActScriptState state) where T : IAIAction
+		private async Task<ExecutorResult> ExecuteActionAsync<T>(BaseActionExecutor<T> executor, T act, ActScriptState state, CancellationToken token) where T : IAIAction
 		{
-			return await executor.ExecuteActionAsync(act, state);
+			return await executor.ExecuteActionAsync(act, state, token);
 		}
 
 		public async Task<ActScriptState> UserInput(Guid chainID, ActScriptState newState)

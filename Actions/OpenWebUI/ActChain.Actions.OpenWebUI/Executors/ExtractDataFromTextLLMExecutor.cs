@@ -8,7 +8,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.OpenWebUI.Executors
 {
-	[JsonDerivedType(typeof(ExtractDataFromTextLLMExecutor), typeDiscriminator: nameof(ExtractDataFromTextLLMExecutor))]
 	public class ExtractDataFromTextLLMExecutor : BaseActionExecutor<ExtractDataFromTextLLMAction>
 	{
 		public IOpenWebUIService OpenWebUIService { get; set; }
@@ -17,7 +16,7 @@ namespace ActChain.Actions.OpenWebUI.Executors
 			OpenWebUIService = openWebUIService;
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(ExtractDataFromTextLLMAction act, ActScriptState state)
+		public override async Task<ExecutorResult> ExecuteActionAsync(ExtractDataFromTextLLMAction act, ActScriptState state, CancellationToken token)
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine(act.Prompt);

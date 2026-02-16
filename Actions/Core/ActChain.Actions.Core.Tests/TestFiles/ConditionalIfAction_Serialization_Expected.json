@@ -1,0 +1,10 @@
+{
+  "$type": "ConditionalIfAction",
+  "Name": "abc",
+  "ExecutorID": "a",
+  "LeftCondition": "a",
+  "RightCondition": "b",
+  "Comparer": 1,
+  "TrueActionName": "abc",
+  "FalseActionName": "abc"
+}

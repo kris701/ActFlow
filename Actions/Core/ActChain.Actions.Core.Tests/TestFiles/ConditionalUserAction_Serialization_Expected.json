@@ -1,0 +1,10 @@
+{
+  "$type": "ConditionalUserAction",
+  "Name": "abc",
+  "ExecutorID": "default",
+  "UserInput": "a",
+  "Condition": "b",
+  "Comparer": 1,
+  "TrueActionName": "abc",
+  "FalseActionName": "abc"
+}

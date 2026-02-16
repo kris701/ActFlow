@@ -1,12 +1,25 @@
 <Solution>
-  <Folder Name="/Actions/">
+  <Folder Name="/Actions/" />
+  <Folder Name="/Actions/Core/">
+    <Project Path="Actions/Core/ActChain.Actions.Core.Tests/ActChain.Actions.Core.Tests.csproj" Id="86debccd-2082-46ef-9410-920bd2077154" />
     <Project Path="Actions/Core/ActChain.Actions.Core/ActChain.Actions.Core.csproj" Id="ec231049-84ad-43ab-bf25-4377a4bb7042" />
+  </Folder>
+  <Folder Name="/Actions/DatabaseSharp/">
     <Project Path="Actions/DatabaseSharp/ActChain.Actions.DatabaseSharp/ActChain.Actions.DatabaseSharp.csproj" Id="e384c561-e34c-4ccb-88c6-cc76fc420503" />
+  </Folder>
+  <Folder Name="/Actions/EMail/">
     <Project Path="Actions/EMail/ActChain.Actions.EMail/ActChain.Actions.EMail.csproj" Id="1052223c-8b26-4544-8400-3032c7d825ac" />
+  </Folder>
+  <Folder Name="/Actions/JSON/">
     <Project Path="Actions/JSON/ActChain.Actions.JSON/ActChain.Actions.JSON.csproj" Id="452c5d75-2244-4a8a-a41b-35f372a54a97" />
+  </Folder>
+  <Folder Name="/Actions/ML.NET/">
     <Project Path="Actions/ML.NET/ActChain.Actions.ML.NET/ActChain.Actions.ML.NET.csproj" Id="59365ed6-ee88-45e3-801b-86afcf2d23af" />
+  </Folder>
+  <Folder Name="/Actions/OpenWebUI/">
     <Project Path="Actions/OpenWebUI/ActChain.Actions.OpenWebUI/ActChain.Actions.OpenWebUI.csproj" Id="2e019908-8c3f-46c5-b505-ac6eccbfa864" />
   </Folder>
   <Project Path="ActChain.Models/ActChain.Models.csproj" Id="6fa3321d-5a31-4eac-8845-3a0a98f64df5" />
+  <Project Path="ActChain.Tools/ActChain.Tools.csproj" Id="d42885b4-71e1-4807-8b1d-ff8fae9813b6" />
   <Project Path="ActChain/ActChain.csproj" />
 </Solution>

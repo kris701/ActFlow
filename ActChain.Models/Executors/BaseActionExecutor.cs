@@ -14,6 +14,6 @@ namespace ActChain.Models.Executors
 			ID = iD;
 		}
 
-		public abstract Task<ExecutorResult> ExecuteActionAsync(T act, ActScriptState state);
+		public abstract Task<ExecutorResult> ExecuteActionAsync(T act, ActScriptState state, CancellationToken token);
 	}
 }

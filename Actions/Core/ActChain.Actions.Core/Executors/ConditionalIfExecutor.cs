@@ -6,28 +6,27 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.Core.Executors
 {
-	[JsonDerivedType(typeof(ConditionalIfExecutor), typeDiscriminator: nameof(ConditionalIfExecutor))]
 	public class ConditionalIfExecutor : BaseActionExecutor<ConditionalIfAction>
 	{
 		public ConditionalIfExecutor(string iD) : base(iD)
 		{
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(ConditionalIfAction act, ActScriptState state)
+		public override async Task<ExecutorResult> ExecuteActionAsync(ConditionalIfAction act, ActScriptState state, CancellationToken token)
 		{
-			state.AppendToLog($"Evaluated: '{act.LeftCondition}' '{act.Comparer.ToLower().Trim()}' '{act.RightCondition}' = '{act.LeftCondition == act.RightCondition}'");
+			state.AppendToLog($"Evaluated: '{act.LeftCondition}' '{Enum.GetName(act.Comparer)}' '{act.RightCondition}' = '{act.LeftCondition == act.RightCondition}'");
 
-			switch (act.Comparer.ToLower().Trim())
+			switch (act.Comparer)
 			{
-				case "==":
+				case ConditionalComparerTypes.Equal:
 					if (act.LeftCondition == act.RightCondition)
 						return new ExecutorResult(new EmptyContext(), act.TrueActionName);
 					break;
-				case "!=":
+				case ConditionalComparerTypes.NotEqual:
 					if (act.LeftCondition != act.RightCondition)
 						return new ExecutorResult(new EmptyContext(), act.TrueActionName);
 					break;
-				case "contains":
+				case ConditionalComparerTypes.Contains:
 					if (act.LeftCondition.Contains(act.RightCondition))
 						return new ExecutorResult(new EmptyContext(), act.TrueActionName);
 					break;

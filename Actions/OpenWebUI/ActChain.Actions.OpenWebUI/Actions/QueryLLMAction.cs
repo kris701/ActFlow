@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.OpenWebUI.Actions
 {
-	[JsonDerivedType(typeof(QueryLLMAction), typeDiscriminator: nameof(QueryLLMAction))]
 	public class QueryLLMAction : IAIAction
 	{
 		public string Name { get; set; } = "queryllm";
@@ -11,8 +10,6 @@ namespace ActChain.Actions.OpenWebUI.Actions
 
 		public string Prompt { get; set; }
 		public string Model { get; set; }
-		[JsonIgnore]
-		public CancellationToken? Token { get; set; }
 
 		public QueryLLMAction(string name, string executorId, string prompt, string model)
 		{

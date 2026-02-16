@@ -10,8 +10,6 @@ namespace ActChain.Actions.EMail.Actions
 		public string SenderEmail { get; set; }
 		public string RecieverEmail { get; set; }
 		public string ConversationID { get; set; }
-		[JsonIgnore]
-		public CancellationToken? Token { get; set; }
 
 		public WaitForEmailAction(string name, string executorId, string senderEmail, string recieverEmail, string conversationID)
 		{

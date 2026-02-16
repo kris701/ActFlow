@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.JSON.Actions
 {
-	[JsonDerivedType(typeof(ExtractValueFromJSONAction), typeDiscriminator: nameof(ExtractValueFromJSONAction))]
 	public class ExtractValueFromJSONAction : IAIAction
 	{
 		public string Name { get; set; } = "extractasinglevaluefromjsontext";
@@ -12,9 +11,6 @@ namespace ActChain.Actions.JSON.Actions
 		public string Text { get; set; }
 		[JsonPropertyName("jsonPath")]
 		public string JSONPath { get; set; }
-
-		[JsonIgnore]
-		public CancellationToken? Token { get; set; }
 
 		public ExtractValueFromJSONAction(string name, string executorId, string text, string jsonPath)
 		{

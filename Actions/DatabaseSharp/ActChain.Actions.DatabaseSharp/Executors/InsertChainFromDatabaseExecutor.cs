@@ -8,7 +8,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.DatabaseSharp.Executors
 {
-	[JsonDerivedType(typeof(InsertChainFromDatabaseExecutor), typeDiscriminator: nameof(InsertChainFromDatabaseExecutor))]
 	public class InsertChainFromDatabaseExecutor : BaseActionExecutor<InsertChainFromDatabaseAction>
 	{
 		public string ConnectionString { get; set; }
@@ -20,7 +19,7 @@ namespace ActChain.Actions.DatabaseSharp.Executors
 			_dBClient = new DBClient(connectionString);
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(InsertChainFromDatabaseAction act, ActScriptState state)
+		public override async Task<ExecutorResult> ExecuteActionAsync(InsertChainFromDatabaseAction act, ActScriptState state, CancellationToken token)
 		{
 			var args = new List<ISQLParameter>();
 			foreach (var key in act.Arguments.Keys)

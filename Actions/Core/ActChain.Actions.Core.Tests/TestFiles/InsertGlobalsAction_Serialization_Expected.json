@@ -1,0 +1,6 @@
+{
+  "$type": "InsertGlobalsAction",
+  "Name": "abc",
+  "ExecutorID": "a",
+  "Arguments": { "a": "asdasdad" }
+}

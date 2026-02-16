@@ -3,14 +3,11 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.Core.Actions
 {
-	[JsonDerivedType(typeof(InsertGlobalsAction), typeDiscriminator: nameof(InsertGlobalsAction))]
 	public class InsertGlobalsAction : IAIAction
 	{
 		public string Name { get; set; } = "insertglobal";
 		public string ExecutorID { get; set; } = "default";
 		public Dictionary<string, string> Arguments { get; set; }
-		[JsonIgnore]
-		public CancellationToken? Token { get; set; }
 
 		public InsertGlobalsAction(string name, string executorId, Dictionary<string, string> arguments)
 		{

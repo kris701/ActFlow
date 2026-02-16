@@ -8,14 +8,13 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.JSON.Executors
 {
-	[JsonDerivedType(typeof(ExtractValueFromJSONExecutor), typeDiscriminator: nameof(ExtractValueFromJSONExecutor))]
 	public class ExtractValueFromJSONExecutor : BaseActionExecutor<ExtractValueFromJSONAction>
 	{
 		public ExtractValueFromJSONExecutor(string iD) : base(iD)
 		{
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(ExtractValueFromJSONAction act, ActScriptState state)
+		public override async Task<ExecutorResult> ExecuteActionAsync(ExtractValueFromJSONAction act, ActScriptState state, CancellationToken token)
 		{
 			var path = JsonPath.Parse(act.JSONPath.ToLower());
 			var instance = JsonNode.Parse(act.Text.ToLower());

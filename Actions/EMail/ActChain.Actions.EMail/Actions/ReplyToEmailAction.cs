@@ -10,8 +10,6 @@ namespace ActChain.Actions.EMail.Actions
 		public string ExecutorID { get; set; } = "default";
 		public string ToMessageID { get; set; }
 		public IActionContext Answer { get; set; }
-		[JsonIgnore]
-		public CancellationToken? Token { get; set; }
 
 		public ReplyToEmailAction(string name, string executorId, string toMessageID, IActionContext answer)
 		{

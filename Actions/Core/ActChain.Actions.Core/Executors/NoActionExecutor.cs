@@ -5,14 +5,13 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.Core.Executors
 {
-	[JsonDerivedType(typeof(NoActionExecutor), typeDiscriminator: nameof(NoActionExecutor))]
 	public class NoActionExecutor : BaseActionExecutor<NoAction>
 	{
 		public NoActionExecutor(string iD) : base(iD)
 		{
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(NoAction act, ActScriptState state)
+		public override async Task<ExecutorResult> ExecuteActionAsync(NoAction act, ActScriptState state, CancellationToken token)
 		{
 			return new ExecutorResult();
 		}

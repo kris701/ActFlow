@@ -3,7 +3,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Models.Contexts
 {
-	[JsonDerivedType(typeof(StringContext), typeDiscriminator: nameof(StringContext))]
 	public class StringContext : IActionContext
 	{
 		public string Text { get; set; } = "Empty";

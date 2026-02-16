@@ -6,7 +6,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.EMail.Contexts
 {
-	[JsonDerivedType(typeof(MailContext), typeDiscriminator: nameof(MailContext))]
 	public class MailContext : IActionContext
 	{
 		public string MessageID { get; set; }

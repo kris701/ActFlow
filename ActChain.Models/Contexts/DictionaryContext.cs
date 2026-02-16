@@ -4,7 +4,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Models.Contexts
 {
-	[JsonDerivedType(typeof(DictionaryContext), typeDiscriminator: nameof(DictionaryContext))]
 	public class DictionaryContext : IActionContext
 	{
 		public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();

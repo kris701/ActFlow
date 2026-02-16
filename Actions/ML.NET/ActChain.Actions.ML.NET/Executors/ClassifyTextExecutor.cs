@@ -8,7 +8,6 @@ using System.Text.Json.Serialization;
 
 namespace ActChain.Actions.ML.NET.Executors
 {
-	[JsonDerivedType(typeof(ClassifyTextExecutor), typeDiscriminator: nameof(ClassifyTextExecutor))]
 	public class ClassifyTextExecutor : BaseActionExecutor<ClassifyTextAction>
 	{
 		private readonly TextClassifier _classifier = new TextClassifier();
@@ -17,7 +16,7 @@ namespace ActChain.Actions.ML.NET.Executors
 		{
 		}
 
-		public override async Task<ExecutorResult> ExecuteActionAsync(ClassifyTextAction act, ActScriptState state)
+		public override async Task<ExecutorResult> ExecuteActionAsync(ClassifyTextAction act, ActScriptState state, CancellationToken token)
 		{
 			var predict = _classifier.Predict(new ModelInput() { Value = act.Text }, act.Model);
 			return new ExecutorResult(
