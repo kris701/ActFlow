@@ -1,0 +1,8 @@
+{
+  "$type": "FetchItemsFromDatabaseAction",
+  "Name": "abc",
+  "ExecutorID": "a",
+  "TargetSTP": "sp_a",
+  "Arguments": {},
+  "TargetDeserializationType": "FetchItemsFromDatabaseAction"
+}

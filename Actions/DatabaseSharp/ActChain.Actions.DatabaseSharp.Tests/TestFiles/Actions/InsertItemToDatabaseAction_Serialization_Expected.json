@@ -1,0 +1,7 @@
+{
+  "$type": "InsertItemToDatabaseAction",
+  "Name": "abc",
+  "ExecutorID": "a",
+  "TargetSTP": "sp_a",
+  "Arguments": {}
+}

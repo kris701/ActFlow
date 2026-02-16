@@ -1,0 +1,5 @@
+{
+  "$type": "FetchItemsFromDatabaseExecutor",
+  "ConnectionString": "",
+  "id": "a"
+}

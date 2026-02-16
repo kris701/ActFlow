@@ -12,6 +12,7 @@
 
 	<ItemGroup>
     <ProjectReference Include="..\..\..\ActChain.Models\ActChain.Models.csproj" />
+    <ProjectReference Include="..\..\..\ActChain.Tools\ActChain.Tools.csproj" />
   </ItemGroup>
 
 </Project>

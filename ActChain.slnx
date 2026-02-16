@@ -5,6 +5,7 @@
     <Project Path="Actions/Core/ActChain.Actions.Core/ActChain.Actions.Core.csproj" Id="ec231049-84ad-43ab-bf25-4377a4bb7042" />
   </Folder>
   <Folder Name="/Actions/DatabaseSharp/">
+    <Project Path="Actions/DatabaseSharp/ActChain.Actions.DatabaseSharp.Tests/ActChain.Actions.DatabaseSharp.Tests.csproj" Id="3ea8f8f0-27ae-46f3-bbee-375f28acbe48" />
     <Project Path="Actions/DatabaseSharp/ActChain.Actions.DatabaseSharp/ActChain.Actions.DatabaseSharp.csproj" Id="e384c561-e34c-4ccb-88c6-cc76fc420503" />
   </Folder>
   <Folder Name="/Actions/EMail/">
