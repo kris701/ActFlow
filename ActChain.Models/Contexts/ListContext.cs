@@ -1,0 +1,28 @@
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace ActChain.Models.Contexts
+{
+	[JsonDerivedType(typeof(ListContext), typeDiscriminator: nameof(ListContext))]
+	public class ListContext : IActionContext
+	{
+		public List<string> Values { get; set; } = new List<string>();
+
+		public string GetContent()
+		{
+			var sb = new StringBuilder();
+
+			foreach (var value in Values)
+				sb.AppendLine($"\"{value}\"");
+
+			return sb.ToString();
+		}
+
+		public Dictionary<string, string> GetContextValues() => new Dictionary<string, string>() { { "$type", nameof(ListContext) } };
+
+		public IActionContext Clone() => new ListContext() { Values = new List<string>(Values) };
+
+		public override string ToString() => JsonSerializer.Serialize(this);
+	}
+}

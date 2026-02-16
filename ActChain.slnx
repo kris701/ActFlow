@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Actions/">
+    <Project Path="Actions/ActChain.Actions.Core/ActChain.Actions.Core.csproj" Id="ec231049-84ad-43ab-bf25-4377a4bb7042" />
+    <Project Path="Actions/ActChain.Actions.DatabaseSharp/ActChain.Actions.DatabaseSharp.csproj" Id="e384c561-e34c-4ccb-88c6-cc76fc420503" />
+    <Project Path="Actions/ActChain.Actions.JSON/ActChain.Actions.JSON.csproj" Id="452c5d75-2244-4a8a-a41b-35f372a54a97" />
+    <Project Path="Actions/ActChain.Actions.MLNET/ActChain.Actions.MLNET.csproj" Id="59365ed6-ee88-45e3-801b-86afcf2d23af" />
+    <Project Path="Actions/ActChain.Actions.OpenWebUI/ActChain.Actions.OpenWebUI.csproj" Id="2e019908-8c3f-46c5-b505-ac6eccbfa864" />
+    <Project Path="Actions/ActChain.Actions.Outlook/ActChain.Actions.Outlook.csproj" Id="1052223c-8b26-4544-8400-3032c7d825ac" />
+  </Folder>
+  <Project Path="ActChain.Models/ActChain.Models.csproj" Id="6fa3321d-5a31-4eac-8845-3a0a98f64df5" />
+  <Project Path="ActChain/ActChain.csproj" />
+</Solution>
