@@ -18,7 +18,7 @@ namespace ActChain.Integrations.DatabaseSharp.Workers
 			_dBClient = new DBClient(connectionString);
 		}
 
-		public override async Task<WorkerResult> Execute(InsertChainFromDatabaseActivity act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(InsertChainFromDatabaseActivity act, WorkflowState state, CancellationToken token)
 		{
 			var args = new List<ISQLParameter>();
 			foreach (var key in act.Arguments.Keys)
@@ -28,9 +28,9 @@ namespace ActChain.Integrations.DatabaseSharp.Workers
 				act.TargetSTP,
 				args);
 			var chainStr = result[0][0].GetValue<string>("Script");
-			var chain = JsonSerializer.Deserialize<ActScript>(chainStr);
-			if (chain is ActScript script)
-				state.Script.Stages.InsertRange(state.Stage + 1, chain.Stages);
+			var chain = JsonSerializer.Deserialize<Workflow>(chainStr);
+			if (chain is Workflow script)
+				state.Workflow.Stages.InsertRange(state.ActivityIndex + 1, chain.Stages);
 			else
 				throw new Exception("Could not deserialize database result to ActScript!");
 

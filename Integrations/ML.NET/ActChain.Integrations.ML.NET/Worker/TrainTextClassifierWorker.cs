@@ -16,7 +16,7 @@ namespace ActChain.Integrations.ML.NET.Worker
 		{
 		}
 
-		public override async Task<WorkerResult> Execute(TrainTextClassifierActivity act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(TrainTextClassifierActivity act, WorkflowState state, CancellationToken token)
 		{
 			var data = JsonSerializer.Deserialize<List<ModelInput>>(act.Data);
 			if (data != null)

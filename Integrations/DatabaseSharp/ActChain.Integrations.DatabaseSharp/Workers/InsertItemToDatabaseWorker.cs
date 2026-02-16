@@ -17,7 +17,7 @@ namespace ActChain.Integrations.DatabaseSharp.Workers
 			_dBClient = new DBClient(connectionString);
 		}
 
-		public override async Task<WorkerResult> Execute(InsertItemToDatabaseActivity act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(InsertItemToDatabaseActivity act, WorkflowState state, CancellationToken token)
 		{
 			var args = new List<ISQLParameter>();
 			foreach (var key in act.Arguments.Keys)

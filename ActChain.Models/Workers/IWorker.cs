@@ -12,6 +12,6 @@ namespace ActChain.Models.Workers
 		[StictLowerCaseString]
 		public string ID { get; set; }
 
-		public Task<WorkerResult> ExecuteActionAsync(dynamic act, ActScriptState state, CancellationToken token);
+		public Task<WorkerResult> ExecuteActionAsync(dynamic act, WorkflowState state, CancellationToken token);
 	}
 }

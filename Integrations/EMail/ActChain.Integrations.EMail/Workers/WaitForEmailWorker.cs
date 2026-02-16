@@ -16,7 +16,7 @@ namespace ActChain.Integrations.EMail.Workers
 			MailService = mailService;
 		}
 
-		public override async Task<WorkerResult> Execute(WaitForEmailActivity act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(WaitForEmailActivity act, WorkflowState state, CancellationToken token)
 		{
 			var startTime = DateTime.UtcNow;
 			while (true)

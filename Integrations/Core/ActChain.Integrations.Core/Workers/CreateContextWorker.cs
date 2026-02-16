@@ -10,7 +10,7 @@ namespace ActChain.Integrations.Core.Workers
 		{
 		}
 
-		public override async Task<WorkerResult> Execute(CreateContextActivity act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(CreateContextActivity act, WorkflowState state, CancellationToken token)
 		{
 			return new WorkerResult(act.Context);
 		}

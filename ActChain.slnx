@@ -20,6 +20,11 @@
   <Folder Name="/Integrations/OpenWebUI/">
     <Project Path="Integrations/OpenWebUI/ActChain.Integrations.OpenWebUI/ActChain.Integrations.OpenWebUI.csproj" Id="2e019908-8c3f-46c5-b505-ac6eccbfa864" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="LICENSE.txt" />
+    <File Path="README.md" />
+  </Folder>
   <Project Path="ActChain.Models/ActChain.Models.csproj" Id="6fa3321d-5a31-4eac-8845-3a0a98f64df5" />
   <Project Path="ActChain.Tools/ActChain.Tools.csproj" Id="d42885b4-71e1-4807-8b1d-ff8fae9813b6" />
   <Project Path="ActChain/ActChain.csproj" />

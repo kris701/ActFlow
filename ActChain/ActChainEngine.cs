@@ -11,8 +11,8 @@ namespace ActChain
 	public class ActChainEngine : IActChainEngine
 	{
 		public List<IWorker> Workers { get; } = new List<IWorker>();
-		public List<ActScriptState> ActiveScripts { get; } = new List<ActScriptState>();
-		public int StageLimiter { get; set; } = 100;
+		public List<WorkflowState> ActiveWorkflows { get; } = new List<WorkflowState>();
+		public int ActivityLimiter { get; set; } = 100;
 		public int RemoveDelay { get; set; } = 60000;
 
 		private readonly Dictionary<ServiceKey, IWorker> _serviceCache = new Dictionary<ServiceKey, IWorker>();
@@ -36,88 +36,88 @@ namespace ActChain
 			}
 		}
 
-		public async Task<ActScriptState> RunScript(ActScript item)
+		public async Task<WorkflowState> Execute(Workflow workflow)
 		{
-			var newState = new ActScriptState(item);
-			return await RunScript(newState);
+			var newState = new WorkflowState(workflow);
+			return await Execute(newState);
 		}
 
-		public async Task<ActScriptState> RunScript(ActScriptState item)
+		public async Task<WorkflowState> Execute(WorkflowState state)
 		{
-			ActiveScripts.Add(item);
-			if (item.Stage == 0)
-				item.AppendToLog("Chain started!");
+			ActiveWorkflows.Add(state);
+			if (state.ActivityIndex == 0)
+				state.AppendToLog("Workflow started!");
 			else
-				item.AppendToLog("Chain continued...");
+				state.AppendToLog("Workflow continued...");
 
-			if (item.Stage < 0)
-				item.Stage = 0;
+			if (state.ActivityIndex < 0)
+				state.ActivityIndex = 0;
 
-			int stageCount = item.Stage;
-			item.Status = ScriptStatus.Running;
-			item.StartedAt = DateTime.UtcNow;
-			await item.Update();
-			while (item.Stage < item.Script.Stages.Count)
+			int activityCount = state.ActivityIndex;
+			state.Status = WorkflowStatuses.Running;
+			state.StartedAt = DateTime.UtcNow;
+			await state.Update();
+			while (state.ActivityIndex < state.Workflow.Stages.Count)
 			{
-				item.AppendToLog();
-				item.AppendToLog($"\tStarting stage: {item.Stage}");
-				if (item.Status == ScriptStatus.Canceled)
+				state.AppendToLog();
+				state.AppendToLog($"\tStarting stage: {state.ActivityIndex}");
+				if (state.Status == WorkflowStatuses.Canceled)
 				{
-					item.AppendToLog($"\tManual cancellation requested.");
+					state.AppendToLog($"\tManual cancellation requested.");
 					break;
 				}
 
 				try
 				{
-					var stage = item.Script.Stages[item.Stage].Clone();
-					item.AppendToLog($"\tInitializing activity {stage.Name}");
+					var stage = state.Workflow.Stages[state.ActivityIndex].Clone();
+					state.AppendToLog($"\tInitializing activity {stage.Name}");
 
-					stage = ApplyContexts(item, stage);
+					stage = ApplyContexts(state, stage);
 
-					item.AppendToLog($"\tExecuting activity");
-					if (item.Status != ScriptStatus.Canceled && stage is IAwaitInputActivity)
-						item.Status = ScriptStatus.AwaitingInput;
-					await item.Update();
-					var executionResult = await ExecuteActivityAsync(stage, item, item.TokenSource.Token);
-					if (item.Status != ScriptStatus.Canceled)
-						item.Status = ScriptStatus.Running;
-					if (item.TokenSource.IsCancellationRequested)
+					state.AppendToLog($"\tExecuting activity");
+					if (state.Status != WorkflowStatuses.Canceled && stage is IAwaitInputActivity)
+						state.Status = WorkflowStatuses.AwaitingInput;
+					await state.Update();
+					var executionResult = await ExecuteActivityAsync(stage, state, state.TokenSource.Token);
+					if (state.Status != WorkflowStatuses.Canceled)
+						state.Status = WorkflowStatuses.Running;
+					if (state.TokenSource.IsCancellationRequested)
 						break;
-					item.AppendToLog($"\tResulting activity context is a {executionResult.Context.GetType()}");
-					item.AppendToLog($"\tResulting activity context content is {executionResult.Context.ToString()}");
+					state.AppendToLog($"\tResulting activity context is a {executionResult.Context.GetType()}");
+					state.AppendToLog($"\tResulting activity context content is {executionResult.Context.ToString()}");
 
-					InsertResultIntoContextStore(item, stage.Name, executionResult);
+					InsertResultIntoContextStore(state, stage.Name, executionResult);
 
-					item.Stage = FindNextStageIndex(item, executionResult);
+					state.ActivityIndex = FindNextStageIndex(state, executionResult);
 				}
 				catch (Exception ex)
 				{
-					item.AppendToLogError($"Message: {ex.Message}");
-					item.AppendToLogError($"Trace: {ex.StackTrace}");
-					item.Status = ScriptStatus.Failed;
+					state.AppendToLogError($"Message: {ex.Message}");
+					state.AppendToLogError($"Trace: {ex.StackTrace}");
+					state.Status = WorkflowStatuses.Failed;
 					break;
 				}
 
-				stageCount++;
-				if (stageCount > StageLimiter)
+				activityCount++;
+				if (activityCount > ActivityLimiter)
 				{
-					item.AppendToLogError($"Chain exceded the stage limiter (of {StageLimiter} steps)! This most likely means something broke or you somehow managed to make the Chain loop.");
-					item.Status = ScriptStatus.Canceled;
+					state.AppendToLogError($"Workflow exceded the stage limiter (of {ActivityLimiter} steps)! This most likely means something broke or you somehow managed to make the Chain loop.");
+					state.Status = WorkflowStatuses.Canceled;
 					break;
 				}
 			}
-			if (item.Status == ScriptStatus.Running)
-				item.Status = ScriptStatus.Succeeded;
-			item.EndedAt = DateTime.UtcNow;
-			item.AppendToLog($"Chain ended!");
+			if (state.Status == WorkflowStatuses.Running)
+				state.Status = WorkflowStatuses.Succeeded;
+			state.EndedAt = DateTime.UtcNow;
+			state.AppendToLog($"Workflow ended!");
 
-			await item.Update();
+			await state.Update();
 
-			await ProcessCompleted(item);
-			return item;
+			await ProcessCompleted(state);
+			return state;
 		}
 
-		private IActivity ApplyContexts(ActScriptState state, IActivity stage)
+		private IActivity ApplyContexts(WorkflowState state, IActivity stage)
 		{
 			var text = JsonSerializer.Serialize(stage);
 			var matches = _variableRegex.Matches(text);
@@ -135,35 +135,35 @@ namespace ActChain
 			return deStage;
 		}
 
-		private int FindNextStageIndex(ActScriptState state, WorkerResult executionResult)
+		private int FindNextStageIndex(WorkflowState state, WorkerResult executionResult)
 		{
-			var nextStageIndex = state.Stage + 1;
+			var nextStageIndex = state.ActivityIndex + 1;
 			if (executionResult.TargetActivity != "")
 			{
 				state.AppendToLog($"\tNext target activity is named {executionResult.TargetActivity}");
-				nextStageIndex = state.Script.Stages.FindIndex(x => x.Name == executionResult.TargetActivity);
+				nextStageIndex = state.Workflow.Stages.FindIndex(x => x.Name == executionResult.TargetActivity);
 				if (nextStageIndex == -1)
 					throw new Exception($"Could not find a activity named '{executionResult.TargetActivity}'");
-				if (state.Script.Stages.Count(x => x.Name == executionResult.TargetActivity) > 1)
+				if (state.Workflow.Stages.Count(x => x.Name == executionResult.TargetActivity) > 1)
 					state.AppendToLog($"Warning, multiple activities with the name '{executionResult.TargetActivity}' found! Using the first one...");
 			}
 			return nextStageIndex;
 		}
 
-		private void InsertResultIntoContextStore(ActScriptState state, string activityName, WorkerResult executionResult)
+		private void InsertResultIntoContextStore(WorkflowState state, string activityName, WorkerResult executionResult)
 		{
 			var values = executionResult.Context.GetContextValues();
 			foreach (var valueKey in values.Keys)
 				state.AddContext($"{activityName}.{valueKey}".ToLower(), values[valueKey]);
 		}
 
-		private async Task ProcessCompleted(ActScriptState state)
+		private async Task ProcessCompleted(WorkflowState state)
 		{
 			if (!state.IsProcessingUserInput)
 				await state.Complete();
 
 			if (state.TokenSource.IsCancellationRequested)
-				ActiveScripts.Remove(state);
+				ActiveWorkflows.Remove(state);
 			else
 			{
 				state.AppendToLog($"Removing from Active List in {RemoveDelay}ms");
@@ -171,32 +171,32 @@ namespace ActChain
 				Task.Run(async () =>
 				{
 					await Task.Delay(RemoveDelay);
-					ActiveScripts.Remove(state);
+					ActiveWorkflows.Remove(state);
 				});
 			}
 		}
 
-		public async Task CancelScript(Guid id)
+		public async Task Cancel(Guid id)
 		{
-			var target = ActiveScripts.FirstOrDefault(x => x.ID == id);
+			var target = ActiveWorkflows.FirstOrDefault(x => x.ID == id);
 			if (target != null)
 			{
 				target.AppendToLog("Cancellation requested");
 				target.TokenSource.Cancel();
-				while (ActiveScripts.Contains(target))
+				while (ActiveWorkflows.Contains(target))
 					await Task.Delay(500);
-				target.Status = ScriptStatus.Canceled;
+				target.Status = WorkflowStatuses.Canceled;
 				await target.Update();
 			}
 		}
 
 		public async Task CancelAll()
 		{
-			foreach (var item in ActiveScripts)
-				await CancelScript(item.ID);
+			foreach (var item in ActiveWorkflows)
+				await Cancel(item.ID);
 		}
 
-		private async Task<WorkerResult> ExecuteActivityAsync(IActivity act, ActScriptState state, CancellationToken token)
+		private async Task<WorkerResult> ExecuteActivityAsync(IActivity act, WorkflowState state, CancellationToken token)
 		{
 			var targetKey = new ServiceKey(act.WorkerID, act.GetType().Name);
 			if (_serviceCache.ContainsKey(targetKey))
@@ -207,28 +207,28 @@ namespace ActChain
 			throw new Exception($"Unknown target activity executor '{targetKey}'! This probably means that the backend have not been set up to accept this type of action!");
 		}
 
-		private async Task<WorkerResult> ExecuteActivityAsync<T>(BaseWorker<T> worker, T act, ActScriptState state, CancellationToken token) where T : IActivity
+		private async Task<WorkerResult> ExecuteActivityAsync<T>(BaseWorker<T> worker, T act, WorkflowState state, CancellationToken token) where T : IActivity
 		{
 			return await worker.Execute(act, state, token);
 		}
 
-		public async Task<ActScriptState> UserInput(Guid chainID, ActScriptState newState)
+		public async Task<WorkflowState> UserInput(Guid stateId, WorkflowState workflow)
 		{
-			var state = ActiveScripts.FirstOrDefault(x => x.ID == chainID);
+			var state = ActiveWorkflows.FirstOrDefault(x => x.ID == stateId);
 			if (state != null)
 			{
 				state.AppendToLog("Applying user input");
-				var combinedState = new ActScriptState(state);
-				combinedState.Script = newState.Script;
+				var combinedState = new WorkflowState(state);
+				combinedState.Workflow = workflow.Workflow;
 				state.IsProcessingUserInput = true;
-				await CancelScript(state.ID);
-				combinedState.Status = ScriptStatus.NotStarted;
+				await Cancel(state.ID);
+				combinedState.Status = WorkflowStatuses.NotStarted;
 				combinedState.AppendToLog("Rerunning chain...");
 				await combinedState.Update();
-				RunScript(combinedState);
+				Execute(combinedState);
 				return combinedState;
 			}
-			throw new Exception($"No chain log item with the id '{chainID}' found!");
+			throw new Exception($"No chain log item with the id '{stateId}' found!");
 		}
 	}
 }

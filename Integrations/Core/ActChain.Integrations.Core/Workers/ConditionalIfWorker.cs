@@ -11,7 +11,7 @@ namespace ActChain.Integrations.Core.Workers
 		{
 		}
 
-		public override async Task<WorkerResult> Execute(ConditionalIfActivity act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(ConditionalIfActivity act, WorkflowState state, CancellationToken token)
 		{
 			state.AppendToLog($"Evaluated: '{act.LeftCondition}' '{Enum.GetName(act.Comparer)}' '{act.RightCondition}' = '{act.LeftCondition == act.RightCondition}'");
 

@@ -10,7 +10,7 @@ namespace ActChain.Integrations.Core.Workers
 		{
 		}
 
-		public override async Task<WorkerResult> Execute(InsertGlobalsActivity act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(InsertGlobalsActivity act, WorkflowState state, CancellationToken token)
 		{
 			state.AddContexts(act.Arguments);
 			return new WorkerResult();

@@ -14,7 +14,7 @@ namespace ActChain.Integrations.Core.Workers
 			WaitDelayMs = waitDelayMs;
 		}
 
-		public override async Task<WorkerResult> Execute(ConditionalUserActivity act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(ConditionalUserActivity act, WorkflowState state, CancellationToken token)
 		{
 			while (act.UserInput == "")
 			{

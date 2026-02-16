@@ -13,7 +13,7 @@ namespace ActChain.Integrations.JSON.Workers
 		{
 		}
 
-		public override async Task<WorkerResult> Execute(ExtractValueFromJSONActivity act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(ExtractValueFromJSONActivity act, WorkflowState state, CancellationToken token)
 		{
 			var path = JsonPath.Parse(act.JSONPath.ToLower());
 			var instance = JsonNode.Parse(act.Text.ToLower());

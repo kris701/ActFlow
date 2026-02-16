@@ -15,7 +15,7 @@ namespace ActChain.Integrations.ML.NET.Worker
 		{
 		}
 
-		public override async Task<WorkerResult> Execute(ClassifyTextActivity act, ActScriptState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(ClassifyTextActivity act, WorkflowState state, CancellationToken token)
 		{
 			var predict = _classifier.Predict(new ModelInput() { Value = act.Text }, act.Model);
 			return new WorkerResult(
