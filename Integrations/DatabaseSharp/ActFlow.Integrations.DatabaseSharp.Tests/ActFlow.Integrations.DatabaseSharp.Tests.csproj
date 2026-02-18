@@ -12,6 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj" />
+    <ProjectReference Include="..\..\..\ActFlow.Tools\ActFlow.Tools.csproj" />
     <ProjectReference Include="..\ActFlow.Integrations.DatabaseSharp\ActFlow.Integrations.DatabaseSharp.csproj" />
   </ItemGroup>
 
