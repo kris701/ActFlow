@@ -51,5 +51,23 @@
 	  <ProjectReference Include="..\ActFlow.Tools\ActFlow.Tools.csproj">
 		  <PrivateAssets>all</PrivateAssets>
 	  </ProjectReference>
+	  <ProjectReference Include="..\Integrations\Core\ActFlow.Integrations.Core\ActFlow.Integrations.Core.csproj">
+		  <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>
+	  <ProjectReference Include="..\Integrations\DatabaseSharp\ActFlow.Integrations.DatabaseSharp\ActFlow.Integrations.DatabaseSharp.csproj" >
+		  <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>
+	  <ProjectReference Include="..\Integrations\EMail\ActFlow.Integrations.EMail\ActFlow.Integrations.EMail.csproj" >
+		  <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>
+	  <ProjectReference Include="..\Integrations\JSON\ActFlow.Integrations.JSON\ActFlow.Integrations.JSON.csproj" >
+		  <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>
+	  <ProjectReference Include="..\Integrations\ML.NET\ActFlow.Integrations.ML.NET\ActFlow.Integrations.ML.NET.csproj">
+		  <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>
+	  <ProjectReference Include="..\Integrations\OpenWebUI\ActFlow.Integrations.OpenWebUI\ActFlow.Integrations.OpenWebUI.csproj" >
+		  <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>
   </ItemGroup>
 </Project>
