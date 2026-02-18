@@ -17,8 +17,8 @@
   <Folder Name="/Integrations/ML.NET/">
     <Project Path="Integrations/ML.NET/ActFlow.Integrations.ML.NET/ActFlow.Integrations.ML.NET.csproj" Id="59365ed6-ee88-45e3-801b-86afcf2d23af" />
   </Folder>
-  <Folder Name="/Integrations/OpenWebUI/">
-    <Project Path="Integrations/OpenWebUI/ActFlow.Integrations.OpenWebUI/ActFlow.Integrations.OpenWebUI.csproj" Id="2e019908-8c3f-46c5-b505-ac6eccbfa864" />
+  <Folder Name="/Integrations/OpenWebUISharp/">
+    <Project Path="Integrations/OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp.csproj" Id="2e019908-8c3f-46c5-b505-ac6eccbfa864" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".github/workflows/dotnet.yml" />

@@ -61,6 +61,61 @@ jobs:
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
           cd ../../../../..
 
+      - name: Build (Release) and Publish [ActFlow.Integrations.DatabaseSharp]
+        run: |  
+          cd Integrations/DatabaseSharp/ActFlow.Integrations.DatabaseSharp
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          cd bin
+          cd Release
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          cd ../../../../..
+
+      - name: Build (Release) and Publish [ActFlow.Integrations.EMail]
+        run: |  
+          cd Integrations/EMail/ActFlow.Integrations.EMail
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          cd bin
+          cd Release
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          cd ../../../../..
+
+      - name: Build (Release) and Publish [ActFlow.Integrations.JSON]
+        run: |  
+          cd Integrations/JSON/ActFlow.Integrations.JSON
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          cd bin
+          cd Release
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          cd ../../../../..
+
+      - name: Build (Release) and Publish [ActFlow.Integrations.ML.NET]
+        run: |  
+          cd Integrations/ML.NET/ActFlow.Integrations.ML.NET
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          cd bin
+          cd Release
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          cd ../../../../..
+
+      - name: Build (Release) and Publish [ActFlow.Integrations.OpenWebUISharp]
+        run: |  
+          cd Integrations/OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          cd bin
+          cd Release
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          cd ../../../../..
+
       - name: Get Package version
         id: get-version
         uses: kzrnm/get-net-sdk-project-versions-action@v1

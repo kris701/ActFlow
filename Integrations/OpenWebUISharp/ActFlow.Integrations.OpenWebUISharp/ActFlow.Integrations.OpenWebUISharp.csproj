@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	  <Title>ActFlow.Integrations.DatabaseSharp</Title>
+	  <Title>ActFlow.Integrations.OpenWebUISharp</Title>
 	  <Authors>Kristian Skov Johansen</Authors>
-	  <Description>DatabaseSharp workflow activities for ActFlow</Description>
+	  <Description>OpenWebUISharp workflow activities for ActFlow</Description>
 	  <RepositoryUrl>https://github.com/kris701/ActFlow</RepositoryUrl>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -33,7 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DatabaseSharp" Version="1.6.3" />
+		<PackageReference Include="OpenWebUISharp" Version="1.2.8" />
 	</ItemGroup>
 
 	<ItemGroup>
