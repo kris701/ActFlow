@@ -15,7 +15,7 @@
 
 	<PropertyGroup>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -45,13 +45,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ActFlow.Models\ActFlow.Models.csproj" />
-    <ProjectReference Include="..\ActFlow.Tools\ActFlow.Tools.csproj" />
-    <ProjectReference Include="..\Integrations\Core\ActFlow.Integrations.Core\ActFlow.Integrations.Core.csproj" />
-    <ProjectReference Include="..\Integrations\DatabaseSharp\ActFlow.Integrations.DatabaseSharp\ActFlow.Integrations.DatabaseSharp.csproj" />
-    <ProjectReference Include="..\Integrations\EMail\ActFlow.Integrations.EMail\ActFlow.Integrations.EMail.csproj" />
-    <ProjectReference Include="..\Integrations\JSON\ActFlow.Integrations.JSON\ActFlow.Integrations.JSON.csproj" />
-    <ProjectReference Include="..\Integrations\ML.NET\ActFlow.Integrations.ML.NET\ActFlow.Integrations.ML.NET.csproj" />
-    <ProjectReference Include="..\Integrations\OpenWebUI\ActFlow.Integrations.OpenWebUI\ActFlow.Integrations.OpenWebUI.csproj" />
+	  <ProjectReference Include="..\ActFlow.Models\ActFlow.Models.csproj">
+		  <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>
+	  <ProjectReference Include="..\ActFlow.Tools\ActFlow.Tools.csproj">
+		  <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>
+	  <ProjectReference Include="..\Integrations\Core\ActFlow.Integrations.Core\ActFlow.Integrations.Core.csproj">
+		  <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>	 
   </ItemGroup>
 </Project>
