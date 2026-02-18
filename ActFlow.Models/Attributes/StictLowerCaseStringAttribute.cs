@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ActChain.Models.Attributes
+namespace ActFlow.Models.Attributes
 {
 	public class StictLowerCaseStringAttribute : ValidationAttribute
 	{

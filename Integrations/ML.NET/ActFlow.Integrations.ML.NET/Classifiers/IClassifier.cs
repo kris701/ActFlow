@@ -1,4 +1,4 @@
-﻿namespace ActChain.Integrations.ML.NET.Classifiers
+﻿namespace ActFlow.Integrations.ML.NET.Classifiers
 {
 	public interface IClassifier<Tin, TOut>
 	{

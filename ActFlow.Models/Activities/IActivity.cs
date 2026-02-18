@@ -1,7 +1,7 @@
-﻿using ActChain.Models.Attributes;
+﻿using ActFlow.Models.Attributes;
 using System.ComponentModel.DataAnnotations;
 
-namespace ActChain.Models.Activities
+namespace ActFlow.Models.Activities
 {
 	public interface IActivity
 	{

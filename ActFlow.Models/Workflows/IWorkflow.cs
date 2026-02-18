@@ -1,9 +1,6 @@
-﻿using ActChain.Models.Activities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ActFlow.Models.Activities;
 
-namespace ActChain.Models.Workflows
+namespace ActFlow.Models.Workflows
 {
 	public interface IWorkflow
 	{

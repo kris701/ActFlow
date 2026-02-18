@@ -1,7 +1,7 @@
 ﻿using Microsoft.Identity.Client;
 using Microsoft.Kiota.Abstractions.Authentication;
 
-namespace ActChain.Integrations.EMail.EMail
+namespace ActFlow.Integrations.EMail.EMail
 {
 	// https://medium.com/@mitchelldalehein25/connecting-to-microsoft-graph-api-with-a-client-secret-c-f791440231f1
 	public class TokenProvider : IAccessTokenProvider

@@ -1,7 +1,6 @@
-﻿using ActChain.Models.Activities;
-using ActChain.Models.Workflows;
+﻿using ActFlow.Models.Activities;
 
-namespace ActChain.Models.Scripts
+namespace ActFlow.Models.Workflows
 {
 	public class Workflow : IWorkflow
 	{

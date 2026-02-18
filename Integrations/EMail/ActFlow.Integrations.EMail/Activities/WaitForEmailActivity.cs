@@ -1,6 +1,6 @@
-﻿using ActChain.Models.Activities;
+﻿using ActFlow.Models.Activities;
 
-namespace ActChain.Integrations.EMail.Activities
+namespace ActFlow.Integrations.EMail.Activities
 {
 	public class WaitForEmailActivity : IActivity, IAwaitInputActivity
 	{

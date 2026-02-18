@@ -1,4 +1,4 @@
-﻿namespace ActChain.Models.Contexts
+﻿namespace ActFlow.Models.Contexts
 {
 	public interface IContext
 	{

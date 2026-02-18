@@ -1,8 +1,8 @@
-﻿using ActChain.Integrations.Core.Activities;
-using ActChain.Models.Scripts;
-using ActChain.Models.Workers;
+﻿using ActFlow.Integrations.Core.Activities;
+using ActFlow.Models.Workers;
+using ActFlow.Models.Workflows;
 
-namespace ActChain.Integrations.Core.Workers
+namespace ActFlow.Integrations.Core.Workers
 {
 	public class CreateContextWorker : BaseWorker<CreateContextActivity>
 	{

@@ -1,12 +1,12 @@
-﻿using ActChain.Integrations.ML.NET.Activity;
-using ActChain.Integrations.ML.NET.Classifiers.ML.NET;
-using ActChain.Integrations.ML.NET.Classifiers.ML.NET.Models;
-using ActChain.Models.Contexts;
-using ActChain.Models.Scripts;
-using ActChain.Models.Workers;
+﻿using ActFlow.Integrations.ML.NET.Activity;
+using ActFlow.Integrations.ML.NET.Classifiers.ML.NET;
+using ActFlow.Integrations.ML.NET.Classifiers.ML.NET.Models;
+using ActFlow.Models.Contexts;
+using ActFlow.Models.Workers;
+using ActFlow.Models.Workflows;
 using System.Text.Json;
 
-namespace ActChain.Integrations.ML.NET.Worker
+namespace ActFlow.Integrations.ML.NET.Worker
 {
 	public class TrainTextClassifierWorker : BaseWorker<TrainTextClassifierActivity>
 	{

@@ -1,4 +1,4 @@
-﻿namespace ActChain.Integrations.Core.Activities
+﻿namespace ActFlow.Integrations.Core.Activities
 {
 	public enum ConditionalComparerTypes
 	{

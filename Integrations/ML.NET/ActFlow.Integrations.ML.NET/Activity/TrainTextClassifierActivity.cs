@@ -1,6 +1,6 @@
-﻿using ActChain.Models.Activities;
+﻿using ActFlow.Models.Activities;
 
-namespace ActChain.Integrations.ML.NET.Activity
+namespace ActFlow.Integrations.ML.NET.Activity
 {
 	public class TrainTextClassifierActivity : IActivity
 	{

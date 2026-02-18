@@ -1,7 +1,7 @@
-﻿using ActChain.Models.Activities;
-using ActChain.Models.Contexts;
+﻿using ActFlow.Models.Activities;
+using ActFlow.Models.Contexts;
 
-namespace ActChain.Integrations.EMail.Activities
+namespace ActFlow.Integrations.EMail.Activities
 {
 	public class SendEmailActivity : IActivity
 	{

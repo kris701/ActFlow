@@ -1,6 +1,6 @@
-﻿using ActChain.Models.Activities;
+﻿using ActFlow.Models.Activities;
 
-namespace ActChain.Integrations.DatabaseSharp.Activities
+namespace ActFlow.Integrations.DatabaseSharp.Activities
 {
 	public class InsertItemToDatabaseActivity : IActivity
 	{

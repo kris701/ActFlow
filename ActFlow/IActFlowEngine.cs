@@ -1,9 +1,9 @@
-﻿using ActChain.Models.Scripts;
-using ActChain.Models.Workers;
+﻿using ActFlow.Models.Workers;
+using ActFlow.Models.Workflows;
 
-namespace ActChain
+namespace ActFlow
 {
-	public interface IActChainEngine
+	public interface IActFlowEngine
 	{
 		public List<IWorker> Workers { get; }
 		public List<WorkflowState> ActiveWorkflows { get; }

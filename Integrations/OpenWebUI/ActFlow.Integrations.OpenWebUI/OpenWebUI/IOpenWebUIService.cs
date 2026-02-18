@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ActChain.Integrations.OpenWebUI.OpenWebUI
+namespace ActFlow.Integrations.OpenWebUI.OpenWebUI
 {
 	[JsonDerivedType(typeof(OpenWebUIService), typeDiscriminator: "OpenWebUIService")]
 	public interface IOpenWebUIService

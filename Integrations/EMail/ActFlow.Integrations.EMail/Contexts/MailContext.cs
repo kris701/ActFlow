@@ -1,9 +1,9 @@
-﻿using ActChain.Models.Contexts;
+﻿using ActFlow.Models.Contexts;
 using HtmlAgilityPack;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace ActChain.Integrations.EMail.Contexts
+namespace ActFlow.Integrations.EMail.Contexts
 {
 	public class MailContext : IContext
 	{

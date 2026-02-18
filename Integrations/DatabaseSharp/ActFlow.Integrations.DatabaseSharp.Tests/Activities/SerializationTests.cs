@@ -1,10 +1,10 @@
-﻿using ActChain.Integrations.DatabaseSharp.Activities;
-using ActChain.Models.Activities;
-using ActChain.Tools.Extensions;
+﻿using ActFlow.Integrations.DatabaseSharp.Activities;
+using ActFlow.Models.Activities;
+using ActFlow.Tools.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
-namespace ActChain.Integrations.DatabaseSharp.Tests.Activities
+namespace ActFlow.Integrations.DatabaseSharp.Tests.Activities
 {
 	[TestClass]
 	public class SerializationTests

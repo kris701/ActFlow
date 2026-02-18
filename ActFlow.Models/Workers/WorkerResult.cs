@@ -1,6 +1,6 @@
-﻿using ActChain.Models.Contexts;
+﻿using ActFlow.Models.Contexts;
 
-namespace ActChain.Models.Workers
+namespace ActFlow.Models.Workers
 {
 	public class WorkerResult
 	{

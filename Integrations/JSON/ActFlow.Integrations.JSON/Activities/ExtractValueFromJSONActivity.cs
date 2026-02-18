@@ -1,7 +1,7 @@
-﻿using ActChain.Models.Activities;
+﻿using ActFlow.Models.Activities;
 using System.Text.Json.Serialization;
 
-namespace ActChain.Integrations.JSON.Activities
+namespace ActFlow.Integrations.JSON.Activities
 {
 	public class ExtractValueFromJSONActivity : IActivity
 	{

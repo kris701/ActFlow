@@ -1,6 +1,6 @@
-﻿using ActChain.Models.Activities;
+﻿using ActFlow.Models.Activities;
 
-namespace ActChain.Integrations.OpenWebUI.Activities
+namespace ActFlow.Integrations.OpenWebUI.Activities
 {
 	public class QueryLLMActivity : IActivity
 	{

@@ -1,9 +1,9 @@
-﻿using ActChain.Integrations.Core.Activities;
-using ActChain.Models.Contexts;
-using ActChain.Models.Scripts;
-using ActChain.Models.Workers;
+﻿using ActFlow.Integrations.Core.Activities;
+using ActFlow.Models.Contexts;
+using ActFlow.Models.Workers;
+using ActFlow.Models.Workflows;
 
-namespace ActChain.Integrations.Core.Workers
+namespace ActFlow.Integrations.Core.Workers
 {
 	public class ConditionalUserWorker : BaseWorker<ConditionalUserActivity>
 	{

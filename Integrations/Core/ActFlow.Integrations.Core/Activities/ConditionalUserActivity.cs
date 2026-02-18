@@ -1,8 +1,8 @@
-﻿using ActChain.Models.Activities;
-using ActChain.Models.Attributes;
+﻿using ActFlow.Models.Activities;
+using ActFlow.Models.Attributes;
 using System.ComponentModel.DataAnnotations;
 
-namespace ActChain.Integrations.Core.Activities
+namespace ActFlow.Integrations.Core.Activities
 {
 	public class ConditionalUserActivity : IActivity, IAwaitInputActivity
 	{

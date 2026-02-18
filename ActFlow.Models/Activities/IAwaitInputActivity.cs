@@ -1,4 +1,4 @@
-﻿namespace ActChain.Models.Activities
+﻿namespace ActFlow.Models.Activities
 {
 	public interface IAwaitInputActivity
 	{

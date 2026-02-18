@@ -1,11 +1,11 @@
-﻿using ActChain.Integrations.JSON.Activities;
-using ActChain.Models.Contexts;
-using ActChain.Models.Scripts;
-using ActChain.Models.Workers;
+﻿using ActFlow.Integrations.JSON.Activities;
+using ActFlow.Models.Contexts;
+using ActFlow.Models.Workers;
+using ActFlow.Models.Workflows;
 using Json.Path;
 using System.Text.Json.Nodes;
 
-namespace ActChain.Integrations.JSON.Workers
+namespace ActFlow.Integrations.JSON.Workers
 {
 	public class ExtractValueFromJSONWorker : BaseWorker<ExtractValueFromJSONActivity>
 	{

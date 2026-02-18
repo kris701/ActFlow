@@ -1,10 +1,10 @@
-﻿using ActChain.Models.Activities;
-using ActChain.Models.Contexts;
-using ActChain.Models.Workers;
+﻿using ActFlow.Models.Activities;
+using ActFlow.Models.Contexts;
+using ActFlow.Models.Workers;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
-namespace ActChain.Tools.Extensions
+namespace ActFlow.Tools.Extensions
 {
 	public static class JsonExtensions
 	{

@@ -1,10 +1,10 @@
-﻿using ActChain.Integrations.EMail.Activities;
-using ActChain.Integrations.EMail.Contexts;
-using ActChain.Integrations.EMail.EMail;
-using ActChain.Models.Scripts;
-using ActChain.Models.Workers;
+﻿using ActFlow.Integrations.EMail.Activities;
+using ActFlow.Integrations.EMail.Contexts;
+using ActFlow.Integrations.EMail.EMail;
+using ActFlow.Models.Workers;
+using ActFlow.Models.Workflows;
 
-namespace ActChain.Integrations.EMail.Workers
+namespace ActFlow.Integrations.EMail.Workers
 {
 	public class ReplyToEmailWorker : BaseWorker<ReplyToEmailActivity>
 	{

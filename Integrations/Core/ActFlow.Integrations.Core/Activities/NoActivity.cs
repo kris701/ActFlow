@@ -1,6 +1,6 @@
-﻿using ActChain.Models.Activities;
+﻿using ActFlow.Models.Activities;
 
-namespace ActChain.Integrations.Core.Activities
+namespace ActFlow.Integrations.Core.Activities
 {
 	public class NoActivity : IActivity
 	{

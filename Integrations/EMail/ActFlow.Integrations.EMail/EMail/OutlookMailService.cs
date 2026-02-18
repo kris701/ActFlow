@@ -1,9 +1,9 @@
-﻿using ActChain.Integrations.EMail.Contexts;
+﻿using ActFlow.Integrations.EMail.Contexts;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Kiota.Abstractions.Authentication;
 
-namespace ActChain.Integrations.EMail.EMail
+namespace ActFlow.Integrations.EMail.EMail
 {
 	public class OutlookMailService
 	{

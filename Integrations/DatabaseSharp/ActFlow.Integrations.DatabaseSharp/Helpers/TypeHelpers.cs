@@ -1,4 +1,4 @@
-﻿namespace ActChain.Integrations.DatabaseSharp.Helpers
+﻿namespace ActFlow.Integrations.DatabaseSharp.Helpers
 {
 	internal static class TypeHelpers
 	{

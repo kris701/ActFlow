@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace ActChain.Models.Contexts
+namespace ActFlow.Models.Contexts
 {
 	public class StringContext : IContext
 	{

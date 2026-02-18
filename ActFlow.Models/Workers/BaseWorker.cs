@@ -1,8 +1,8 @@
-﻿using ActChain.Models.Activities;
-using ActChain.Models.Scripts;
+﻿using ActFlow.Models.Activities;
+using ActFlow.Models.Workflows;
 using System.Text.Json.Serialization;
 
-namespace ActChain.Models.Workers
+namespace ActFlow.Models.Workers
 {
 	public abstract class BaseWorker<T> : IWorker where T : IActivity
 	{

@@ -1,4 +1,4 @@
-﻿namespace ActChain.Models
+﻿namespace ActFlow.Models
 {
 	internal class ServiceKey
 	{

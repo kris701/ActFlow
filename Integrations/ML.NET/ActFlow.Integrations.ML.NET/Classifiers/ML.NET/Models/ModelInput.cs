@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace ActChain.Integrations.ML.NET.Classifiers.ML.NET.Models
+namespace ActFlow.Integrations.ML.NET.Classifiers.ML.NET.Models
 {
 	public class ModelInput
 	{

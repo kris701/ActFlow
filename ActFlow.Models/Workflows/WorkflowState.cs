@@ -1,8 +1,7 @@
-﻿using ActChain.Models.Workflows;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using ToolsSharp.Interfaces;
 
-namespace ActChain.Models.Scripts
+namespace ActFlow.Models.Workflows
 {
 	public class WorkflowState : IGenericClonable<WorkflowState>
 	{

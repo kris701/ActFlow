@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace ActChain.Models.Contexts
+namespace ActFlow.Models.Contexts
 {
 	public class ListContext : IContext
 	{

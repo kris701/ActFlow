@@ -1,11 +1,11 @@
-﻿using ActChain.Integrations.Core.Activities;
-using ActChain.Models.Activities;
-using ActChain.Models.Contexts;
-using ActChain.Tools.Extensions;
+﻿using ActFlow.Integrations.Core.Activities;
+using ActFlow.Models.Activities;
+using ActFlow.Models.Contexts;
+using ActFlow.Tools.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
-namespace ActChain.Integrations.Core.Tests.Activities
+namespace ActFlow.Integrations.Core.Tests.Activities
 {
 	[TestClass]
 	public class SerializationTests

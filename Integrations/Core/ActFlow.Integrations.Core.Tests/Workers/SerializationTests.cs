@@ -1,10 +1,10 @@
-﻿using ActChain.Integrations.Core.Workers;
-using ActChain.Models.Workers;
-using ActChain.Tools.Extensions;
+﻿using ActFlow.Integrations.Core.Workers;
+using ActFlow.Models.Workers;
+using ActFlow.Tools.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
-namespace ActChain.Integrations.Core.Tests.Workers
+namespace ActFlow.Integrations.Core.Tests.Workers
 {
 	[TestClass]
 	public class SerializationTests

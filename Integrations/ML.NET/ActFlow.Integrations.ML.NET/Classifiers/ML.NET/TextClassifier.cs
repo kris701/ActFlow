@@ -1,9 +1,9 @@
-﻿using ActChain.Integrations.ML.NET.Classifiers.ML.NET.Models;
+﻿using ActFlow.Integrations.ML.NET.Classifiers.ML.NET.Models;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.TorchSharp;
 
-namespace ActChain.Integrations.ML.NET.Classifiers.ML.NET
+namespace ActFlow.Integrations.ML.NET.Classifiers.ML.NET
 {
 	public class TextClassifier : IClassifier<ModelInput, ClassificationResult>
 	{

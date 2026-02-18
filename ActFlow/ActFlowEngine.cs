@@ -1,14 +1,14 @@
-﻿using ActChain.Models;
-using ActChain.Models.Activities;
-using ActChain.Models.Scripts;
-using ActChain.Models.Workers;
+﻿using ActFlow.Models;
+using ActFlow.Models.Activities;
+using ActFlow.Models.Workers;
+using ActFlow.Models.Workflows;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace ActChain
+namespace ActFlow
 {
-	public class ActChainEngine : IActChainEngine
+	public class ActFlowEngine : IActFlowEngine
 	{
 		public List<IWorker> Workers { get; } = new List<IWorker>();
 		public List<WorkflowState> ActiveWorkflows { get; } = new List<WorkflowState>();
@@ -19,7 +19,7 @@ namespace ActChain
 		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);
 		private readonly ILogger _logger;
 
-		public ActChainEngine(List<IWorker> workers, ILogger logger)
+		public ActFlowEngine(List<IWorker> workers, ILogger logger)
 		{
 			_logger = logger;
 			Workers = workers;
