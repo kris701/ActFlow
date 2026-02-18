@@ -51,8 +51,5 @@
 	  <ProjectReference Include="..\ActFlow.Tools\ActFlow.Tools.csproj">
 		  <PrivateAssets>all</PrivateAssets>
 	  </ProjectReference>
-	  <ProjectReference Include="..\Integrations\Core\ActFlow.Integrations.Core\ActFlow.Integrations.Core.csproj">
-		  <PrivateAssets>all</PrivateAssets>
-	  </ProjectReference>	 
   </ItemGroup>
 </Project>

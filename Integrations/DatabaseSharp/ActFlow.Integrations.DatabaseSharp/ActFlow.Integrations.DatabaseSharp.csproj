@@ -11,8 +11,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj" />
-    <ProjectReference Include="..\..\..\ActFlow.Tools\ActFlow.Tools.csproj" />
+		<ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj">
+			<PrivateAssets>all</PrivateAssets>
+		</ProjectReference>
+		<ProjectReference Include="..\..\..\ActFlow.Tools\ActFlow.Tools.csproj">
+			<PrivateAssets>all</PrivateAssets>
+		</ProjectReference>
   </ItemGroup>
 
 </Project>
