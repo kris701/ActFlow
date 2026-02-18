@@ -8,10 +8,10 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj">
-		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>all</IncludeAssets>
 	  </ProjectReference>
 	  <ProjectReference Include="..\..\..\ActFlow.Tools\ActFlow.Tools.csproj">
-		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>all</IncludeAssets>
 	  </ProjectReference>
   </ItemGroup>
 
