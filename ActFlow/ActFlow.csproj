@@ -15,7 +15,7 @@
 
 	<PropertyGroup>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<Version>1.0.3</Version>
+		<Version>1.0.4</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -42,32 +42,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-	  <ProjectReference Include="..\ActFlow.Models\ActFlow.Models.csproj">
-		  <IncludeAssets>all</IncludeAssets>
-	  </ProjectReference>
-	  <ProjectReference Include="..\ActFlow.Tools\ActFlow.Tools.csproj">
-		  <IncludeAssets>all</IncludeAssets>
-	  </ProjectReference>
-	  <ProjectReference Include="..\Integrations\Core\ActFlow.Integrations.Core\ActFlow.Integrations.Core.csproj">
-		  <IncludeAssets>all</IncludeAssets>
-	  </ProjectReference>
-	  <ProjectReference Include="..\Integrations\DatabaseSharp\ActFlow.Integrations.DatabaseSharp\ActFlow.Integrations.DatabaseSharp.csproj" >
-		  <IncludeAssets>all</IncludeAssets>
-	  </ProjectReference>
-	  <ProjectReference Include="..\Integrations\EMail\ActFlow.Integrations.EMail\ActFlow.Integrations.EMail.csproj" >
-		  <IncludeAssets>all</IncludeAssets>
-	  </ProjectReference>
-	  <ProjectReference Include="..\Integrations\JSON\ActFlow.Integrations.JSON\ActFlow.Integrations.JSON.csproj" >
-		  <IncludeAssets>all</IncludeAssets>
-	  </ProjectReference>
-	  <ProjectReference Include="..\Integrations\ML.NET\ActFlow.Integrations.ML.NET\ActFlow.Integrations.ML.NET.csproj">
-		  <IncludeAssets>all</IncludeAssets>
-	  </ProjectReference>
-	  <ProjectReference Include="..\Integrations\OpenWebUI\ActFlow.Integrations.OpenWebUI\ActFlow.Integrations.OpenWebUI.csproj" >
-		  <IncludeAssets>all</IncludeAssets>
-	  </ProjectReference>
+    <PackageReference Include="ToolsSharp" Version="1.1.6" />
   </ItemGroup>
 </Project>

@@ -12,8 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj" />
-    <ProjectReference Include="..\..\..\ActFlow.Tools\ActFlow.Tools.csproj" />
     <ProjectReference Include="..\ActFlow.Integrations.Core\ActFlow.Integrations.Core.csproj" />
   </ItemGroup>
 

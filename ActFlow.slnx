@@ -26,7 +26,5 @@
     <File Path="LICENSE.txt" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="ActFlow.Models/ActFlow.Models.csproj" Id="6fa3321d-5a31-4eac-8845-3a0a98f64df5" />
-  <Project Path="ActFlow.Tools/ActFlow.Tools.csproj" Id="d42885b4-71e1-4807-8b1d-ff8fae9813b6" />
   <Project Path="ActFlow/ActFlow.csproj" />
 </Solution>

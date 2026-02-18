@@ -12,10 +12,8 @@
 		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
 	</ItemGroup>
 
-  <ItemGroup>
-	  <ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj">
-		  <IncludeAssets>all</IncludeAssets>
-	  </ProjectReference>
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\ActFlow\ActFlow.csproj" />
+	</ItemGroup>
 
 </Project>

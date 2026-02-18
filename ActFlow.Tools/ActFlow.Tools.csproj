@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ActFlow.Models\ActFlow.Models.csproj" />
-  </ItemGroup>
-
 </Project>

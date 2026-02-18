@@ -4,15 +4,37 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Title>ActFlow.Integrations.Core</Title>
+	  <Authors>Kristian Skov Johansen</Authors>
+	  <Description>Core workflow activities for ActFlow</Description>
+	  <RepositoryUrl>https://github.com/kris701/ActFlow</RepositoryUrl>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<Version>1.0.0</Version>
+	</PropertyGroup>
+
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\ActFlow.Models\ActFlow.Models.csproj">
-		  <IncludeAssets>all</IncludeAssets>
-	  </ProjectReference>
-	  <ProjectReference Include="..\..\..\ActFlow.Tools\ActFlow.Tools.csproj">
-		  <IncludeAssets>all</IncludeAssets>
-	  </ProjectReference>
+		<None Include="..\..\..\LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\ActFlow\ActFlow.csproj" />
   </ItemGroup>
+
 
 </Project>
