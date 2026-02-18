@@ -49,6 +49,7 @@ jobs:
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
           cd ../..
+          ls
 
       - name: Build (Release) and Publish [ActFlow.Integrations.Core]
         run: |  
