@@ -45,9 +45,18 @@ jobs:
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-          cd ..
-          cd ..
-          cd ..
+          cd
+
+      - name: Build (Release) and Publish [ActFlow.Integrations.DatabaseSharp]
+        run: |  
+          cd ActFlow/Integrations/DatabaseSharp/ActFlow.Integrations.DatabaseSharp
+          dotnet build --configuration Release
+          dotnet pack --configuration Release
+          cd bin
+          cd Release
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
+          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          cd
 
       - name: Get Package version
         id: get-version
