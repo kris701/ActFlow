@@ -35,17 +35,20 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
 
+      - name: Add NuGet Source
+        run: | 
+          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
+
       - name: Build (Release) and Publish [ActFlow]
         run: |  
           cd ActFlow
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-          cd ../../..
+          cd ../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.Core]
         run: |  
@@ -56,7 +59,7 @@ jobs:
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-          cd ../../../../../..
+          cd ../../../../..
 
       - name: Get Package version
         id: get-version
