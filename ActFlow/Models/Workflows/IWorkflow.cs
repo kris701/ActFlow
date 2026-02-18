@@ -6,6 +6,6 @@ namespace ActFlow.Models.Workflows
 	{
 		public string Name { get; set; }
 		public Dictionary<string, string> Globals { get; set; }
-		public List<IActivity> Stages { get; set; }
+		public List<IActivity> Activities { get; set; }
 	}
 }

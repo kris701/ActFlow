@@ -4,9 +4,9 @@ using ActFlow.Models.Workflows;
 
 namespace ActFlow.Integrations.Core.Workers
 {
-	public class NoActionWorker : BaseWorker<NoActivity>
+	public class NoActivityWorker : BaseWorker<NoActivity>
 	{
-		public NoActionWorker(string iD) : base(iD)
+		public NoActivityWorker(string iD) : base(iD)
 		{
 		}
 

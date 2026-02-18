@@ -35,7 +35,7 @@
     <None Update="TestFiles\Activities\NoActivity_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestFiles\Workers\NoActionWorker_Serialization_Expected.json">
+    <None Update="TestFiles\Workers\NoActivityWorker_Serialization_Expected.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="TestFiles\Workers\InsertGlobalsWorker_Serialization_Expected.json">

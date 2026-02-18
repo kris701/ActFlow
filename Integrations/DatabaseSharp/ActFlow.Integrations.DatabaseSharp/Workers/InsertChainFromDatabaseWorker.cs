@@ -30,7 +30,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 			var chainStr = result[0][0].GetValue<string>("Script");
 			var chain = JsonSerializer.Deserialize<Workflow>(chainStr);
 			if (chain is Workflow script)
-				state.Workflow.Stages.InsertRange(state.ActivityIndex + 1, chain.Stages);
+				state.Workflow.Activities.InsertRange(state.ActivityIndex + 1, chain.Activities);
 			else
 				throw new Exception("Could not deserialize database result to ActScript!");
 

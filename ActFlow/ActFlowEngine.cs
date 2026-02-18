@@ -2,7 +2,6 @@
 using ActFlow.Models.Activities;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
-using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -17,11 +16,9 @@ namespace ActFlow
 
 		private readonly Dictionary<ServiceKey, IWorker> _serviceCache = new Dictionary<ServiceKey, IWorker>();
 		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);
-		private readonly ILogger _logger;
 
-		public ActFlowEngine(List<IWorker> workers, ILogger logger)
+		public ActFlowEngine(List<IWorker> workers)
 		{
-			_logger = logger;
 			Workers = workers;
 			foreach (var worker in workers)
 			{
@@ -31,8 +28,6 @@ namespace ActFlow
 				var key = new ServiceKey(worker.ID, typeArg);
 				if (!_serviceCache.ContainsKey(key))
 					_serviceCache.Add(key, worker);
-				else
-					_logger.LogWarning($"Multiple services with the key '{key}' exists! Ignoring all but the first...");
 			}
 		}
 
@@ -57,10 +52,10 @@ namespace ActFlow
 			state.Status = WorkflowStatuses.Running;
 			state.StartedAt = DateTime.UtcNow;
 			await state.Update();
-			while (state.ActivityIndex < state.Workflow.Stages.Count)
+			while (state.ActivityIndex < state.Workflow.Activities.Count)
 			{
 				state.AppendToLog();
-				state.AppendToLog($"\tStarting stage: {state.ActivityIndex}");
+				state.AppendToLog($"\tStarting activity: {state.ActivityIndex}");
 				if (state.Status == WorkflowStatuses.Canceled)
 				{
 					state.AppendToLog($"\tManual cancellation requested.");
@@ -69,16 +64,16 @@ namespace ActFlow
 
 				try
 				{
-					var stage = state.Workflow.Stages[state.ActivityIndex].Clone();
-					state.AppendToLog($"\tInitializing activity {stage.Name}");
+					var activity = state.Workflow.Activities[state.ActivityIndex].Clone();
+					state.AppendToLog($"\tInitializing activity {activity.Name}");
 
-					stage = ApplyContexts(state, stage);
+					activity = ApplyContexts(state, activity);
 
 					state.AppendToLog($"\tExecuting activity");
-					if (state.Status != WorkflowStatuses.Canceled && stage is IAwaitInputActivity)
+					if (state.Status != WorkflowStatuses.Canceled && activity is IAwaitInputActivity)
 						state.Status = WorkflowStatuses.AwaitingInput;
 					await state.Update();
-					var executionResult = await ExecuteActivityAsync(stage, state, state.TokenSource.Token);
+					var executionResult = await ExecuteActivityAsync(activity, state, state.TokenSource.Token);
 					if (state.Status != WorkflowStatuses.Canceled)
 						state.Status = WorkflowStatuses.Running;
 					if (state.TokenSource.IsCancellationRequested)
@@ -86,9 +81,9 @@ namespace ActFlow
 					state.AppendToLog($"\tResulting activity context is a {executionResult.Context.GetType()}");
 					state.AppendToLog($"\tResulting activity context content is {executionResult.Context.ToString()}");
 
-					InsertResultIntoContextStore(state, stage.Name, executionResult);
+					InsertResultIntoContextStore(state, activity.Name, executionResult);
 
-					state.ActivityIndex = FindNextStageIndex(state, executionResult);
+					state.ActivityIndex = FindNextActivityIndex(state, executionResult);
 				}
 				catch (Exception ex)
 				{
@@ -101,7 +96,7 @@ namespace ActFlow
 				activityCount++;
 				if (activityCount > ActivityLimiter)
 				{
-					state.AppendToLogError($"Workflow exceded the stage limiter (of {ActivityLimiter} steps)! This most likely means something broke or you somehow managed to make the Chain loop.");
+					state.AppendToLogError($"Workflow exceded the activity limiter (of {ActivityLimiter} steps)! This most likely means something broke or you somehow managed to make the workflow loop.");
 					state.Status = WorkflowStatuses.Canceled;
 					break;
 				}
@@ -117,9 +112,9 @@ namespace ActFlow
 			return state;
 		}
 
-		private IActivity ApplyContexts(WorkflowState state, IActivity stage)
+		private IActivity ApplyContexts(WorkflowState state, IActivity activity)
 		{
-			var text = JsonSerializer.Serialize(stage);
+			var text = JsonSerializer.Serialize(activity);
 			var matches = _variableRegex.Matches(text);
 			foreach (Match match in matches)
 			{
@@ -129,25 +124,25 @@ namespace ActFlow
 				else
 					throw new Exception($"Variable '{key}' was not found in the current state!");
 			}
-			var deStage = JsonSerializer.Deserialize<IActivity>(text);
-			if (deStage == null)
-				throw new ArgumentNullException("Could not deserialize the activity stage!");
-			return deStage;
+			var deActivity = JsonSerializer.Deserialize<IActivity>(text);
+			if (deActivity == null)
+				throw new ArgumentNullException("Could not deserialize the activity!");
+			return deActivity;
 		}
 
-		private int FindNextStageIndex(WorkflowState state, WorkerResult executionResult)
+		private int FindNextActivityIndex(WorkflowState state, WorkerResult executionResult)
 		{
-			var nextStageIndex = state.ActivityIndex + 1;
+			var nextActivityIndex = state.ActivityIndex + 1;
 			if (executionResult.TargetActivity != "")
 			{
 				state.AppendToLog($"\tNext target activity is named {executionResult.TargetActivity}");
-				nextStageIndex = state.Workflow.Stages.FindIndex(x => x.Name == executionResult.TargetActivity);
-				if (nextStageIndex == -1)
+				nextActivityIndex = state.Workflow.Activities.FindIndex(x => x.Name == executionResult.TargetActivity);
+				if (nextActivityIndex == -1)
 					throw new Exception($"Could not find a activity named '{executionResult.TargetActivity}'");
-				if (state.Workflow.Stages.Count(x => x.Name == executionResult.TargetActivity) > 1)
+				if (state.Workflow.Activities.Count(x => x.Name == executionResult.TargetActivity) > 1)
 					state.AppendToLog($"Warning, multiple activities with the name '{executionResult.TargetActivity}' found! Using the first one...");
 			}
-			return nextStageIndex;
+			return nextActivityIndex;
 		}
 
 		private void InsertResultIntoContextStore(WorkflowState state, string activityName, WorkerResult executionResult)

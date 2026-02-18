@@ -24,8 +24,8 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 				new InsertGlobalsWorker("a"),
 				"TestFiles/Workers/InsertGlobalsWorker_Serialization_Expected.json" };
 			yield return new object[] {
-				new NoActionWorker("a"),
-				"TestFiles/Workers/NoActionWorker_Serialization_Expected.json" };
+				new NoActivityWorker("a"),
+				"TestFiles/Workers/NoActivityWorker_Serialization_Expected.json" };
 		}
 
 		[TestMethod]

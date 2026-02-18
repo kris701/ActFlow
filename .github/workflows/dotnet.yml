@@ -6,25 +6,30 @@ on:
       - main
 
 jobs:
-  BuildAndTest:
+  check-tag:
+    name: Check if version is new
     runs-on: ubuntu-latest
-    name: Run Tests
+    outputs: 
+        releaseExists: ${{ steps.check-tag.outputs.exists }}
     steps:
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v4
+
+      - name: Get Project version
+        id: get-version
+        uses: kzrnm/get-net-sdk-project-versions-action@v1
         with:
-            dotnet-version: '10.0'
-      - name: Checkout repository
-        uses: actions/checkout@master
+          proj-path: ActFlow/ActFlow.csproj
 
-      - name: Install dependencies
-        run: dotnet restore
+      - uses: mukunku/tag-exists-action@v1.6.0
+        id: check-tag
+        with: 
+          tag: 'v${{ steps.get-version.outputs.package-version }}'
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-  BuildAndPublish:
-    needs: BuildAndTest
+  createRelease:
     runs-on: ubuntu-latest
-    name: Update NuGet 
+    name: Create new Release
+    needs: check-tag
+    if: needs.check-tag.outputs.releaseExists == 'false'
     steps:
       - uses: actions/setup-dotnet@v4
         with:
@@ -137,3 +142,20 @@ jobs:
           artifacts: "ActFlow/bin/Release/*.nupkg"
           tag: "v${{ steps.get-version.outputs.package-version }}"
 
+  testBuild:
+    runs-on: ubuntu-latest
+    name: Build
+    needs: check-tag
+    if: needs.check-tag.outputs.releaseExists == 'true'
+    steps:
+      - uses: actions/setup-dotnet@v4
+        with:
+            dotnet-version: '10.0'
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
