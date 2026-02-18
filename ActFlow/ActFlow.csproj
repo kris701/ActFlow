@@ -4,9 +4,41 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <IsPublishable>false</IsPublishable>
-	  <PlatformTarget>x64</PlatformTarget>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <Title>ActFlow</Title>
+	  <Authors>Kristian Skov Johansen</Authors>
+	  <Description>A simple workflow activity system to string together business logic</Description>
+	  <RepositoryUrl>https://github.com/kris701/ActFlow</RepositoryUrl>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
+	<PropertyGroup>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<Version>1.0.0</Version>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageIcon>logo.png</PackageIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="logo.png" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\LICENSE.txt">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
@@ -14,5 +46,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ActFlow.Models\ActFlow.Models.csproj" />
+    <ProjectReference Include="..\ActFlow.Tools\ActFlow.Tools.csproj" />
+    <ProjectReference Include="..\Integrations\Core\ActFlow.Integrations.Core\ActFlow.Integrations.Core.csproj" />
+    <ProjectReference Include="..\Integrations\DatabaseSharp\ActFlow.Integrations.DatabaseSharp\ActFlow.Integrations.DatabaseSharp.csproj" />
+    <ProjectReference Include="..\Integrations\EMail\ActFlow.Integrations.EMail\ActFlow.Integrations.EMail.csproj" />
+    <ProjectReference Include="..\Integrations\JSON\ActFlow.Integrations.JSON\ActFlow.Integrations.JSON.csproj" />
+    <ProjectReference Include="..\Integrations\ML.NET\ActFlow.Integrations.ML.NET\ActFlow.Integrations.ML.NET.csproj" />
+    <ProjectReference Include="..\Integrations\OpenWebUI\ActFlow.Integrations.OpenWebUI\ActFlow.Integrations.OpenWebUI.csproj" />
   </ItemGroup>
 </Project>

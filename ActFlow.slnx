@@ -21,6 +21,7 @@
     <Project Path="Integrations/OpenWebUI/ActFlow.Integrations.OpenWebUI/ActFlow.Integrations.OpenWebUI.csproj" Id="2e019908-8c3f-46c5-b505-ac6eccbfa864" />
   </Folder>
   <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/dotnet.yml" />
     <File Path=".gitignore" />
     <File Path="LICENSE.txt" />
     <File Path="README.md" />
