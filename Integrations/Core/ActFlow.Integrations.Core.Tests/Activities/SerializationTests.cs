@@ -2,9 +2,6 @@
 using ActFlow.Models.Activities;
 using ActFlow.Models.Contexts;
 using ActFlow.TestTools;
-using ActFlow.Tools.Extensions;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 
 namespace ActFlow.Integrations.Core.Tests.Activities
 {

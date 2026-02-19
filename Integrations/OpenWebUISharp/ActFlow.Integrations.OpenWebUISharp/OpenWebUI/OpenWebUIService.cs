@@ -3,7 +3,7 @@ using OpenWebUISharp;
 using OpenWebUISharp.Models.Query;
 using System.Text.Json.Serialization;
 
-namespace ActFlow.Integrations.OpenWebUI.OpenWebUI
+namespace ActFlow.Integrations.OpenWebUISharp.OpenWebUI
 {
 	public class OpenWebUIService : IOpenWebUIService
 	{

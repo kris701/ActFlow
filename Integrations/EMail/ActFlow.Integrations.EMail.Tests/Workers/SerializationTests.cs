@@ -1,5 +1,4 @@
-﻿using ActFlow.Integrations.EMail.Activities;
-using ActFlow.Integrations.EMail.Workers;
+﻿using ActFlow.Integrations.EMail.Workers;
 using ActFlow.Models.Workers;
 using ActFlow.TestTools;
 

@@ -1,6 +1,6 @@
 ﻿using ActFlow.Models.Activities;
 
-namespace ActFlow.Integrations.OpenWebUI.Activities
+namespace ActFlow.Integrations.OpenWebUISharp.Activities
 {
 	public class ExtractDataFromTextLLMActivity : IActivity
 	{

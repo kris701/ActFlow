@@ -1,6 +1,5 @@
 ﻿using ActFlow.Integrations.ML.NET.Activity;
 using ActFlow.Models.Activities;
-using ActFlow.Models.Contexts;
 using ActFlow.TestTools;
 
 namespace ActFlow.Integrations.ML.NET.Tests.Activities

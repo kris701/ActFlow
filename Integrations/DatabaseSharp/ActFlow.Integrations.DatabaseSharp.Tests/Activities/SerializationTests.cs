@@ -1,9 +1,6 @@
 ﻿using ActFlow.Integrations.DatabaseSharp.Activities;
 using ActFlow.Models.Activities;
 using ActFlow.TestTools;
-using ActFlow.Tools.Extensions;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 
 namespace ActFlow.Integrations.DatabaseSharp.Tests.Activities
 {

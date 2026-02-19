@@ -1,5 +1,5 @@
-﻿using ActFlow.Integrations.OpenWebUI.OpenWebUI;
-using ActFlow.Integrations.OpenWebUI.Workers;
+﻿using ActFlow.Integrations.OpenWebUISharp.OpenWebUI;
+using ActFlow.Integrations.OpenWebUISharp.Workers;
 using ActFlow.Models.Workers;
 using ActFlow.TestTools;
 

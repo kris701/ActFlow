@@ -1,10 +1,10 @@
-﻿using ActFlow.Integrations.OpenWebUI.Activities;
-using ActFlow.Integrations.OpenWebUI.OpenWebUI;
+﻿using ActFlow.Integrations.OpenWebUISharp.Activities;
+using ActFlow.Integrations.OpenWebUISharp.OpenWebUI;
 using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 
-namespace ActFlow.Integrations.OpenWebUI.Workers
+namespace ActFlow.Integrations.OpenWebUISharp.Workers
 {
 	public class QueryLLMWorker : BaseWorker<QueryLLMActivity>
 	{

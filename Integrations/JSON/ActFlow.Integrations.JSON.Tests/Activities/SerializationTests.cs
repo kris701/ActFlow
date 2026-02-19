@@ -1,6 +1,5 @@
 ﻿using ActFlow.Integrations.JSON.Activities;
 using ActFlow.Models.Activities;
-using ActFlow.Models.Contexts;
 using ActFlow.TestTools;
 
 namespace ActFlow.Integrations.JSON.Tests.Activities

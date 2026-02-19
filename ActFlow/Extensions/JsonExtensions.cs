@@ -4,7 +4,7 @@ using ActFlow.Models.Workers;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 
-namespace ActFlow.Tools.Extensions
+namespace ActFlow.Extensions
 {
 	public static class JsonExtensions
 	{

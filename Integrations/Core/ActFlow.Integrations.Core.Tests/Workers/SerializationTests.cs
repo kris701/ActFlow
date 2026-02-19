@@ -1,10 +1,6 @@
 ﻿using ActFlow.Integrations.Core.Workers;
-using ActFlow.Models.Activities;
 using ActFlow.Models.Workers;
 using ActFlow.TestTools;
-using ActFlow.Tools.Extensions;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 
 namespace ActFlow.Integrations.Core.Tests.Workers
 {

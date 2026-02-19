@@ -1,4 +1,4 @@
-﻿using ActFlow.Integrations.OpenWebUI.Activities;
+﻿using ActFlow.Integrations.OpenWebUISharp.Activities;
 using ActFlow.Models.Activities;
 using ActFlow.TestTools;
 
