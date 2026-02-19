@@ -16,6 +16,12 @@ namespace ActFlow.Integrations.Core.Workers
 
 		public override async Task<WorkerResult> Execute(ConditionalUserActivity act, WorkflowState state, CancellationToken token)
 		{
+			if (act.UserInput == "")
+			{
+				state.Status = WorkflowStatuses.AwaitingUpdate;
+				await state.Update();
+			}
+
 			while (act.UserInput == "")
 			{
 				await Task.Delay(WaitDelayMs);

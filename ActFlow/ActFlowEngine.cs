@@ -7,16 +7,35 @@ using System.Text.RegularExpressions;
 
 namespace ActFlow
 {
+	/// <summary>
+	/// Main implementation for the ActFlow engine
+	/// </summary>
 	public class ActFlowEngine : IActFlowEngine
 	{
+		/// <summary>
+		/// List of workers that the engine has to work with
+		/// </summary>
 		public List<IWorker> Workers { get; } = new List<IWorker>();
+		/// <summary>
+		/// List of currently active workflows
+		/// </summary>
 		public List<WorkflowState> ActiveWorkflows { get; } = new List<WorkflowState>();
+		/// <summary>
+		/// A limiter to how many activities a workflow can execute (to prevent infinite workflows)
+		/// </summary>
 		public int ActivityLimiter { get; set; } = 100;
+		/// <summary>
+		/// How many ms should pass before removing a completed workflow from the <seealso cref="ActiveWorkflows"/> list
+		/// </summary>
 		public int RemoveDelay { get; set; } = 60000;
 
 		private readonly Dictionary<ServiceKey, IWorker> _serviceCache = new Dictionary<ServiceKey, IWorker>();
 		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);
 
+		/// <summary>
+		/// Main constructor with a set of workers
+		/// </summary>
+		/// <param name="workers"></param>
 		public ActFlowEngine(List<IWorker> workers)
 		{
 			Workers = workers;
@@ -31,13 +50,46 @@ namespace ActFlow
 			}
 		}
 
-		public async Task<WorkflowState> Execute(Workflow workflow)
+		#region Execute
+
+		/// <summary>
+		/// Execute a workflow and gets its state ID
+		/// </summary>
+		/// <param name="workflow"></param>
+		/// <returns>ID of the workflow state</returns>
+		public Guid Execute(Workflow workflow)
 		{
 			var newState = new WorkflowState(workflow);
-			return await Execute(newState);
+			Task.Run(async () => await ExecuteAsync(newState));
+			return newState.ID;
+		}
+		/// <summary>
+		/// Execute a workflow state and gets its state ID
+		/// </summary>
+		/// <param name="state"></param>
+		/// <returns>ID of the workflow state</returns>
+		public Guid Execute(WorkflowState state)
+		{
+			Task.Run(async () => await ExecuteAsync(state));
+			return state.ID;
 		}
 
-		public async Task<WorkflowState> Execute(WorkflowState state)
+		/// <summary>
+		/// Execute a workflow and wait for the result.
+		/// </summary>
+		/// <param name="workflow"></param>
+		/// <returns></returns>
+		public async Task<WorkflowState> ExecuteAsync(Workflow workflow)
+		{
+			var newState = new WorkflowState(workflow);
+			return await ExecuteAsync(newState);
+		}
+		/// <summary>
+		/// Execute a workflow state and wait for the result.
+		/// </summary>
+		/// <param name="state"></param>
+		/// <returns></returns>
+		public async Task<WorkflowState> ExecuteAsync(WorkflowState state)
 		{
 			ActiveWorkflows.Add(state);
 			if (state.ActivityIndex == 0)
@@ -70,8 +122,6 @@ namespace ActFlow
 					activity = ApplyContexts(state, activity);
 
 					state.AppendToLog($"\tExecuting activity");
-					if (state.Status != WorkflowStatuses.Canceled && activity is IAwaitInputActivity)
-						state.Status = WorkflowStatuses.AwaitingInput;
 					await state.Update();
 					var executionResult = await ExecuteActivityAsync(activity, state, state.TokenSource.Token);
 					if (state.Status != WorkflowStatuses.Canceled)
@@ -163,32 +213,14 @@ namespace ActFlow
 			{
 				state.AppendToLog($"Removing from Active List in {RemoveDelay}ms");
 				await state.Update();
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 				Task.Run(async () =>
 				{
 					await Task.Delay(RemoveDelay);
 					ActiveWorkflows.Remove(state);
 				});
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 			}
-		}
-
-		public async Task Cancel(Guid id)
-		{
-			var target = ActiveWorkflows.FirstOrDefault(x => x.ID == id);
-			if (target != null)
-			{
-				target.AppendToLog("Cancellation requested");
-				target.TokenSource.Cancel();
-				while (ActiveWorkflows.Contains(target))
-					await Task.Delay(500);
-				target.Status = WorkflowStatuses.Canceled;
-				await target.Update();
-			}
-		}
-
-		public async Task CancelAll()
-		{
-			foreach (var item in ActiveWorkflows)
-				await Cancel(item.ID);
 		}
 
 		private async Task<WorkerResult> ExecuteActivityAsync(IActivity act, WorkflowState state, CancellationToken token)
@@ -207,23 +239,86 @@ namespace ActFlow
 			return await worker.Execute(act, state, token);
 		}
 
-		public async Task<WorkflowState> UserInput(Guid stateId, WorkflowState workflow)
+		#endregion
+
+		#region Cancelation
+
+		/// <summary>
+		/// Request a cancel of a given workflow state id
+		/// </summary>
+		/// <param name="id"></param>
+		public void Cancel(Guid id)
+		{
+			Task.Run(async () => CancelAsync(id));
+		}
+		/// <summary>
+		/// Cancel a given workflow by its id and wait for it to finish
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public async Task CancelAsync(Guid id)
+		{
+			var target = ActiveWorkflows.FirstOrDefault(x => x.ID == id);
+			if (target != null)
+			{
+				target.AppendToLog("Cancellation requested");
+				target.TokenSource.Cancel();
+				while (ActiveWorkflows.Contains(target))
+					await Task.Delay(500);
+				target.Status = WorkflowStatuses.Canceled;
+				await target.Update();
+			}
+		}
+
+		/// <summary>
+		/// Request all workflows to cancel
+		/// </summary>
+		public void CancelAll()
+		{
+			Task.Run(async () => CancelAllAsync());
+		}
+		/// <summary>
+		/// Cancel all workflows and wait for them all to stop.
+		/// </summary>
+		/// <returns></returns>
+		public async Task CancelAllAsync()
+		{
+			foreach (var item in ActiveWorkflows)
+				await CancelAsync(item.ID);
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Updates a currently running workflow state with a new workflow definition.
+		/// This is only possible if the workflow is at an activity that implements <seealso cref="Models.Activities.IUpdatableWorkflowActivity"/>
+		/// and that the workflow state is <seealso cref="ActFlow.Models.Workflows.WorkflowStatuses.AwaitingUpdate"/>
+		/// </summary>
+		/// <param name="stateId"></param>
+		/// <param name="workflow"></param>
+		/// <returns></returns>
+		public async Task<WorkflowState> UpdateWorkflowAsync(Guid stateId, Workflow workflow)
 		{
 			var state = ActiveWorkflows.FirstOrDefault(x => x.ID == stateId);
 			if (state != null)
 			{
+				if (state.Workflow.Activities[state.ActivityIndex] is not IUpdatableWorkflowActivity)
+					throw new Exception($"Can only update the workflow on activities that implements '{nameof(IUpdatableWorkflowActivity)}'");
+				if (state.Status != WorkflowStatuses.AwaitingUpdate)
+					throw new Exception("Current state is not awaiting any updates!");
+
 				state.AppendToLog("Applying user input");
 				var combinedState = new WorkflowState(state);
-				combinedState.Workflow = workflow.Workflow;
+				combinedState.Workflow = workflow;
 				state.IsProcessingUserInput = true;
-				await Cancel(state.ID);
+				await CancelAsync(state.ID);
 				combinedState.Status = WorkflowStatuses.NotStarted;
-				combinedState.AppendToLog("Rerunning chain...");
+				combinedState.AppendToLog("Rerunning workflow...");
 				await combinedState.Update();
 				Execute(combinedState);
 				return combinedState;
 			}
-			throw new Exception($"No chain log item with the id '{stateId}' found!");
+			throw new Exception($"No workflow log item with the id '{stateId}' found!");
 		}
 	}
 }

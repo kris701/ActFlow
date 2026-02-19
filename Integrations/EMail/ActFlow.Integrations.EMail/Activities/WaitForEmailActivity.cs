@@ -2,7 +2,7 @@
 
 namespace ActFlow.Integrations.EMail.Activities
 {
-	public class WaitForEmailActivity : IActivity, IAwaitInputActivity
+	public class WaitForEmailActivity : IActivity, IUpdatableWorkflowActivity
 	{
 		public string Name { get; set; } = "waitforemail";
 		public string WorkerID { get; set; } = "default";

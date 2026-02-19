@@ -1,6 +1,6 @@
 ﻿namespace ActFlow.Models.Activities
 {
-	public interface IAwaitInputActivity
+	public interface IUpdatableWorkflowActivity
 	{
 	}
 }

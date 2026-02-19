@@ -28,6 +28,12 @@ namespace ActFlow.Integrations.EMail.Workers
 					if (mail.ConversationID == act.ConversationID)
 						return new WorkerResult(mail);
 
+				if (state.Status != WorkflowStatuses.AwaitingUpdate)
+				{
+					state.Status = WorkflowStatuses.AwaitingUpdate;
+					await state.Update();
+				}
+
 				await Task.Delay(WaitDelayMs, token);
 				if (token.IsCancellationRequested)
 					return new WorkerResult();

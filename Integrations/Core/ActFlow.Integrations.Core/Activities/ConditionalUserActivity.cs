@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.Core.Activities
 {
-	public class ConditionalUserActivity : IActivity, IAwaitInputActivity
+	public class ConditionalUserActivity : IActivity, IUpdatableWorkflowActivity
 	{
 		public string Name { get; set; } = "waitforuserinput";
 		public string WorkerID { get; set; } = "default";
