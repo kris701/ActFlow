@@ -1,11 +1,9 @@
-﻿using ActFlow.Integrations.DatabaseSharp.Workers;
+﻿using ActFlow.Integrations.EMail.Activities;
+using ActFlow.Integrations.EMail.Workers;
 using ActFlow.Models.Workers;
 using ActFlow.TestTools;
-using ActFlow.Tools.Extensions;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 
-namespace ActFlow.Integrations.DatabaseSharp.Tests.Workers
+namespace ActFlow.Integrations.EMail.Tests.Workers
 {
 	[TestClass]
 	public class SerializationTests
@@ -13,11 +11,11 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new FetchItemsFromDatabaseWorker("a", "") };
+				new ReplyToEmailWorker("a", new EMail.OutlookMailService("",0,"","","")) };
 			yield return new object[] {
-				new InsertChainFromDatabaseWorker("a", "") };
+				new SendEmailWorker("a", new EMail.OutlookMailService("",0,"","","")) };
 			yield return new object[] {
-				new InsertItemToDatabaseWorker("a", "") };
+				new WaitForEmailWorker("a", 1000, new EMail.OutlookMailService("",0,"","","")) };
 		}
 
 		[TestMethod]

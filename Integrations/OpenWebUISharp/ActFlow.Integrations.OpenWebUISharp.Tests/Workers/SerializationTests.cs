@@ -1,11 +1,9 @@
-﻿using ActFlow.Integrations.DatabaseSharp.Workers;
+﻿using ActFlow.Integrations.OpenWebUI.OpenWebUI;
+using ActFlow.Integrations.OpenWebUI.Workers;
 using ActFlow.Models.Workers;
 using ActFlow.TestTools;
-using ActFlow.Tools.Extensions;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 
-namespace ActFlow.Integrations.DatabaseSharp.Tests.Workers
+namespace ActFlow.Integrations.OpenWebUISharp.Tests.Workers
 {
 	[TestClass]
 	public class SerializationTests
@@ -13,11 +11,11 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new FetchItemsFromDatabaseWorker("a", "") };
+				new ExtractDataFromTextLLMWorker("a", new OpenWebUIService("","")) };
 			yield return new object[] {
-				new InsertChainFromDatabaseWorker("a", "") };
+				new ExtractDataFromTextRAGLLMWorker("a", new OpenWebUIService("","")) };
 			yield return new object[] {
-				new InsertItemToDatabaseWorker("a", "") };
+				new QueryLLMWorker("a", new OpenWebUIService("","")) };
 		}
 
 		[TestMethod]

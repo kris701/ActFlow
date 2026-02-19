@@ -1,5 +1,0 @@
-{
-  "$type": "ConditionalUserWorker",
-  "WaitDelayMs": 1000,
-  "id": "a"
-}

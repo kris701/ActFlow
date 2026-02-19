@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\ActFlow.TestTools\ActFlow.TestTools.csproj" />
-    <ProjectReference Include="..\ActFlow.Integrations.Core\ActFlow.Integrations.Core.csproj" />
+    <ProjectReference Include="..\ActFlow.Integrations.OpenWebUISharp\ActFlow.Integrations.OpenWebUISharp.csproj" />
   </ItemGroup>
 
   <ItemGroup>

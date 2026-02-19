@@ -1,5 +1,0 @@
-{
-  "$type": "FetchItemsFromDatabaseWorker",
-  "ConnectionString": "",
-  "id": "a"
-}

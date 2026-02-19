@@ -1,8 +1,0 @@
-{
-  "$type": "FetchItemsFromDatabaseActivity",
-  "Name": "abc",
-  "WorkerID": "a",
-  "TargetSTP": "sp_a",
-  "Arguments": {},
-  "TargetDeserializationType": "FetchItemsFromDatabaseActivity"
-}

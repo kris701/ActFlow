@@ -9,15 +9,19 @@
     <Project Path="Integrations/DatabaseSharp/ActFlow.Integrations.DatabaseSharp/ActFlow.Integrations.DatabaseSharp.csproj" Id="e384c561-e34c-4ccb-88c6-cc76fc420503" />
   </Folder>
   <Folder Name="/Integrations/EMail/">
+    <Project Path="Integrations/EMail/ActFlow.Integrations.EMail.Tests/ActFlow.Integrations.EMail.Tests.csproj" Id="f7d42584-86b3-4c74-a704-7d2371a181e8" />
     <Project Path="Integrations/EMail/ActFlow.Integrations.EMail/ActFlow.Integrations.EMail.csproj" Id="1052223c-8b26-4544-8400-3032c7d825ac" />
   </Folder>
   <Folder Name="/Integrations/JSON/">
+    <Project Path="Integrations/JSON/ActFlow.Integrations.JSON.Tests/ActFlow.Integrations.JSON.Tests.csproj" Id="fa50f3bb-7d0e-4348-88dc-b081091ab153" />
     <Project Path="Integrations/JSON/ActFlow.Integrations.JSON/ActFlow.Integrations.JSON.csproj" Id="452c5d75-2244-4a8a-a41b-35f372a54a97" />
   </Folder>
   <Folder Name="/Integrations/ML.NET/">
+    <Project Path="Integrations/ML.NET/ActFlow.Integrations.ML.NET.Tests/ActFlow.Integrations.ML.NET.Tests.csproj" Id="88e3d29e-6d75-4c9a-a36b-78d959796ae8" />
     <Project Path="Integrations/ML.NET/ActFlow.Integrations.ML.NET/ActFlow.Integrations.ML.NET.csproj" Id="59365ed6-ee88-45e3-801b-86afcf2d23af" />
   </Folder>
   <Folder Name="/Integrations/OpenWebUISharp/">
+    <Project Path="Integrations/OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp.Tests/ActFlow.Integrations.OpenWebUISharp.Tests.csproj" Id="2405d71a-e976-4f3a-886a-7468b71627db" />
     <Project Path="Integrations/OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp.csproj" Id="2e019908-8c3f-46c5-b505-ac6eccbfa864" />
   </Folder>
   <Folder Name="/Solution Items/">
@@ -26,5 +30,6 @@
     <File Path="LICENSE.txt" />
     <File Path="README.md" />
   </Folder>
+  <Project Path="ActFlow.TestTools/ActFlow.TestTools.csproj" Id="5b8306df-d746-41e7-b6f0-59ce6306af07" />
   <Project Path="ActFlow/ActFlow.csproj" />
 </Solution>
