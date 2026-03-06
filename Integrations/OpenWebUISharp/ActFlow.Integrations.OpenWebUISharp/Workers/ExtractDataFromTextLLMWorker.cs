@@ -15,7 +15,7 @@ namespace ActFlow.Integrations.OpenWebUISharp.Workers
 			OpenWebUIService = openWebUIService;
 		}
 
-		public override async Task<WorkerResult> Execute(ExtractDataFromTextLLMActivity act, WorkflowState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(ExtractDataFromTextLLMActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine(act.Prompt);

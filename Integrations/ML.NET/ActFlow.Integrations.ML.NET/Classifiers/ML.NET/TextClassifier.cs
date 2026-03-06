@@ -9,10 +9,12 @@ namespace ActFlow.Integrations.ML.NET.Classifiers.ML.NET
 	{
 		public string ClassifierLog { get; internal set; } = "";
 
-		public async Task Train(List<ModelInput> items, string modelName)
+		public async Task Train(List<ModelInput> items, string modelName, string directory)
 		{
-			if (!Directory.Exists("trainingmodels"))
-				Directory.CreateDirectory("trainingmodels");
+			var modelDir = Path.Combine(directory, "MLNET", "models");
+
+			if (!Directory.Exists(modelDir))
+				Directory.CreateDirectory(modelDir);
 
 			AppendToLog("Training info:");
 			AppendToLog($"\tTotal items to train on: {items.Count}");
@@ -55,7 +57,7 @@ namespace ActFlow.Integrations.ML.NET.Classifiers.ML.NET
 			AppendToLog();
 
 			AppendToLog($"Saving trained model...");
-			var targetFile = $"trainingmodels/{modelName}.zip";
+			var targetFile = Path.Combine(modelDir, $"{modelName}.zip");
 			var targetFileInfo = new FileInfo(targetFile);
 			if (!Directory.Exists(targetFileInfo.Directory!.FullName))
 				Directory.CreateDirectory(targetFileInfo.Directory!.FullName);
@@ -64,11 +66,13 @@ namespace ActFlow.Integrations.ML.NET.Classifiers.ML.NET
 			AppendToLog($"Training sequence complete!");
 		}
 
-		public ClassificationResult Predict(ModelInput item, string modelName)
+		public ClassificationResult Predict(ModelInput item, string modelName, string directory)
 		{
-			if (!Directory.Exists("trainingmodels"))
-				Directory.CreateDirectory("trainingmodels");
-			if (!File.Exists($"trainingmodels/{modelName}.zip"))
+			var modelDir = Path.Combine(directory, "MLNET", "models");
+			if (!Directory.Exists(modelDir))
+				Directory.CreateDirectory(modelDir);
+			var modelPath = Path.Combine(modelDir, $"{modelName}.zip");
+			if (!File.Exists(modelPath))
 				throw new FileNotFoundException("Model not found! You must train a model before you can predict with it.");
 
 			// Initialize MLContext
@@ -79,7 +83,7 @@ namespace ActFlow.Integrations.ML.NET.Classifiers.ML.NET
 			};
 
 			DataViewSchema modelSchema;
-			ITransformer trainedModel = mlContext.Model.Load($"trainingmodels/{modelName}.zip", out modelSchema);
+			ITransformer trainedModel = mlContext.Model.Load(modelPath, out modelSchema);
 			PredictionEngine<ModelInput, ModelOutput> engine =
 				mlContext.Model.CreatePredictionEngine<ModelInput, ModelOutput>(trainedModel);
 

@@ -29,6 +29,16 @@ namespace ActFlow
 		/// </summary>
 		public int RemoveDelay { get; set; } = 60000;
 
+		/// <summary>
+		/// The path to the persistent data folder
+		/// </summary>
+		public string PersistentDirectory { get; set; } = "persistent";
+
+		/// <summary>
+		/// The path to the temporary data folder
+		/// </summary>
+		public string TemporaryDirectory { get; set; } = "runners";
+
 		private readonly Dictionary<ServiceKey, IWorker> _serviceCache = new Dictionary<ServiceKey, IWorker>();
 		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);
 
@@ -41,6 +51,8 @@ namespace ActFlow
 			Workers = workers;
 			foreach (var worker in workers)
 			{
+				worker.PersistenDirectory = PersistentDirectory;
+
 				var tpy = worker.GetType();
 				var baseType = tpy.BaseType;
 				var typeArg = baseType?.GenericTypeArguments[0].Name;
@@ -97,6 +109,13 @@ namespace ActFlow
 			else
 				state.AppendToLog("Workflow continued...");
 
+			var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
+			if (Directory.Exists(tmpDirectory))
+				Directory.Delete(tmpDirectory);
+			Directory.CreateDirectory(tmpDirectory);
+
+			state.AppendToLog("Temporary folder created");
+
 			if (state.ActivityIndex < 0)
 				state.ActivityIndex = 0;
 
@@ -123,7 +142,7 @@ namespace ActFlow
 
 					state.AppendToLog($"\tExecuting activity");
 					await state.Update();
-					var executionResult = await ExecuteActivityAsync(activity, state, state.TokenSource.Token);
+					var executionResult = await ExecuteActivityAsync(activity, state, state.TokenSource.Token, tmpDirectory);
 					if (state.Status != WorkflowStatuses.Canceled)
 						state.Status = WorkflowStatuses.Running;
 					if (state.TokenSource.IsCancellationRequested)
@@ -208,7 +227,12 @@ namespace ActFlow
 				await state.Complete();
 
 			if (state.TokenSource.IsCancellationRequested)
+			{
+				var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
+				if (Directory.Exists(tmpDirectory))
+					Directory.Delete(tmpDirectory);
 				ActiveWorkflows.Remove(state);
+			}
 			else
 			{
 				state.AppendToLog($"Removing from Active List in {RemoveDelay}ms");
@@ -217,26 +241,29 @@ namespace ActFlow
 				Task.Run(async () =>
 				{
 					await Task.Delay(RemoveDelay);
+					var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
+					if (Directory.Exists(tmpDirectory))
+						Directory.Delete(tmpDirectory);
 					ActiveWorkflows.Remove(state);
 				});
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 			}
 		}
 
-		private async Task<WorkerResult> ExecuteActivityAsync(IActivity act, WorkflowState state, CancellationToken token)
+		private async Task<WorkerResult> ExecuteActivityAsync(IActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var targetKey = new ServiceKey(act.WorkerID, act.GetType().Name);
 			if (_serviceCache.ContainsKey(targetKey))
 			{
 				var executor = _serviceCache[targetKey];
-				return await ExecuteActivityAsync((dynamic)executor, (dynamic)act, state, token);
+				return await ExecuteActivityAsync((dynamic)executor, (dynamic)act, state, token, tmpDirectory);
 			}
 			throw new Exception($"Unknown target activity executor '{targetKey}'! This probably means that the backend have not been set up to accept this type of action!");
 		}
 
-		private async Task<WorkerResult> ExecuteActivityAsync<T>(BaseWorker<T> worker, T act, WorkflowState state, CancellationToken token) where T : IActivity
+		private async Task<WorkerResult> ExecuteActivityAsync<T>(BaseWorker<T> worker, T act, WorkflowState state, CancellationToken token, string tmpDirectory) where T : IActivity
 		{
-			return await worker.Execute(act, state, token);
+			return await worker.Execute(act, state, token, tmpDirectory);
 		}
 
 		#endregion

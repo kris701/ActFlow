@@ -16,13 +16,13 @@ namespace ActFlow.Integrations.ML.NET.Worker
 		{
 		}
 
-		public override async Task<WorkerResult> Execute(TrainTextClassifierActivity act, WorkflowState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(TrainTextClassifierActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var data = JsonSerializer.Deserialize<List<ModelInput>>(act.Data);
 			if (data != null)
 			{
 				_classifier.ClassifierLog = "";
-				await _classifier.Train(data, act.ModelName);
+				await _classifier.Train(data, act.ModelName, PersistenDirectory);
 				state.AppendToLog(_classifier.ClassifierLog);
 			}
 

@@ -12,6 +12,9 @@ namespace ActFlow.Models.Workers
 		[StictLowerCaseString]
 		public string ID { get; set; }
 
-		public Task<WorkerResult> ExecuteActionAsync(dynamic act, WorkflowState state, CancellationToken token);
+		[JsonIgnore]
+		public string PersistenDirectory { get; set; }
+
+		public Task<WorkerResult> ExecuteActionAsync(dynamic act, WorkflowState state, CancellationToken token, string directory);
 	}
 }

@@ -15,7 +15,7 @@ namespace ActFlow.Integrations.EMail.Workers
 			MailService = mailService;
 		}
 
-		public override async Task<WorkerResult> Execute(SendEmailActivity act, WorkflowState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(SendEmailActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			if (act.Answer is MailContext answer)
 				await MailService.SendAsync(answer);
