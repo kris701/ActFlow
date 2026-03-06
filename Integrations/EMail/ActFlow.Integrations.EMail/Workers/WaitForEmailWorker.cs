@@ -16,7 +16,7 @@ namespace ActFlow.Integrations.EMail.Workers
 			MailService = mailService;
 		}
 
-		public override async Task<WorkerResult> Execute(WaitForEmailActivity act, WorkflowState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(WaitForEmailActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var startTime = DateTime.UtcNow;
 			while (true)

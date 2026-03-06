@@ -4,7 +4,7 @@
 	{
 		public string ClassifierLog { get; }
 
-		public Task Train(List<Tin> items, string modelName);
-		public TOut Predict(Tin item, string modelName);
+		public Task Train(List<Tin> items, string modelName, string directory);
+		public TOut Predict(Tin item, string modelName, string directory);
 	}
 }

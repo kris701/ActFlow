@@ -26,6 +26,16 @@ namespace ActFlow
 		public int RemoveDelay { get; set; }
 
 		/// <summary>
+		/// The path to the persistent data folder
+		/// </summary>
+		public string PersistentDirectory { get; set; }
+
+		/// <summary>
+		/// The path to the temporary data folder
+		/// </summary>
+		public string TemporaryDirectory { get; set; }
+
+		/// <summary>
 		/// Execute a workflow and gets its state ID
 		/// </summary>
 		/// <param name="workflow"></param>

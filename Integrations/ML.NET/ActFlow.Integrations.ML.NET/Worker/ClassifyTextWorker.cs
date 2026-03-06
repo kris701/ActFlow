@@ -15,9 +15,9 @@ namespace ActFlow.Integrations.ML.NET.Worker
 		{
 		}
 
-		public override async Task<WorkerResult> Execute(ClassifyTextActivity act, WorkflowState state, CancellationToken token)
+		public override async Task<WorkerResult> Execute(ClassifyTextActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
-			var predict = _classifier.Predict(new ModelInput() { Value = act.Text }, act.Model);
+			var predict = _classifier.Predict(new ModelInput() { Value = act.Text }, act.Model, PersistenDirectory);
 			return new WorkerResult(
 				new StringContext() { Text = predict.Label });
 		}
