@@ -2,12 +2,8 @@
 using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using ToolsSharp;
 
 namespace ActFlow.Integrations.XML.Workers
 {
@@ -21,7 +17,7 @@ namespace ActFlow.Integrations.XML.Workers
 		{
 			var xmlText = XElement.Parse(act.XML);
 			var results = new Dictionary<string, string>();
-			foreach(var key in act.XPaths.Keys)
+			foreach (var key in act.XPaths.Keys)
 			{
 				var value = xmlText.XPathSelectElement(act.XPaths[key]);
 				var valueStr = value?.Value;

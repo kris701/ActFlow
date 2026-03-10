@@ -1,9 +1,6 @@
 ﻿using ActFlow.Integrations.XML.Activities;
 using ActFlow.Integrations.XML.Workers;
 using ActFlow.Models.Contexts;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ActFlow.Integrations.XML.Tests.Workers
 {
@@ -16,7 +13,7 @@ namespace ActFlow.Integrations.XML.Tests.Workers
 			// ARRANGE
 			var xmlText = File.ReadAllText("TestFiles/books.xml");
 			var worker = new ExtractValuesFromXMLWorker("");
-			var activity = new ExtractValuesFromXMLActivity("","", xmlText, new Dictionary<string, string>() {
+			var activity = new ExtractValuesFromXMLActivity("", "", xmlText, new Dictionary<string, string>() {
 				{ "v1", "//book[last()]/author" },
 				{ "v2", "//book[@id='bk102'][1]/author" }
 			});

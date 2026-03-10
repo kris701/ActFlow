@@ -4,7 +4,6 @@ using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using DatabaseSharp;
 using DatabaseSharp.Models;
-using System.Text.Json;
 
 namespace ActFlow.Integrations.DatabaseSharp.Workers
 {
@@ -35,9 +34,9 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 			{
 				var targetTable = result[act.ResultTable];
 				var newItem = new Dictionary<string, string>();
-				foreach(var row in targetTable)
+				foreach (var row in targetTable)
 				{
-					foreach(var mapKey in act.ResultMap.Keys)
+					foreach (var mapKey in act.ResultMap.Keys)
 					{
 						var value = row.GetValue<string>(mapKey);
 						newItem.Add(act.ResultMap[mapKey], value);

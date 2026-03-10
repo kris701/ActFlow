@@ -1,7 +1,4 @@
 ﻿using ActFlow.Models.Activities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ActFlow.Integrations.XML.Activities
 {

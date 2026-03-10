@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace ActFlow.Models.Contexts
 {
@@ -12,7 +11,7 @@ namespace ActFlow.Models.Contexts
 			var newDict = new Dictionary<string, string>();
 			newDict.Add("$type", nameof(ListDictionaryContext));
 			var index = 0;
-			foreach(var item in Values)
+			foreach (var item in Values)
 				foreach (var key in item.Keys)
 					newDict.Add($"{index++}.{key}", item[key]);
 			return newDict;

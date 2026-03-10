@@ -10,11 +10,11 @@ namespace ActFlow.Models.Contexts
 		{
 			var newDict = new Dictionary<string, string>();
 			newDict.Add("$type", nameof(DictionaryListContext));
-			foreach(var key in Values.Keys)
+			foreach (var key in Values.Keys)
 			{
 				var index = 0;
 				foreach (var value in Values[key])
-					newDict.Add($"{key}.{index++}",value);
+					newDict.Add($"{key}.{index++}", value);
 			}
 			return newDict;
 		}
