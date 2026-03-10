@@ -162,6 +162,9 @@ namespace ActFlow
 					}
 				}
 
+				if (state.TokenSource.IsCancellationRequested)
+					break;
+
 				activityCount++;
 				if (activityCount > ActivityLimiter)
 				{
