@@ -84,106 +84,56 @@ Using this simple system syntax, you can combine many different activities to cr
 
 Here is a list of integrations that you can use in your ActFlow workflows.
 
-![Static Badge](https://img.shields.io/badge/Integration-Core-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Core) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.Core)
-
-Contains some core activities that you typically see used in workflows. 
-Take a look in the Integrations folder under Core to inspect the schema of the activities.
-
-The activities are:
-* **Conditional If**
+* ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.Core-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Core) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.Core)
+  * **Conditional If**
     * Compares two string values against each other. True or false redirects to different activity indexes in the workflow file.
-* **Conditional (user) If**
+  * **Conditional (user) If**
     * Same as the conditional if, but where one of the values is a user input.
-* **Create Context**
+  * **Create Context**
     * Directly creates a new context.
-* **Insert Globals**
+  * **Insert Globals**
     * Insert some global values that can be used across the entire workflow.
-* **No Action**
+  * **No Action**
     * A placeholder activity that does nothing.
-
-![Static Badge](https://img.shields.io/badge/Integration-DatabaseSharp-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.DatabaseSharp) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.DatabaseSharp)
-
-Integrates [DatabaseSharp](https://github.com/kris701/DatabaseSharp) as activities.
-Take a look in the Integrations folder under DatabaseSharp to inspect the schema of the activities.
-
-The activities are:
-* **Execute STP**
+* ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.DatabaseSharp-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.DatabaseSharp) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.DatabaseSharp)
+  * [DatabaseSharp](https://github.com/kris701/DatabaseSharp)
+  * **Execute STP**
     * Execute a STP with some parameters and get the result.
-* **Insert Workflow From Databaser**
+  * **Insert Workflow From Databaser**
     * Fetch a workflow from a database and insert it after this activity.
-
-![Static Badge](https://img.shields.io/badge/Integration-EMail-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.EMail) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.EMail)
-
-Integrates Outlook email handling as activities.
-Take a look in the Integrations folder under EMail to inspect the schema of the activities.
-
-The activities are:
-* **Reply to Email**
+* ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.EMail-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.EMail) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.EMail)
+  * **Reply to Email**
     * Reply to a given email
-* **Send Email**
+  * **Send Email**
     * Send a new email
-* **Wait for Email**
+  * **Wait for Email**
     * Wait for a reply on a given email
-
-![Static Badge](https://img.shields.io/badge/Integration-JSON-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.JSON) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.JSON)
-
-Integrates some JSON handling as activities.
-Take a look in the Integrations folder under JSON to inspect the schema of the activities.
-
-The activities are:
-* **Extract Value From JSON**
+* ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.JSON-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.JSON) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.JSON)
+  * **Extract Value From JSON**
     * Given some text, extract some data by means of a JSONPath
-
-![Static Badge](https://img.shields.io/badge/Integration-ML.NET-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.ML.NET) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.ML.NET)
-
-Integrates [ML.NET](https://dotnet.microsoft.com/en-us/apps/ai/ml-dotnet) handling as activities.
-Take a look in the Integrations folder under ML.NET to inspect the schema of the activities.
-
-The activities are:
-* **Train Text Classitifer**
+* ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.ML.NET-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.ML.NET) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.ML.NET)
+  * [ML.NET](https://dotnet.microsoft.com/en-us/apps/ai/ml-dotnet)
+  * **Train Text Classitifer**
     * Train a text classifier with some data
-* **Classify Text**
+  * **Classify Text**
     * Classify some text
-
-![Static Badge](https://img.shields.io/badge/Integration-OpenWebUISharp-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.OpenWebUISharp) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.OpenWebUISharp)
-
-Integrates [DatabaseSharp](https://github.com/kris701/OpenWebUISharp) as activities.
-Take a look in the Integrations folder under OpenWebUISharp to inspect the schema of the activities.
-
-The activities are:
-* **Extract Data From Text**
+* ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.OpenWebUISharp-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.OpenWebUISharp) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.OpenWebUISharp)
+  * [OpenWebUISharp](https://github.com/kris701/OpenWebUISharp)
+  * **Extract Data From Text**
     * Extract data from text using a LLM
-* **Extract Data From Text (RAG)**
+  * **Extract Data From Text (RAG)**
     * Extract data from text using a LLM (RAG)
-* **Query**
+  * **Query**
     * Query an LLM
-
-![Static Badge](https://img.shields.io/badge/Integration-XML-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.XML) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.XML)
-
-Integrates some XML handling as activities.
-Take a look in the Integrations folder under XML to inspect the schema of the activities.
-
-The activities are:
-* **Extract Values from XML**
+* ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.XML-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.XML) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.XML)
+  * **Extract Values from XML**
     * Given some text, extract values to a dictionary
-
-![Static Badge](https://img.shields.io/badge/Integration-Javascript-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Javascript) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.Javascript)
-
-Integrates Javascript execution as activities.
-Take a look in the Integrations folder under Javascript to inspect the schema of the activities.
-
-The activities are:
-* **Execute Javascript**
+* ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.Javascript-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Javascript) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.Javascript)
+  * **Execute Javascript**
     * Execute some javascript code
-
-![Static Badge](https://img.shields.io/badge/Integration-Time-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Time) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.Time)
-
-Integrates Time based as activities.
-Take a look in the Integrations folder under Time to inspect the schema of the activities.
-
-The activities are:
-* **Delay**
+* ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.Time-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Time) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.Time)
+  * **Delay**
     * Wait for some specified amount of time
-* **Cron Wait**
+  * **Cron Wait**
     * Wait for the next occurence from some Cron expression
 
