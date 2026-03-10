@@ -20,6 +20,12 @@ namespace ActFlow.Integrations.XML.Activities
 			XPaths = xPaths;
 		}
 
-		public IActivity Clone() => new ExtractValuesFromXMLActivity(Name, WorkerID, XML, XPaths);
+		public IActivity Clone()
+		{
+			var xPaths = new Dictionary<string, string>();
+			foreach (var key in XPaths.Keys)
+				xPaths.Add(key, XPaths[key]);
+			return new ExtractValuesFromXMLActivity(Name, WorkerID, XML, xPaths);
+		}
 	}
 }

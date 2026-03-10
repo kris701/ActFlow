@@ -7,16 +7,6 @@ namespace ActFlow.Models.Contexts
 	{
 		public Dictionary<string, string> Values { get; set; } = new Dictionary<string, string>();
 
-		public string GetContent()
-		{
-			var sb = new StringBuilder();
-
-			foreach (var key in Values.Keys)
-				sb.AppendLine($"\"{key}\":\"{Values[key]}\"");
-
-			return sb.ToString();
-		}
-
 		public Dictionary<string, string> GetContextValues()
 		{
 			var newDict = new Dictionary<string, string>();

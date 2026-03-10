@@ -8,15 +8,17 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 		public string WorkerID { get; set; } = "default";
 		public string TargetSTP { get; set; }
 		public Dictionary<string, string> Arguments { get; set; }
-		public string TargetDeserializationType { get; set; }
+		public int ResultTable { get; set; } = 0;
+		public Dictionary<string, string> ResultMap { get; set; }
 
-		public FetchItemsFromDatabaseActivity(string name, string workerId, string targetSTP, Dictionary<string, string> arguments, string targetDeserializationType)
+		public FetchItemsFromDatabaseActivity(string name, string workerId, string targetSTP, Dictionary<string, string> arguments, int resultTable, Dictionary<string, string> resultMap)
 		{
 			Name = name;
 			WorkerID = workerId;
 			TargetSTP = targetSTP;
 			Arguments = arguments;
-			TargetDeserializationType = targetDeserializationType;
+			ResultTable = resultTable;
+			ResultMap = resultMap;
 		}
 
 		public IActivity Clone()
@@ -24,7 +26,10 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 			var arguments = new Dictionary<string, string>();
 			foreach (var key in Arguments.Keys)
 				arguments.Add(key, Arguments[key]);
-			return new FetchItemsFromDatabaseActivity(Name, WorkerID, TargetSTP, arguments, TargetDeserializationType);
+			var resultMap = new Dictionary<string, string>();
+			foreach (var key in ResultMap.Keys)
+				resultMap.Add(key, ResultMap[key]);
+			return new FetchItemsFromDatabaseActivity(Name, WorkerID, TargetSTP, arguments, ResultTable, resultMap);
 		}
 	}
 }

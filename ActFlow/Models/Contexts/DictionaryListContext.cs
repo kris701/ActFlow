@@ -6,13 +6,16 @@ namespace ActFlow.Models.Contexts
 	{
 		public Dictionary<string, List<string>> Values { get; set; } = new Dictionary<string, List<string>>();
 
-		public string GetContent() => JsonSerializer.Serialize(Values);
-
 		public Dictionary<string, string> GetContextValues()
 		{
 			var newDict = new Dictionary<string, string>();
 			newDict.Add("$type", nameof(DictionaryListContext));
-			newDict.Add("dictlistdata", JsonSerializer.Serialize(JsonSerializer.Serialize(Values)));
+			foreach(var key in Values.Keys)
+			{
+				var index = 0;
+				foreach (var value in Values[key])
+					newDict.Add($"{key}.{index++}",value);
+			}
 			return newDict;
 		}
 

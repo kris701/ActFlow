@@ -1,5 +1,4 @@
 ﻿using ActFlow.Integrations.DatabaseSharp.Activities;
-using ActFlow.Integrations.DatabaseSharp.Helpers;
 using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
@@ -30,9 +29,24 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 				act.TargetSTP,
 				args);
 
-			var jsonResult = JsonSerializer.Serialize(result[0].FillAll(TypeHelpers.ByName(act.TargetDeserializationType)));
+			var results = new List<Dictionary<string, string>>();
 
-			return new WorkerResult(new StringContext() { Text = jsonResult.Replace("\"", "\\\"") });
+			if (result.Count >= act.ResultTable)
+			{
+				var targetTable = result[act.ResultTable];
+				var newItem = new Dictionary<string, string>();
+				foreach(var row in targetTable)
+				{
+					foreach(var mapKey in act.ResultMap.Keys)
+					{
+						var value = row.GetValue<string>(mapKey);
+						newItem.Add(act.ResultMap[mapKey], value);
+					}
+				}
+				results.Add(newItem);
+			}
+
+			return new WorkerResult(new ListDictionaryContext() { Values = results });
 		}
 	}
 }

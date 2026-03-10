@@ -12,7 +12,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Workers
 			yield return new object[] {
 				new FetchItemsFromDatabaseWorker("a", "") };
 			yield return new object[] {
-				new InsertChainFromDatabaseWorker("a", "") };
+				new InsertWorkflowFromDatabaseWorker("a", "") };
 			yield return new object[] {
 				new InsertItemToDatabaseWorker("a", "") };
 		}

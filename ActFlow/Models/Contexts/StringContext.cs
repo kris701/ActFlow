@@ -6,7 +6,6 @@ namespace ActFlow.Models.Contexts
 	{
 		public string Text { get; set; } = "Empty";
 
-		public string GetContent() => Text;
 		public Dictionary<string, string> GetContextValues() => new Dictionary<string, string>() { { "$type", nameof(StringContext) }, { "text", Text } };
 		public IContext Clone() => new StringContext() { Text = Text };
 

@@ -7,17 +7,15 @@ namespace ActFlow.Models.Contexts
 	{
 		public List<string> Values { get; set; } = new List<string>();
 
-		public string GetContent()
+		public Dictionary<string, string> GetContextValues()
 		{
-			var sb = new StringBuilder();
-
+			var newDict = new Dictionary<string, string>();
+			newDict.Add("$type", nameof(ListContext));
+			var index = 0;
 			foreach (var value in Values)
-				sb.AppendLine($"\"{value}\"");
-
-			return sb.ToString();
+				newDict.Add($"{index++}", value);
+			return newDict;
 		}
-
-		public Dictionary<string, string> GetContextValues() => new Dictionary<string, string>() { { "$type", nameof(ListContext) } };
 
 		public IContext Clone() => new ListContext() { Values = new List<string>(Values) };
 

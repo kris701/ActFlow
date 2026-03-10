@@ -9,7 +9,7 @@ namespace ActFlow.Integrations.JSON.Activities
 		public string WorkerID { get; set; } = "default";
 
 		public string JSON { get; set; }
-		[JsonPropertyName("jsonPath")]
+		[JsonPropertyName("jsonPaths")]
 		public Dictionary<string, string> JSONPaths { get; set; }
 
 		public ExtractValuesFromJSONActivity(string name, string workerId, string json, Dictionary<string, string> jsonPaths)
@@ -20,6 +20,12 @@ namespace ActFlow.Integrations.JSON.Activities
 			JSONPaths = jsonPaths;
 		}
 
-		public IActivity Clone() => new ExtractValuesFromJSONActivity(Name, WorkerID, JSON, JSONPaths);
+		public IActivity Clone()
+		{
+			var jsonPaths = new Dictionary<string, string>();
+			foreach (var key in JSONPaths.Keys)
+				jsonPaths.Add(key, JSONPaths[key]);
+			return new ExtractValuesFromJSONActivity(Name, WorkerID, JSON, jsonPaths);
+		}
 	}
 }
