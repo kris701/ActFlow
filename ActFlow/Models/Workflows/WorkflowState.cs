@@ -18,7 +18,7 @@ namespace ActFlow.Models.Workflows
 		public DateTime? StartedAt { get; set; }
 		public DateTime? EndedAt { get; set; }
 		public string LogText { get; set; }
-		public IWorkflow Workflow { get; set; }
+		public Workflow Workflow { get; set; }
 
 		public bool IsProcessingUserInput { get; set; } = false;
 
@@ -37,7 +37,7 @@ namespace ActFlow.Models.Workflows
 			ContextStore = new Dictionary<string, string>();
 		}
 
-		public WorkflowState(IWorkflow workflow)
+		public WorkflowState(Workflow workflow)
 		{
 			ID = Guid.NewGuid();
 			Workflow = workflow;

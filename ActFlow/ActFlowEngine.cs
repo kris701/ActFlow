@@ -1,8 +1,8 @@
-﻿using ActFlow.Models;
+﻿using ActFlow.Helpers;
+using ActFlow.Models;
 using ActFlow.Models.Activities;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace ActFlow
@@ -135,31 +135,31 @@ namespace ActFlow
 
 				try
 				{
-					var activity = state.Workflow.Activities[state.ActivityIndex].Clone();
-					state.AppendToLog($"\tInitializing activity {activity.Name}");
-
-					activity = ApplyContexts(state, activity);
-
-					state.AppendToLog($"\tExecuting activity");
-					await state.Update();
-					var executionResult = await ExecuteActivityAsync(activity, state, state.TokenSource.Token, tmpDirectory);
-					if (state.Status != WorkflowStatuses.Canceled)
-						state.Status = WorkflowStatuses.Running;
-					if (state.TokenSource.IsCancellationRequested)
-						break;
-					state.AppendToLog($"\tResulting activity context is a {executionResult.Context.GetType()}");
-					state.AppendToLog($"\tResulting activity context content is {executionResult.Context.ToString()}");
-
-					InsertResultIntoContextStore(state, activity.Name, executionResult);
-
-					state.ActivityIndex = FindNextActivityIndex(state, executionResult);
+					await ExecuteActivityAsync(state, tmpDirectory);
 				}
 				catch (Exception ex)
 				{
 					state.AppendToLogError($"Message: {ex.Message}");
 					state.AppendToLogError($"Trace: {ex.StackTrace}");
-					state.Status = WorkflowStatuses.Failed;
-					break;
+
+					if (state.Workflow.RetryBehaviour == WorkflowRetryBehaviour.None)
+					{
+						state.Status = WorkflowStatuses.Failed;
+						break;
+					}
+					else if (state.Workflow.RetryBehaviour == WorkflowRetryBehaviour.Activity)
+					{
+						state.AppendToLogError($"Retrying activity in 10 seconds...");
+						await Task.Delay(TimeSpan.FromSeconds(10));
+						continue;
+					}
+					else if (state.Workflow.RetryBehaviour == WorkflowRetryBehaviour.Workflow)
+					{
+						state.AppendToLogError($"Retrying entire workflow in 10 seconds...");
+						await Task.Delay(TimeSpan.FromSeconds(10));
+						ActiveWorkflows.Remove(state);
+						return await ExecuteAsync(state.Workflow);
+					}
 				}
 
 				activityCount++;
@@ -179,46 +179,6 @@ namespace ActFlow
 
 			await ProcessCompleted(state);
 			return state;
-		}
-
-		private IActivity ApplyContexts(WorkflowState state, IActivity activity)
-		{
-			var text = JsonSerializer.Serialize(activity);
-			var matches = _variableRegex.Matches(text);
-			foreach (Match match in matches)
-			{
-				var key = match.Groups[1].Value.ToLower();
-				if (state.ContextStore.Keys.Contains(key))
-					text = text.Replace(match.Groups[0].Value, state.ContextStore[key]);
-				else
-					throw new Exception($"Variable '{key}' was not found in the current state!");
-			}
-			var deActivity = JsonSerializer.Deserialize<IActivity>(text);
-			if (deActivity == null)
-				throw new ArgumentNullException("Could not deserialize the activity!");
-			return deActivity;
-		}
-
-		private int FindNextActivityIndex(WorkflowState state, WorkerResult executionResult)
-		{
-			var nextActivityIndex = state.ActivityIndex + 1;
-			if (executionResult.TargetActivity != "")
-			{
-				state.AppendToLog($"\tNext target activity is named {executionResult.TargetActivity}");
-				nextActivityIndex = state.Workflow.Activities.FindIndex(x => x.Name == executionResult.TargetActivity);
-				if (nextActivityIndex == -1)
-					throw new Exception($"Could not find a activity named '{executionResult.TargetActivity}'");
-				if (state.Workflow.Activities.Count(x => x.Name == executionResult.TargetActivity) > 1)
-					state.AppendToLog($"Warning, multiple activities with the name '{executionResult.TargetActivity}' found! Using the first one...");
-			}
-			return nextActivityIndex;
-		}
-
-		private void InsertResultIntoContextStore(WorkflowState state, string activityName, WorkerResult executionResult)
-		{
-			var values = executionResult.Context.GetContextValues();
-			foreach (var valueKey in values.Keys)
-				state.AddContext($"{activityName}.{valueKey}".ToLower(), values[valueKey]);
 		}
 
 		private async Task ProcessCompleted(WorkflowState state)
@@ -250,20 +210,37 @@ namespace ActFlow
 			}
 		}
 
+		private async Task ExecuteActivityAsync(WorkflowState state, string tmpDirectory)
+		{
+			var activity = state.Workflow.Activities[state.ActivityIndex].Clone();
+			state.AppendToLog($"\tInitializing activity {activity.Name}");
+
+			activity = ActivityHelpers.ApplyContexts(state, activity);
+
+			state.AppendToLog($"\tExecuting activity");
+			await state.Update();
+			var executionResult = await ExecuteActivityAsync(activity, state, state.TokenSource.Token, tmpDirectory);
+			if (state.Status != WorkflowStatuses.Canceled)
+				state.Status = WorkflowStatuses.Running;
+			if (state.TokenSource.IsCancellationRequested)
+				return;
+			state.AppendToLog($"\tResulting activity context is a {executionResult.Context.GetType()}");
+			state.AppendToLog($"\tResulting activity context content is {executionResult.Context.ToString()}");
+
+			WorkflowStateHelpers.InsertResultIntoContextStore(state, activity.Name, executionResult);
+
+			state.ActivityIndex = WorkflowStateHelpers.FindNextActivityIndex(state, executionResult);
+		}
+
 		private async Task<WorkerResult> ExecuteActivityAsync(IActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var targetKey = new ServiceKey(act.WorkerID, act.GetType().Name);
 			if (_serviceCache.ContainsKey(targetKey))
 			{
 				var executor = _serviceCache[targetKey];
-				return await ExecuteActivityAsync((dynamic)executor, (dynamic)act, state, token, tmpDirectory);
+				return await ActivityHelpers.ExecuteActivityAsync((dynamic)executor, (dynamic)act, state, token, tmpDirectory);
 			}
 			throw new Exception($"Unknown target activity executor '{targetKey}'! This probably means that the backend have not been set up to accept this type of action!");
-		}
-
-		private async Task<WorkerResult> ExecuteActivityAsync<T>(BaseWorker<T> worker, T act, WorkflowState state, CancellationToken token, string tmpDirectory) where T : IActivity
-		{
-			return await worker.Execute(act, state, token, tmpDirectory);
 		}
 
 		#endregion
