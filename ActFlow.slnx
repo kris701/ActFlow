@@ -24,6 +24,10 @@
     <Project Path="Integrations/OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp.Tests/ActFlow.Integrations.OpenWebUISharp.Tests.csproj" Id="2405d71a-e976-4f3a-886a-7468b71627db" />
     <Project Path="Integrations/OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp.csproj" Id="2e019908-8c3f-46c5-b505-ac6eccbfa864" />
   </Folder>
+  <Folder Name="/Integrations/XML/">
+    <Project Path="Integrations/XML/ActFlow.Integrations.XML.Tests/ActFlow.Integrations.XML.Tests.csproj" Id="4f2ce649-8711-42dc-a72b-aca9c1cd28f5" />
+    <Project Path="Integrations/XML/ActFlow.Integrations.XML/ActFlow.Integrations.XML.csproj" Id="719f3f88-b946-4478-9707-ca1513f61ea4" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".github/workflows/dotnet.yml" />
     <File Path=".gitignore" />

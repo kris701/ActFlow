@@ -160,3 +160,11 @@ The activities are:
 * **Query**
     * Query an LLM
 
+![Static Badge](https://img.shields.io/badge/Integration-XML-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.XML) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.XML)
+
+Integrates some XML handling as activities.
+Take a look in the Integrations folder under XML to inspect the schema of the activities.
+
+The activities are:
+* **Extract Values from XML**
+    * Given some text, extract values to a dictionary

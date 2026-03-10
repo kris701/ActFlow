@@ -1,8 +1,8 @@
-﻿using ActFlow.Integrations.JSON.Activities;
+﻿using ActFlow.Integrations.XML.Activities;
 using ActFlow.Models.Activities;
 using ActFlow.TestTools;
 
-namespace ActFlow.Integrations.JSON.Tests.Activities
+namespace ActFlow.Integrations.XML.Tests.Activities
 {
 	[TestClass]
 	public class SerializationTests
@@ -10,7 +10,7 @@ namespace ActFlow.Integrations.JSON.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExtractValuesFromJSONActivity("abc", "a", "abc", new Dictionary<string, string>(){ { "v1", "$0" } }) };
+				new ExtractValuesFromXMLActivity("abc", "a", "", new Dictionary<string, string>()) };
 		}
 
 		[TestMethod]

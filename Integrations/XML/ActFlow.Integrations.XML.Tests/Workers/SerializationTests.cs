@@ -1,8 +1,8 @@
-﻿using ActFlow.Integrations.JSON.Workers;
+﻿using ActFlow.Integrations.XML.Workers;
 using ActFlow.Models.Workers;
 using ActFlow.TestTools;
 
-namespace ActFlow.Integrations.JSON.Tests.Workers
+namespace ActFlow.Integrations.XML.Tests.Workers
 {
 	[TestClass]
 	public class SerializationTests
@@ -10,7 +10,7 @@ namespace ActFlow.Integrations.JSON.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExtractValuesFromJSONWorker("a") };
+				new ExtractValuesFromXMLWorker("a") };
 		}
 
 		[TestMethod]

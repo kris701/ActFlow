@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	  <Title>ActFlow.Integrations.ML.NET</Title>
+	  <Title>ActFlow.Integrations.XML</Title>
 	  <Authors>Kristian Skov Johansen</Authors>
-	  <Description>ML.NET workflow activities for ActFlow</Description>
+	  <Description>XML workflow activities for ActFlow</Description>
 	  <RepositoryUrl>https://github.com/kris701/ActFlow</RepositoryUrl>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -15,7 +15,7 @@
 
 	<PropertyGroup>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<Version>1.0.1</Version>
+		<Version>1.0.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -33,12 +33,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.ML" Version="5.0.0" />
-		<PackageReference Include="Microsoft.ML.TorchSharp" Version="0.23.0" />
+		<ProjectReference Include="..\..\..\ActFlow\ActFlow.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\ActFlow\ActFlow.csproj" />
+	  <PackageReference Include="ToolsSharp" Version="1.1.6" />
 	</ItemGroup>
 
 </Project>
