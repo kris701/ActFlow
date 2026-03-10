@@ -176,5 +176,14 @@ The activities are:
 * **Execute Javascript**
     * Execute some javascript code
 
+![Static Badge](https://img.shields.io/badge/Integration-Time-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Time) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.Time)
 
+Integrates Time based as activities.
+Take a look in the Integrations folder under Time to inspect the schema of the activities.
+
+The activities are:
+* **Delay**
+    * Wait for some specified amount of time
+* **Cron Wait**
+    * Wait for the next occurence from some Cron expression
 

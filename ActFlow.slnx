@@ -28,6 +28,10 @@
     <Project Path="Integrations/OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp.Tests/ActFlow.Integrations.OpenWebUISharp.Tests.csproj" Id="2405d71a-e976-4f3a-886a-7468b71627db" />
     <Project Path="Integrations/OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp.csproj" Id="2e019908-8c3f-46c5-b505-ac6eccbfa864" />
   </Folder>
+  <Folder Name="/Integrations/Time/">
+    <Project Path="Integrations/Time/ActFlow.Integrations.Time.Tests/ActFlow.Integrations.Time.Tests.csproj" Id="29a2abd1-027b-41b6-8a33-a4970c409249" />
+    <Project Path="Integrations/Time/ActFlow.Integrations.Time/ActFlow.Integrations.Time.csproj" Id="b7987b48-15b8-4e52-ae77-8ea428f7761c" />
+  </Folder>
   <Folder Name="/Integrations/XML/">
     <Project Path="Integrations/XML/ActFlow.Integrations.XML.Tests/ActFlow.Integrations.XML.Tests.csproj" Id="4f2ce649-8711-42dc-a72b-aca9c1cd28f5" />
     <Project Path="Integrations/XML/ActFlow.Integrations.XML/ActFlow.Integrations.XML.csproj" Id="719f3f88-b946-4478-9707-ca1513f61ea4" />
