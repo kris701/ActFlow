@@ -26,7 +26,7 @@ All workers and activities are JSON serializable
 > To make this work, you must add a modifier to the default TypeInfoResolver for a JsonSerializer instance like this: `JsonSerializerOptions(){ TypeInfoResolver = new DefaultJsonTypeInfoResolver().WithAddedModifier(JsonExtensions.AddNativePolymorphicTypInfo) }`
 
 ## How to use
-Start by installing the nuget package `ActFlow` into your project.
+Start by installing the [NuGet package](https://www.nuget.org/packages/ActFlow/) `ActFlow` into your project.
 This package contains the actual engine used to run the workflows.
 You can add whichever integration nuget package afterwards, to give you workers and activities (I will assume you have `ActFlow.Integrations.Core` installed for the following).
 You can then setup the ActFlow engine by doing the following:
@@ -82,7 +82,7 @@ Using this simple system syntax, you can combine many different activities to cr
 
 ## Integrations
 
-Here is a list of integrations that you can use in your ActFlow workflows.
+Each of the integrations below can be found as NuGet packages by their name.
 
 * ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.Core-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Core) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.Core)
   * **Conditional If**
