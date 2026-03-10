@@ -12,8 +12,11 @@ namespace ActFlow.Models.Contexts
 			newDict.Add("$type", nameof(ListDictionaryContext));
 			var index = 0;
 			foreach (var item in Values)
+			{
 				foreach (var key in item.Keys)
-					newDict.Add($"{index++}.{key}", item[key]);
+					newDict.Add($"{index}.{key}", item[key]);
+				index++;
+			}
 			return newDict;
 		}
 

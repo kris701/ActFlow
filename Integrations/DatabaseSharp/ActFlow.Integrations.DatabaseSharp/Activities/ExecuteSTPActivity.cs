@@ -2,7 +2,7 @@
 
 namespace ActFlow.Integrations.DatabaseSharp.Activities
 {
-	public class FetchItemsFromDatabaseActivity : IActivity
+	public class ExecuteSTPActivity : IActivity
 	{
 		public string Name { get; set; } = "fetchitemsfromdatabases";
 		public string WorkerID { get; set; } = "default";
@@ -11,7 +11,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 		public int ResultTable { get; set; } = 0;
 		public Dictionary<string, string> ResultMap { get; set; }
 
-		public FetchItemsFromDatabaseActivity(string name, string workerId, string targetSTP, Dictionary<string, string> arguments, int resultTable, Dictionary<string, string> resultMap)
+		public ExecuteSTPActivity(string name, string workerId, string targetSTP, Dictionary<string, string> arguments, int resultTable, Dictionary<string, string> resultMap)
 		{
 			Name = name;
 			WorkerID = workerId;
@@ -29,7 +29,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 			var resultMap = new Dictionary<string, string>();
 			foreach (var key in ResultMap.Keys)
 				resultMap.Add(key, ResultMap[key]);
-			return new FetchItemsFromDatabaseActivity(Name, WorkerID, TargetSTP, arguments, ResultTable, resultMap);
+			return new ExecuteSTPActivity(Name, WorkerID, TargetSTP, arguments, ResultTable, resultMap);
 		}
 	}
 }

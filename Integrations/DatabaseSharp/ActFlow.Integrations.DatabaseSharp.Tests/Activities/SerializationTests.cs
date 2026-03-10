@@ -10,11 +10,9 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new FetchItemsFromDatabaseActivity("abc", "a", "sp_a", new Dictionary<string, string>(), 0, new Dictionary<string, string>()) };
+				new ExecuteSTPActivity("abc", "a", "sp_a", new Dictionary<string, string>(), 0, new Dictionary<string, string>()) };
 			yield return new object[] {
 				new InsertWorkflowFromDatabaseActivity("abc", "a", "sp_a", new Dictionary<string, string>(), false) };
-			yield return new object[] {
-				new InsertItemToDatabaseActivity("abc", "a", "sp_a", new Dictionary<string, string>()) };
 		}
 
 		[TestMethod]

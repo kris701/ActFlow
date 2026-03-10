@@ -4,21 +4,29 @@ using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using DatabaseSharp;
 using DatabaseSharp.Models;
+using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.DatabaseSharp.Workers
 {
-	public class FetchItemsFromDatabaseWorker : BaseWorker<FetchItemsFromDatabaseActivity>
+	public class ExecuteSTPWorker : BaseWorker<ExecuteSTPActivity>
 	{
 		public string ConnectionString { get; set; }
 		private readonly IDBClient _dBClient;
 
-		public FetchItemsFromDatabaseWorker(string iD, string connectionString) : base(iD)
+		[JsonConstructor]
+		public ExecuteSTPWorker(string iD, string connectionString) : base(iD)
 		{
 			ConnectionString = connectionString;
 			_dBClient = new DBClient(connectionString);
 		}
 
-		public override async Task<WorkerResult> Execute(FetchItemsFromDatabaseActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
+		public ExecuteSTPWorker(string iD, IDBClient dbClient) : base(iD)
+		{
+			ConnectionString = dbClient.ConnectionString;
+			_dBClient = dbClient;
+		}
+
+		public override async Task<WorkerResult> Execute(ExecuteSTPActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var args = new List<ISQLParameter>();
 			foreach (var key in act.Arguments.Keys)
@@ -33,16 +41,17 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 			if (result.Count >= act.ResultTable)
 			{
 				var targetTable = result[act.ResultTable];
-				var newItem = new Dictionary<string, string>();
 				foreach (var row in targetTable)
 				{
+					var newItem = new Dictionary<string, string>();
 					foreach (var mapKey in act.ResultMap.Keys)
 					{
 						var value = row.GetValue<string>(mapKey);
 						newItem.Add(act.ResultMap[mapKey], value);
 					}
+					if (newItem.Count > 0)
+						results.Add(newItem);
 				}
-				results.Add(newItem);
 			}
 
 			return new WorkerResult(new ListDictionaryContext() { Values = results });

@@ -107,10 +107,8 @@ Integrates [DatabaseSharp](https://github.com/kris701/DatabaseSharp) as activiti
 Take a look in the Integrations folder under DatabaseSharp to inspect the schema of the activities.
 
 The activities are:
-* **Fetch Items From Database**
-    * Gets a set of items from a database and returns them as a Dictionary context.
-* **Insert Item Into Database**
-    * Insert some data into a database.
+* **Execute STP**
+    * Execute a STP with some parameters and get the result.
 * **Insert Workflow From Databaser**
     * Fetch a workflow from a database and insert it after this activity.
 
