@@ -3,9 +3,9 @@ using ActFlow.Models.Workflows;
 
 namespace ActFlow.Helpers
 {
-	public static class WorkflowStateHelpers
+	internal static class WorkflowStateHelpers
 	{
-		public static int FindNextActivityIndex(WorkflowState state, WorkerResult executionResult)
+		internal static int FindNextActivityIndex(WorkflowState state, WorkerResult executionResult)
 		{
 			var nextActivityIndex = state.ActivityIndex + 1;
 			if (executionResult.TargetActivity != "")
@@ -20,7 +20,7 @@ namespace ActFlow.Helpers
 			return nextActivityIndex;
 		}
 
-		public static void InsertResultIntoContextStore(WorkflowState state, string activityName, WorkerResult executionResult)
+		internal static void InsertResultIntoContextStore(WorkflowState state, string activityName, WorkerResult executionResult)
 		{
 			var values = executionResult.Context.GetContextValues();
 			foreach (var valueKey in values.Keys)
