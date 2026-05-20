@@ -42,7 +42,9 @@
     <File Path="LICENSE.txt" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="ActFlow.CLI/ActFlow.CLI.csproj" Id="0b92afe1-f053-422a-9fcc-c009845639b5" />
+  <Project Path="ActFlow.CLI/ActFlow.CLI.csproj" Id="0b92afe1-f053-422a-9fcc-c009845639b5">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="ActFlow.TestTools/ActFlow.TestTools.csproj" Id="5b8306df-d746-41e7-b6f0-59ce6306af07" />
   <Project Path="ActFlow/ActFlow.csproj" />
 </Solution>
