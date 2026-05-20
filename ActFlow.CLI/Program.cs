@@ -5,12 +5,15 @@ using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using CommandLine;
 using CommandLine.Text;
+using NuGet;
+using NuGet.Protocol.Core.Types;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
 internal class Program
 {
-	private static JsonSerializerOptions _serializerOpts = new JsonSerializerOptions() { TypeInfoResolver = new DefaultJsonTypeInfoResolver().WithAddedModifier(JsonExtensions.AddNativePolymorphicTypInfo) };
+	private static JsonSerializerOptions _serializerOpts = new JsonSerializerOptions() { WriteIndented = true, TypeInfoResolver = new DefaultJsonTypeInfoResolver().WithAddedModifier(JsonExtensions.AddNativePolymorphicTypInfo) };
 
 	static async Task Main(string[] args)
 	{
@@ -25,6 +28,32 @@ internal class Program
 		Console.WriteLine("Checking paths...");
 		var inputFile = File.ReadAllText(opts.InputPath);
 		var configFile = File.ReadAllText(opts.ConfigPath);
+		var packageFile = File.ReadAllText(opts.PackagePath);
+
+		Console.WriteLine("Ensuring packages are installed...");
+		var targetPackages = JsonSerializer.Deserialize<List<string>>(packageFile);
+		if (targetPackages == null)
+			throw new Exception("Packages is malformed!");
+
+		var loader = new NuGetLoader();
+		await loader.LoadExtensions(targetPackages);
+		var plugins = Directory.GetDirectories(".plugins");
+		var found = 0;
+		foreach(var plugin in plugins)
+		{
+			var target = targetPackages.FirstOrDefault(x => plugin.StartsWith(Path.Combine(".plugins", x)));
+			if (target != null)
+			{
+				var targetPath = Path.Combine(plugin, "lib", "net10.0", target + ".dll");
+				if (!File.Exists(targetPath))
+					throw new Exception($"Could not find package '{target}'");
+				Assembly.LoadFrom(targetPath);
+				AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(targetPath));
+				found++;
+			}
+		}
+		if (found != targetPackages.Count)
+			throw new Exception("Could not find all packages!");
 
 		Console.WriteLine("Parsing Config...");
 		var workers = JsonSerializer.Deserialize<List<IWorker>>(configFile, _serializerOpts);

@@ -20,8 +20,8 @@ namespace ActFlow.Extensions
 
 		private static void UpdateTypeInfo<T>(JsonTypeInfo jsonTypeInfo)
 		{
-			var actionTypes = AppDomain.CurrentDomain.GetAssemblies()
-					.SelectMany(s => s.GetTypes())
+			var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+			var actionTypes = assemblies.SelectMany(s => s.GetTypes())
 					.Where(p => typeof(T).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
 
 			jsonTypeInfo.PolymorphismOptions = new JsonPolymorphismOptions

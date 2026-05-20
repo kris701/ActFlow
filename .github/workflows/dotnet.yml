@@ -16,223 +16,127 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
 
+      - name: Add nuget source
+        run: |
+          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
+
       - name: Build (Release) and Publish [ActFlow]
         run: |  
           cd ActFlow
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-
-  publishActFlowCore:
-    runs-on: ubuntu-latest
-    name: Publish "ActFlow.Integrations.Core"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-          
-      - name: Install dependencies
-        run: dotnet restore
+          cd ../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.Core]
         run: |  
           cd Integrations/Core/ActFlow.Integrations.Core
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-
-  publishActFlowDatabaseSharp:
-    runs-on: ubuntu-latest
-    name: Publish "ActFlow.Integrations.DatabaseSharp"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-          
-      - name: Install dependencies
-        run: dotnet restore
+          cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.DatabaseSharp]
         run: |  
           cd Integrations/DatabaseSharp/ActFlow.Integrations.DatabaseSharp
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-
-  publishActFlowEMail:
-    runs-on: ubuntu-latest
-    name: Publish "ActFlow.Integrations.EMail"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-          
-      - name: Install dependencies
-        run: dotnet restore
+          cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.EMail]
         run: |  
           cd Integrations/EMail/ActFlow.Integrations.EMail
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-
-  publishActFlowJSON:
-    runs-on: ubuntu-latest
-    name: Publish "ActFlow.Integrations.JSON"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-          
-      - name: Install dependencies
-        run: dotnet restore
+          cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.JSON]
         run: |  
           cd Integrations/JSON/ActFlow.Integrations.JSON
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-
-  publishActFlowMLNET:
-    runs-on: ubuntu-latest
-    name: Publish "ActFlow.Integrations.ML.NET"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-          
-      - name: Install dependencies
-        run: dotnet restore
+          cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.ML.NET]
         run: |  
           cd Integrations/ML.NET/ActFlow.Integrations.ML.NET
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-
-  publishActFlowOpenWebUISharp:
-    runs-on: ubuntu-latest
-    name: Publish "ActFlow.Integrations.OpenWebUISharp"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-          
-      - name: Install dependencies
-        run: dotnet restore
+          cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.OpenWebUISharp]
         run: |  
           cd Integrations/OpenWebUISharp/ActFlow.Integrations.OpenWebUISharp
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-
-  publishActFlowXML:
-    runs-on: ubuntu-latest
-    name: Publish "ActFlow.Integrations.XML"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-          
-      - name: Install dependencies
-        run: dotnet restore
+          cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.XML]
         run: |  
           cd Integrations/XML/ActFlow.Integrations.XML
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-
-  publishActFlowJavascript:
-    runs-on: ubuntu-latest
-    name: Publish "ActFlow.Integrations.Javascript"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-          
-      - name: Install dependencies
-        run: dotnet restore
+          cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.Javascript]
         run: |  
           cd Integrations/Javascript/ActFlow.Integrations.Javascript
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-
-  publishActFlowTime:
-    runs-on: ubuntu-latest
-    name: Publish "ActFlow.Integrations.Time"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-          
-      - name: Install dependencies
-        run: dotnet restore
+          cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.Time]
         run: |  
           cd Integrations/Time/ActFlow.Integrations.Time
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
-
-  publishActFlowCLI:
-    runs-on: ubuntu-latest
-    name: Publish "ActFlow.CLI"
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-          
-      - name: Install dependencies
-        run: dotnet restore
+          cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.CLI]
         run: |  
           cd ActFlow.CLI
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin
           cd Release
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          cd ../../..

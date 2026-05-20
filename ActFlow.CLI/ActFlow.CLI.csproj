@@ -17,7 +17,7 @@
 
 	<PropertyGroup>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -44,19 +44,13 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.2" />
+    <PackageReference Include="NuGet.Core" Version="2.14.0" />
+    <PackageReference Include="NuGet.Protocol" Version="7.6.0" />
+    <PackageReference Include="NuGet.Resolver" Version="7.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ActFlow\ActFlow.csproj" />
-    <ProjectReference Include="..\Integrations\Core\ActFlow.Integrations.Core\ActFlow.Integrations.Core.csproj" />
-    <ProjectReference Include="..\Integrations\DatabaseSharp\ActFlow.Integrations.DatabaseSharp\ActFlow.Integrations.DatabaseSharp.csproj" />
-    <ProjectReference Include="..\Integrations\EMail\ActFlow.Integrations.EMail\ActFlow.Integrations.EMail.csproj" />
-    <ProjectReference Include="..\Integrations\Javascript\ActFlow.Integrations.Javascript\ActFlow.Integrations.Javascript.csproj" />
-    <ProjectReference Include="..\Integrations\JSON\ActFlow.Integrations.JSON\ActFlow.Integrations.JSON.csproj" />
-    <ProjectReference Include="..\Integrations\ML.NET\ActFlow.Integrations.ML.NET\ActFlow.Integrations.ML.NET.csproj" />
-    <ProjectReference Include="..\Integrations\OpenWebUISharp\ActFlow.Integrations.OpenWebUISharp\ActFlow.Integrations.OpenWebUISharp.csproj" />
-    <ProjectReference Include="..\Integrations\Time\ActFlow.Integrations.Time\ActFlow.Integrations.Time.csproj" />
-    <ProjectReference Include="..\Integrations\XML\ActFlow.Integrations.XML\ActFlow.Integrations.XML.csproj" />
   </ItemGroup>
-
 </Project>
