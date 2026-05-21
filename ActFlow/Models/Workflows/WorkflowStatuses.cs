@@ -3,35 +3,35 @@
 	/// <summary>
 	/// The different states a workflow can be in
 	/// </summary>
-	public enum WorkflowStatuses 
+	public enum WorkflowStatuses
 	{
 		/// <summary>
 		/// None
 		/// </summary>
-		None, 
+		None,
 		/// <summary>
 		/// Not started yet
 		/// </summary>
-		NotStarted, 
+		NotStarted,
 		/// <summary>
 		/// The workflow is actively running
 		/// </summary>
-		Running, 
+		Running,
 		/// <summary>
 		/// Workflow has failed and is no longer running
 		/// </summary>
-		Failed, 
+		Failed,
 		/// <summary>
 		/// Workflow has ended in success
 		/// </summary>
-		Succeeded, 
+		Succeeded,
 		/// <summary>
 		/// Workflow was cancled
 		/// </summary>
-		Canceled, 
+		Canceled,
 		/// <summary>
 		/// Workflow is awaiting manual input
 		/// </summary>
-		AwaitingUpdate 
+		AwaitingUpdate
 	}
 }

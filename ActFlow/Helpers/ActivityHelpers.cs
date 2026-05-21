@@ -11,7 +11,7 @@ namespace ActFlow.Helpers
 	public static class ActivityHelpers
 	{
 		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);
-		private static JsonSerializerOptions _serializerOpts = new JsonSerializerOptions() { TypeInfoResolver = new DefaultJsonTypeInfoResolver().WithAddedModifier(JsonExtensions.AddNativePolymorphicTypInfo) };
+		private static readonly JsonSerializerOptions _serializerOpts = new JsonSerializerOptions() { TypeInfoResolver = new DefaultJsonTypeInfoResolver().WithAddedModifier(JsonExtensions.AddNativePolymorphicTypInfo) };
 
 		public static IActivity ApplyContexts(WorkflowState state, IActivity activity)
 		{
