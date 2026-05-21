@@ -8,13 +8,6 @@ using NuGet.Packaging.Signing;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ActFlow.CLI
 {
@@ -31,7 +24,7 @@ namespace ActFlow.CLI
 			public bool PreRelease { get; set; }
 		}
 
-		public async Task LoadExtensions(List<string> packages)
+		public async Task LoadExtensions(string package, string version)
 		{
 			// Define a source provider, with nuget, plus my own feed.
 			var sourceProvider = new PackageSourceProvider(NullSettings.Instance, new[]
@@ -53,11 +46,15 @@ namespace ActFlow.CLI
 			var logger = new NullLogger();
 
 			// My extension configuration:
-			var extensions = packages.Select(x => new ExtensionConfiguration()
+			var extensions = new List<ExtensionConfiguration>()
 			{
-				Package = x,
-				PreRelease = false
-			});
+				new ExtensionConfiguration()
+				{
+					Package = package,
+					Version = version,
+					PreRelease = false
+				}
+			};
 
 			// Replace this with a proper cancellation token.
 			var cancellationToken = CancellationToken.None;
@@ -145,7 +142,7 @@ namespace ActFlow.CLI
 			return packagesToInstall;
 		}
 
-		private async Task<PackageIdentity> GetPackageIdentity(
+		public async Task<PackageIdentity> GetPackageIdentity(
 		  ExtensionConfiguration extConfig, SourceCacheContext cache, ILogger nugetLogger,
 		  IEnumerable<SourceRepository> repositories, CancellationToken cancelToken)
 		{
