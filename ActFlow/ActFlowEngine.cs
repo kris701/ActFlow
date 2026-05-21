@@ -27,17 +27,17 @@ namespace ActFlow
 		/// <summary>
 		/// How many ms should pass before removing a completed workflow from the <seealso cref="ActiveWorkflows"/> list
 		/// </summary>
-		public int RemoveDelay { get; set; } = 60000;
+		public TimeSpan RemoveDelay { get; set; } = TimeSpan.FromSeconds(60);
 
 		/// <summary>
 		/// The path to the persistent data folder
 		/// </summary>
-		public string PersistentDirectory { get; set; } = "persistent";
+		public string PersistentDirectory { get; set; } = ".persistent";
 
 		/// <summary>
 		/// The path to the temporary data folder
 		/// </summary>
-		public string TemporaryDirectory { get; set; } = "runners";
+		public string TemporaryDirectory { get; set; } = ".runners";
 
 		private readonly Dictionary<ServiceKey, IWorker> _serviceCache = new Dictionary<ServiceKey, IWorker>();
 		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);

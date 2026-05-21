@@ -23,7 +23,7 @@ namespace ActFlow
 		/// <summary>
 		/// How many ms should pass before removing a completed workflow from the <seealso cref="ActiveWorkflows"/> list
 		/// </summary>
-		public int RemoveDelay { get; set; }
+		public TimeSpan RemoveDelay { get; set; }
 
 		/// <summary>
 		/// The path to the persistent data folder

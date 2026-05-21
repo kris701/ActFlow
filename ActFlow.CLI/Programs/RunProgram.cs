@@ -53,7 +53,12 @@ namespace ActFlow.CLI.Programs
 				throw new Exception("Input workflow is malformed!");
 
 			Console.WriteLine("Initializing engine...");
-			IActFlowEngine engine = new ActFlowEngine(workers);
+			IActFlowEngine engine = new ActFlowEngine(workers)
+			{
+				ActivityLimiter = opts.Limiter,
+				PersistentDirectory = opts.PersistentDirectory,
+				TemporaryDirectory = opts.RunnerDirectory
+			};
 
 			Console.WriteLine("Executing workflow...");
 			var result = await engine.ExecuteAsync(workflow);

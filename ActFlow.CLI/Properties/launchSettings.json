@@ -2,7 +2,7 @@
   "profiles": {
     "ActFlow.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "run -i \"C:\\Users\\kris7\\Downloads\\tmptst\\input.json\" -c \"C:\\Users\\kris7\\Downloads\\tmptst\\config.json\""
+      "commandLineArgs": "serve -c \"C:\\Users\\kris7\\Downloads\\tmptst\\config.json\""
     }
   }
 }
