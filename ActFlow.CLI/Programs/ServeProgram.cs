@@ -50,8 +50,8 @@ namespace ActFlow.CLI.Programs
 				throw new Exception("Config is malformed!");
 
 			Console.WriteLine("Initializing engine...");
-			IActFlowEngine engine = new ActFlowEngine(workers) 
-			{ 
+			IActFlowEngine engine = new ActFlowEngine(workers)
+			{
 				RemoveDelay = TimeSpan.FromSeconds(opts.Lifetime),
 				ActivityLimiter = opts.Limiter,
 				PersistentDirectory = opts.PersistentDirectory,
@@ -85,7 +85,7 @@ namespace ActFlow.CLI.Programs
 
 					resp.Close();
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					Console.WriteLine("Unknown error: " + ex.Message);
 				}
