@@ -25,7 +25,14 @@ All workers and activities are JSON serializable
 > [!IMPORTANT]
 > To make this work, you must add a modifier to the default TypeInfoResolver for a JsonSerializer instance like this: `JsonSerializerOptions(){ TypeInfoResolver = new DefaultJsonTypeInfoResolver().WithAddedModifier(JsonExtensions.AddNativePolymorphicTypInfo) }`
 
-## How to use
+## How to Use
+For just using ActFlow, you can install the CLI tool by entering
+```
+dotnet tool install ActFlow.CLI -g
+```
+You can then call the CLI tool by the `actflow` command.
+
+## Developing
 Start by installing the [NuGet package](https://www.nuget.org/packages/ActFlow/) `ActFlow` into your project.
 This package contains the actual engine used to run the workflows.
 You can add whichever integration nuget package afterwards, to give you workers and activities (I will assume you have `ActFlow.Integrations.Core` installed for the following).
