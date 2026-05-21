@@ -16,7 +16,7 @@ The syntax are as follows for running a small HTTP server that can run workflows
 actflow serve -c <config file>
 ```
 * `-c|--config` a path to the config file to use.
-* `-p|--port` port to serve the HTTP server on.
+* `-h|--host` host o serve the HTTP server on.
 * `--lifetime` Amount of time (seconds) before completed workflows gets removed from memory.
 * `--limiter` limiter on how many activities are allowed to run pr workflow.
 * `--persistent` Directory to keep persistent data in.

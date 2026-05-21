@@ -140,3 +140,52 @@ jobs:
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
           cd ../../..
+
+  createReleaseDocker:
+    name: Update Docker Images
+    needs: createRelease
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.API_KEY_GITHUB }}
+
+      - name: Get CLI Project version
+        id: get-version
+        uses: kzrnm/get-net-sdk-project-versions-action@v1
+        with:
+          proj-path: ./ActFlow.CLI/ActFlow.CLI.csproj
+
+      - name: Get Database artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: FeatherTracker.Database.dacpac
+          path: ./Docker/Database/
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and push
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Docker/.Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/actflow:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/actflow:${{ steps.get-version.outputs.package-version }}
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/actflow:latest
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/actflow:${{ steps.get-version.outputs.package-version }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/actflow:latest
+          cache-to: type=inline,mode=min

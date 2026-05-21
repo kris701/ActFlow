@@ -1,4 +1,9 @@
 <Solution>
+  <Folder Name="/Docker/">
+    <File Path="Docker/.Dockerfile" />
+    <File Path="Docker/entry.sh" />
+    <File Path="Docker/README.md" />
+  </Folder>
   <Folder Name="/Integrations/" />
   <Folder Name="/Integrations/Core/">
     <Project Path="Integrations/Core/ActFlow.Integrations.Core.Tests/ActFlow.Integrations.Core.Tests.csproj" Id="86debccd-2082-46ef-9410-920bd2077154" />
@@ -39,6 +44,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".github/workflows/dotnet.yml" />
     <File Path=".gitignore" />
+    <File Path="docker-compose.yaml" />
     <File Path="LICENSE.txt" />
     <File Path="README.md" />
   </Folder>

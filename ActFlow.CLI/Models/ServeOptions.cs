@@ -8,8 +8,8 @@ namespace ActFlow.CLI.Models
 		[Option('c', "config", Required = true, HelpText = "Target config file to use. This should be a JSON file, being a list of IWorker configs", Default = "")]
 		public string ConfigPath { get; set; } = "";
 
-		[Option('p', "port", Required = false, HelpText = "Port to run the server on", Default = 5523)]
-		public int Port { get; set; } = 5523;
+		[Option('h', "host", Required = false, HelpText = "Host to run it on", Default = "http://localhost:5523/")]
+		public string Host { get; set; } = "http://localhost:5523/";
 
 		[Option("lifetime", Required = false, HelpText = "Amount of time (seconds) before completed workflows gets removed from memory", Default = 60)]
 		public int Lifetime { get; set; } = 60;

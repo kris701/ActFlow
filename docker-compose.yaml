@@ -1,0 +1,23 @@
+name: actflow
+services:
+    actflow:
+        container_name: actflow
+        environment:
+            - PLUGINS=ActFlow.Integrations.Core,1.0.1;ActFlow.Integrations.XML,1.0.3
+            - LIFETIME=60
+            - LIMITER=100
+        ports:
+            - 5523:6234
+        image: kris701/actflow
+        volumes:
+            - actflow-persistent:/opt/ActFlow/.persistent
+            - actflow-runners:/opt/ActFlow/.runners
+            - type: bind
+              source: <path to your config>
+              target: /opt/ActFlow/actflowconfig.json
+        restart: unless-stopped
+volumes:
+    actflow-persistent:
+        name: actflow-persistent
+    actflow-runners:
+        name: actflow-runners

@@ -32,6 +32,18 @@ dotnet tool install ActFlow.CLI -g
 ```
 You can then call the CLI tool by the `actflow` command.
 
+You can also choose to use the Docker image.
+This requires that you have a `config.json` config on your computer that contains the `IWorker` configuration.
+Simply change the bind mount in the `docker-compose.yaml`
+
+After you have set that up, you can start the docker container:
+
+```
+docker compose up -d
+```
+
+This will then start the HTTP server of the CLI, open on port 5523.
+
 ## Developing
 Start by installing the [NuGet package](https://www.nuget.org/packages/ActFlow/) `ActFlow` into your project.
 This package contains the actual engine used to run the workflows.
