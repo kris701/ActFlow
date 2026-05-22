@@ -13,11 +13,7 @@ namespace ActFlow.Integrations.Core.Workers
 
 		public override async Task<WorkerResult> Execute(LoadFileActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
-			var path = Path.Combine(PersistenDirectory, act.Path);
-			if (!File.Exists(path))
-				throw new Exception("File not found!");
-			var txt = File.ReadAllText(path);
-
+			var txt = await LoadFile(act.Path, act.Directory, tmpDirectory, token);
 			return new WorkerResult(new StringContext()
 			{
 				Text = txt

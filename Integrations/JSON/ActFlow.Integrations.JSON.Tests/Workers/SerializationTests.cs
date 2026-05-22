@@ -11,6 +11,8 @@ namespace ActFlow.Integrations.JSON.Tests.Workers
 		{
 			yield return new object[] {
 				new ExtractValuesFromJSONWorker("a") };
+			yield return new object[] {
+				new ExtractValuesFromJSONFileWorker("a") };
 		}
 
 		[TestMethod]

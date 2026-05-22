@@ -11,6 +11,8 @@ namespace ActFlow.Integrations.XML.Tests.Workers
 		{
 			yield return new object[] {
 				new ExtractValuesFromXMLWorker("a") };
+			yield return new object[] {
+				new ExtractValuesFromXMLFileWorker("a") };
 		}
 
 		[TestMethod]

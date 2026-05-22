@@ -11,6 +11,8 @@ namespace ActFlow.Integrations.XML.Tests.Activities
 		{
 			yield return new object[] {
 				new ExtractValuesFromXMLActivity("abc", "a", "", new Dictionary<string, string>()) };
+			yield return new object[] {
+				new ExtractValuesFromXMLFileActivity("abc", "a", "", Models.Contexts.FileDirectories.Temporary, new Dictionary<string, string>()) };
 		}
 
 		[TestMethod]

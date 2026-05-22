@@ -136,6 +136,8 @@ Each of the integrations below can be found as NuGet packages by their name.
 * ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.JSON-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.JSON) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.JSON)
   * **Extract Value From JSON**
     * Given some text, extract some data by means of a JSONPath
+  * **Extract Value From JSON File**
+    * Given some file, extract some data by means of a JSONPath
 * ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.ML.NET-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.ML.NET) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.ML.NET)
   * [ML.NET](https://dotnet.microsoft.com/en-us/apps/ai/ml-dotnet)
   * **Train Text Classitifer**
@@ -153,6 +155,8 @@ Each of the integrations below can be found as NuGet packages by their name.
 * ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.XML-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.XML) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.XML)
   * **Extract Values from XML**
     * Given some text, extract values to a dictionary
+  * **Extract Values from XML file**
+    * Given some file, extract values to a dictionary
 * ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.Javascript-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Javascript) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.Javascript)
   * **Execute Javascript**
     * Execute some javascript code

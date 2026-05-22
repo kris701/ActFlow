@@ -13,8 +13,7 @@ namespace ActFlow.Integrations.Core.Workers
 
 		public override async Task<WorkerResult> Execute(SaveFileActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
-			var path = Path.Combine(PersistenDirectory, act.Path);
-			File.WriteAllText(path, act.Data);
+			await SaveFile(act.Path, act.Data, act.Directory, tmpDirectory, token);
 			return new WorkerResult();
 		}
 	}

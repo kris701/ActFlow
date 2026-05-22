@@ -21,11 +21,11 @@ namespace ActFlow.Integrations.Core.Tests.Activities
 			yield return new object[] {
 				new InsertGlobalsActivity("abc", "a", new Dictionary<string, string>() { { "a", "asdasdad" } })};
 			yield return new object[] {
-				new LoadFileActivity("abc", "a", "file.txt")};
+				new LoadFileActivity("abc", "a", "file.txt", FileDirectories.Temporary)};
 			yield return new object[] {
-				new SaveFileActivity("abc", "a", "dat", "file.txt")};
+				new SaveFileActivity("abc", "a", "dat", "file.txt", FileDirectories.Temporary)};
 			yield return new object[] {
-				new ListFilesActivity("abc", "a", "")};
+				new ListFilesActivity("abc", "a", "", FileDirectories.Temporary)};
 		}
 
 		[TestMethod]

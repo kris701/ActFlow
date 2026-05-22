@@ -13,12 +13,10 @@ namespace ActFlow.Integrations.Core.Workers
 
 		public override async Task<WorkerResult> Execute(ListFilesActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
-			var path = Path.Combine(PersistenDirectory, act.Path);
-			var dirInfo = new DirectoryInfo(path);
-			var files = dirInfo.GetFiles();
+			var files = ListFiles(act.Path, act.Directory, tmpDirectory);
 			return new WorkerResult(new ListContext()
 			{
-				Values = files.Select(x => x.Name).ToList()
+				Values = files
 			});
 		}
 	}

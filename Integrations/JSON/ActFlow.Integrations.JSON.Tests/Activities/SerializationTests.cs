@@ -11,6 +11,8 @@ namespace ActFlow.Integrations.JSON.Tests.Activities
 		{
 			yield return new object[] {
 				new ExtractValuesFromJSONActivity("abc", "a", "abc", new Dictionary<string, string>(){ { "v1", "$0" } }) };
+			yield return new object[] {
+				new ExtractValuesFromJSONFileActivity("abc", "a", "", Models.Contexts.FileDirectories.Temporary, new Dictionary<string, string>(){ { "v1", "$0" } }) };
 		}
 
 		[TestMethod]
