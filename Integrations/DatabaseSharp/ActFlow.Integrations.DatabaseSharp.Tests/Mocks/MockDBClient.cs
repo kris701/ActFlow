@@ -12,5 +12,10 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Mocks
 
 		public async Task<DatabaseResult> ExecuteAsync(string procedureName, List<ISQLParameter>? parameters = null) => ResultToGive;
 		public async Task<DatabaseResult> ExecuteAsync(string procedureName, object item) => ResultToGive;
+
+		public Task<DatabaseResult> ExecuteFreeAsync(string freeSql)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -13,6 +13,8 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Activities
 				new ExecuteSTPActivity("abc", "a", "sp_a", new Dictionary<string, string>(), 0, new Dictionary<string, string>()) };
 			yield return new object[] {
 				new InsertWorkflowFromDatabaseActivity("abc", "a", "sp_a", new Dictionary<string, string>(), false) };
+			yield return new object[] {
+				new ExecuteSQLActivity("abc", "a", "sp_a", 0, new Dictionary<string, string>()) };
 		}
 
 		[TestMethod]

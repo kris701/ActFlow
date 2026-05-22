@@ -13,6 +13,8 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Workers
 				new ExecuteSTPWorker("a", "") };
 			yield return new object[] {
 				new InsertWorkflowFromDatabaseWorker("a", "") };
+			yield return new object[] {
+				new ExecuteSQLWorker("a", "") };
 		}
 
 		[TestMethod]
