@@ -20,6 +20,12 @@ namespace ActFlow.Integrations.Core.Tests.Activities
 				new CreateContextActivity("abc", "a", new EmptyContext()) };
 			yield return new object[] {
 				new InsertGlobalsActivity("abc", "a", new Dictionary<string, string>() { { "a", "asdasdad" } })};
+			yield return new object[] {
+				new LoadFileActivity("abc", "a", "file.txt")};
+			yield return new object[] {
+				new SaveFileActivity("abc", "a", "dat", "file.txt")};
+			yield return new object[] {
+				new ListFilesActivity("abc", "a", "")};
 		}
 
 		[TestMethod]
