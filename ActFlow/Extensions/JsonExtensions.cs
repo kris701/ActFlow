@@ -21,7 +21,8 @@ namespace ActFlow.Extensions
 
 		private static void UpdateTypeInfo<T>(JsonTypeInfo jsonTypeInfo)
 		{
-			var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+			var assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+			assemblies.RemoveAll(x => !x.FullName.StartsWith("ActFlow"));
 			var actionTypes = assemblies.SelectMany(s => s.GetTypes())
 					.Where(p => typeof(T).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
 
