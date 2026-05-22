@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ActFlow.Integrations.SerializableHttps.Activities
+﻿namespace ActFlow.Integrations.SerializableHttps.Activities
 {
 	public enum HttpTypes
 	{
