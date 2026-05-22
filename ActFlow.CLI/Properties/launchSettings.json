@@ -2,7 +2,7 @@
   "profiles": {
     "ActFlow.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "run \"C:\\Users\\kris7\\Downloads\\tmptst\\input.json\" -c \"C:\\Users\\kris7\\Downloads\\tmptst\\config.json\""
+      "commandLineArgs": "plugins add ActFlow.Integrations.DatabaseSharp 1.0.6"
     }
   }
 }

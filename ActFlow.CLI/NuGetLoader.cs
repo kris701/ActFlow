@@ -59,7 +59,7 @@ namespace ActFlow.CLI
 			var cancellationToken = CancellationToken.None;
 
 			// The framework we're using.
-			var targetFramework = NuGetFramework.ParseFolder("netcoreapp3.1");
+			var targetFramework = NuGetFramework.ParseFolder("net10.0");
 			var allPackages = new HashSet<SourcePackageDependencyInfo>();
 
 			var dependencyContext = DependencyContext.Default;
