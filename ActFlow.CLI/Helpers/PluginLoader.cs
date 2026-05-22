@@ -29,10 +29,11 @@ namespace ActFlow.CLI.Helpers
 				var dllToLoad = Path.Combine(first, target.Name.Replace(".nuspec", "") + ".dll");
 
 				var assemblyName = AssemblyName.GetAssemblyName(dllToLoad);
-				if (AppDomain.CurrentDomain.GetAssemblies().Any(x => x.GetName().Name == assemblyName.Name))
-					throw new Exception($"Assembly with name '{assemblyName.Name}' already loaded!");
-				Assembly.LoadFrom(dllToLoad);
-				AppDomain.CurrentDomain.Load(assemblyName);
+				if (!AppDomain.CurrentDomain.GetAssemblies().Any(x => x.GetName().Name == assemblyName.Name))
+				{
+					Assembly.LoadFrom(dllToLoad);
+					AppDomain.CurrentDomain.Load(assemblyName);
+				}
 			}
 		}
 	}
