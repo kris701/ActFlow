@@ -167,4 +167,8 @@ Each of the integrations below can be found as NuGet packages by their name.
     * Wait for some specified amount of time
   * **Cron Wait**
     * Wait for the next occurence from some Cron expression
+* ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.SerializableHttps-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Time) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.SerializableHttps)
+  * [SerializableHttps](https://github.com/kris701/SerializableHttps)
+  * **Execute HTTP**
+    * Executes a HTTP request with automatic JSON serialization/deserialization
 
