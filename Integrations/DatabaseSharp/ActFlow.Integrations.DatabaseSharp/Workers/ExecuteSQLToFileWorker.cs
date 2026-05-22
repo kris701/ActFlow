@@ -29,7 +29,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 		{
 			var result = await _dBClient.ExecuteFreeAsync(
 				act.SQL);
-			
+
 			if (result.Count >= act.ResultTable)
 			{
 				var targetTable = result[act.ResultTable];

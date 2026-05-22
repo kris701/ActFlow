@@ -20,7 +20,8 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Workers
 			var dbClient = new MockDBClient();
 			dbClient.ResultToGive = resultToGive;
 			var worker = new ExecuteSQLToFileWorker("", dbClient);
-			var activity = new ExecuteSQLToFileActivity() { 
+			var activity = new ExecuteSQLToFileActivity()
+			{
 				WorkerID = "",
 				Name = "",
 				SQL = "SELECT ABC",
