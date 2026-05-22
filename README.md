@@ -126,6 +126,8 @@ Each of the integrations below can be found as NuGet packages by their name.
     * Execute a STP with some parameters and get the result.
   * **Execute SQL**
     * Execute a free SQL string and get the result.
+  * **Execute SQL to CSV**
+    * Execute a free SQL string and save the resulting table to a CSV file.
   * **Insert Workflow From Databaser**
     * Fetch a workflow from a database and insert it after this activity.
 * ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.EMail-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.EMail) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.EMail)

@@ -15,6 +15,8 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Activities
 				new InsertWorkflowFromDatabaseActivity("abc", "a", "sp_a", new Dictionary<string, string>(), false) };
 			yield return new object[] {
 				new ExecuteSQLActivity("abc", "a", "sp_a", 0, new Dictionary<string, string>()) };
+			yield return new object[] {
+				new ExecuteSQLToFileActivity(){ WorkerID = "abc", Name = "a", Path = "path", Directory = Models.Contexts.FileDirectories.Persistent, ResultTable = 0, SQL = "SELECT" } };
 		}
 
 		[TestMethod]
