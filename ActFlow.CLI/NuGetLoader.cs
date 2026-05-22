@@ -29,8 +29,7 @@ namespace ActFlow.CLI
 			// Define a source provider, with nuget, plus my own feed.
 			var sourceProvider = new PackageSourceProvider(NullSettings.Instance, new[]
 			{
-				new PackageSource("https://api.nuget.org/v3/index.json"),
-				new PackageSource("https://f.feedz.io/autostep/ci/nuget/index.json")
+				new PackageSource("https://api.nuget.org/v3/index.json")
 			});
 
 			// Establish the source repository provider; the available providers come from our custom settings.

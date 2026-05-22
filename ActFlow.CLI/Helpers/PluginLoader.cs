@@ -6,9 +6,10 @@ namespace ActFlow.CLI.Helpers
 	{
 		public static void LoadPlugins()
 		{
-			if (!Directory.Exists(Constants._pluginPath))
-				Directory.CreateDirectory(Constants._pluginPath);
-			var plugins = Directory.GetDirectories(Constants._pluginPath);
+			if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, Constants._pluginPath)))
+				Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, Constants._pluginPath));
+
+			var plugins = Directory.GetDirectories(Path.Combine(Environment.CurrentDirectory, Constants._pluginPath));
 			Console.WriteLine($"\t{plugins.Length} plugins to load");
 			foreach (var plugin in plugins)
 			{
