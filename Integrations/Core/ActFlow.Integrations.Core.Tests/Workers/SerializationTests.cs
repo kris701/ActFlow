@@ -19,6 +19,12 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 				new InsertGlobalsWorker("a") };
 			yield return new object[] {
 				new NoActivityWorker("a") };
+			yield return new object[] {
+				new LoadFileWorker("a") };
+			yield return new object[] {
+				new SaveFileWorker("a") };
+			yield return new object[] {
+				new ListFilesWorker("a") };
 		}
 
 		[TestMethod]

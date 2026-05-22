@@ -114,6 +114,12 @@ Each of the integrations below can be found as NuGet packages by their name.
     * Insert some global values that can be used across the entire workflow.
   * **No Action**
     * A placeholder activity that does nothing.
+  * **Load File**
+    * Loads the content of a file in the `persistent` directory into context.
+  * **Save File**
+    * Saves some text to a file in the `persistent` directory.
+  * **List Files**
+    * Lists files in a given path in the `persistent` directory.
 * ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.DatabaseSharp-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.DatabaseSharp) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.DatabaseSharp)
   * [DatabaseSharp](https://github.com/kris701/DatabaseSharp)
   * **Execute STP**
