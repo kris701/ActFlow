@@ -5,7 +5,7 @@ namespace ActFlow.CLI.Helpers
 {
 	public static class PluginLoader
 	{
-		private static List<string> _preferedNetVersion = new List<string>()
+		private static readonly List<string> _preferedNetVersion = new List<string>()
 		{
 			"net10.0",
 			"net9.0",
@@ -41,7 +41,7 @@ namespace ActFlow.CLI.Helpers
 						}
 					}
 				}
-				catch(Exception ex)
+				catch (Exception ex)
 				{
 					Console.WriteLine($"\tError loading '{plugin}': {ex.Message}");
 				}
@@ -111,7 +111,7 @@ namespace ActFlow.CLI.Helpers
 			var libDirs = Directory.GetDirectories(targetLib).ToList();
 			libDirs.RemoveAll(x => !_preferedNetVersion.Any(y => x.EndsWith(y)));
 			string? first = null;
-			foreach(var version in _preferedNetVersion)
+			foreach (var version in _preferedNetVersion)
 			{
 				var target = libDirs.FirstOrDefault(x => x.EndsWith(version));
 				if (target != null)

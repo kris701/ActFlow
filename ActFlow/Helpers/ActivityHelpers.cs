@@ -1,5 +1,4 @@
-﻿using ActFlow.Extensions;
-using ActFlow.Models.Activities;
+﻿using ActFlow.Models.Activities;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using System.Text.RegularExpressions;
@@ -12,7 +11,7 @@ namespace ActFlow.Helpers
 		public static IActivity ApplyContexts(WorkflowState state, IActivity activity)
 		{
 			var props = activity.GetType().GetProperties();
-			foreach(var prop in props)
+			foreach (var prop in props)
 			{
 				if (prop.PropertyType == typeof(string))
 				{
