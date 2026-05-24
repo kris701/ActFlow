@@ -91,6 +91,9 @@ namespace ActFlow.Models.Workflows
 			EndedAt = null;
 			LogText = "";
 			ContextStore = new Dictionary<string, string>();
+			AddContext("constants.utcnow", DateTime.UtcNow.ToString("o"));
+			AddContext("constants.utc", DateTime.Now.ToString("o"));
+			AddContext("constants.stateid", ID.ToString());
 			AddContexts(workflow.Globals);
 			TokenSource = new CancellationTokenSource();
 		}
