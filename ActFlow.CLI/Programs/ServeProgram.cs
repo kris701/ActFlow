@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Web;
+using ToolsSharp;
 
 namespace ActFlow.CLI.Programs
 {
@@ -13,18 +14,18 @@ namespace ActFlow.CLI.Programs
 	{
 		public static async Task Run(ServeOptions opts)
 		{
-			Console.WriteLine("Checking paths...");
+			ConsoleHelpers.WriteLineColor("Checking paths...", ConsoleColor.Blue);
 			var configFile = File.ReadAllText(opts.ConfigPath);
 
-			Console.WriteLine("Loading plugins...");
+			ConsoleHelpers.WriteLineColor("Loading plugins...", ConsoleColor.Blue);
 			PluginLoader.LoadPlugins();
 
-			Console.WriteLine("Parsing Config...");
+			ConsoleHelpers.WriteLineColor("Parsing Config...", ConsoleColor.Blue);
 			var workers = JsonSerializer.Deserialize<List<IWorker>>(configFile, Constants._serializerOpts);
 			if (workers == null)
 				throw new Exception("Config is malformed!");
 
-			Console.WriteLine("Initializing engine...");
+			ConsoleHelpers.WriteLineColor("Initializing engine...", ConsoleColor.Blue);
 			IActFlowEngine engine = new ActFlowEngine(workers)
 			{
 				RemoveDelay = TimeSpan.FromSeconds(opts.Lifetime),
@@ -36,7 +37,7 @@ namespace ActFlow.CLI.Programs
 			HttpListener listener = new HttpListener();
 			listener.Prefixes.Add(opts.Host);
 			listener.Start();
-			Console.WriteLine($"Now listening on '{opts.Host}'");
+			ConsoleHelpers.WriteLineColor($"Now listening on '{opts.Host}'", ConsoleColor.Green);
 			while (true)
 			{
 				try
@@ -47,7 +48,7 @@ namespace ActFlow.CLI.Programs
 
 					if (req.Url != null)
 					{
-						Console.WriteLine($"\tRequest on '{req.Url.AbsolutePath}'");
+						ConsoleHelpers.WriteLineColor($"\tRequest on '{req.Url.AbsolutePath}'", ConsoleColor.DarkGray);
 
 						if ((req.HttpMethod == "POST") && (req.Url.AbsolutePath == "/run"))
 							await HandleRunRequest(engine, req, resp);
@@ -61,7 +62,7 @@ namespace ActFlow.CLI.Programs
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine("Unknown error: " + ex.Message);
+					ConsoleHelpers.WriteLineColor("Unknown error: " + ex.Message, ConsoleColor.Red);
 				}
 			}
 		}

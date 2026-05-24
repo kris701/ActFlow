@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.Loader;
+using ToolsSharp;
 
 namespace ActFlow.CLI.Helpers
 {
@@ -21,7 +22,7 @@ namespace ActFlow.CLI.Helpers
 				Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, Constants._pluginPath));
 
 			var plugins = Directory.GetDirectories(Path.Combine(Environment.CurrentDirectory, Constants._pluginPath));
-			Console.WriteLine($"\t{plugins.Length} plugins to load");
+			ConsoleHelpers.WriteLineColor($"\t{plugins.Length} plugins to load", ConsoleColor.DarkGray);
 			var loaded = 0;
 			foreach (var plugin in plugins)
 			{
@@ -43,10 +44,10 @@ namespace ActFlow.CLI.Helpers
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine($"\tError loading '{plugin}': {ex.Message}");
+					ConsoleHelpers.WriteLineColor($"\tError loading '{plugin}': {ex.Message}", ConsoleColor.Red);
 				}
 			}
-			Console.WriteLine($"\tLoaded {loaded} out of {plugins.Length}");
+			ConsoleHelpers.WriteLineColor($"\tLoaded {loaded} out of {plugins.Length}", ConsoleColor.DarkGray);
 		}
 
 		private static List<string> GetRuntimes(string plugin)

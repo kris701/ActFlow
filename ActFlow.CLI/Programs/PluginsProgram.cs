@@ -1,5 +1,6 @@
 ﻿using ActFlow.CLI.Helpers;
 using ActFlow.CLI.Models;
+using ToolsSharp;
 
 namespace ActFlow.CLI.Programs
 {
@@ -11,33 +12,33 @@ namespace ActFlow.CLI.Programs
 			{
 				case "add":
 					if (Directory.Exists(Path.Combine(Constants._pluginPath, opts.PluginName + "." + opts.PluginVersion)))
-						Console.WriteLine("Plugin already installed!");
+						ConsoleHelpers.WriteLineColor("Plugin already installed!", ConsoleColor.DarkYellow);
 					else
 					{
 						var loader = new NuGetLoader();
 						await loader.LoadExtensions(opts.PluginName, opts.PluginVersion);
-						Console.WriteLine($"Plugin '{opts.PluginName}' version '{opts.PluginVersion}' downloaded and ready for use!");
+						ConsoleHelpers.WriteLineColor($"Plugin '{opts.PluginName}' version '{opts.PluginVersion}' downloaded and ready for use!", ConsoleColor.Green);
 					}
 					break;
 				case "remove":
 					var path = Path.Combine(Constants._pluginPath, opts.PluginName + "." + opts.PluginVersion);
 					if (!Directory.Exists(path))
-						Console.WriteLine("Plugin does not exist!");
+						ConsoleHelpers.WriteLineColor("Plugin does not exist!", ConsoleColor.Red);
 					else
 					{
 						DirectoryHelpers.DeleteDirectory(path);
-						Console.WriteLine("Plugin removed!");
+						ConsoleHelpers.WriteLineColor("Plugin removed!", ConsoleColor.Green);
 					}
 					break;
 				case "list":
 					var dirs = Directory.GetDirectories(Constants._pluginPath);
 					foreach (var dir in dirs)
-						Console.WriteLine("\tPackage: " + dir);
+						ConsoleHelpers.WriteLineColor("\tPackage: " + dir, ConsoleColor.DarkGray);
 					if (dirs.Length == 0)
-						Console.WriteLine("No packages installed!");
+						ConsoleHelpers.WriteLineColor("No packages installed!", ConsoleColor.DarkYellow);
 					break;
 				default:
-					Console.WriteLine("Unknown action!");
+					ConsoleHelpers.WriteLineColor("Unknown action!", ConsoleColor.Red);
 					break;
 			}
 		}
