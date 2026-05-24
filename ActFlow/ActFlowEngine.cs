@@ -228,7 +228,10 @@ namespace ActFlow
 			if (state.TokenSource.IsCancellationRequested)
 				return;
 			state.AppendToLog($"\tResulting activity context is a {executionResult.Context.GetType()}");
-			state.AppendToLog($"\tResulting activity context content is {executionResult.Context.ToString()}");
+			var contextString = executionResult.Context.ToString();
+			if (contextString != null)
+				contextString = contextString.Length > 100 ? contextString.Substring(0, 100) : contextString;
+			state.AppendToLog($"\tResulting activity context content is {contextString}");
 
 			WorkflowStateHelpers.InsertResultIntoContextStore(state, activity.Name, executionResult);
 
