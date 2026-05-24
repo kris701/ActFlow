@@ -25,6 +25,10 @@
     <Project Path="Integrations/JSON/ActFlow.Integrations.JSON.Tests/ActFlow.Integrations.JSON.Tests.csproj" Id="fa50f3bb-7d0e-4348-88dc-b081091ab153" />
     <Project Path="Integrations/JSON/ActFlow.Integrations.JSON/ActFlow.Integrations.JSON.csproj" Id="452c5d75-2244-4a8a-a41b-35f372a54a97" />
   </Folder>
+  <Folder Name="/Integrations/Math/">
+    <Project Path="Integrations/Math/ActFlow.Integrations.Math.Tests/ActFlow.Integrations.Math.Tests.csproj" Id="662da7b3-796b-4fa1-ad88-4c84b7c561f7" />
+    <Project Path="Integrations/Math/ActFlow.Integrations.Math/ActFlow.Integrations.Math.csproj" Id="7871aff5-97eb-4854-9f4c-9e313290eb59" />
+  </Folder>
   <Folder Name="/Integrations/ML.NET/">
     <Project Path="Integrations/ML.NET/ActFlow.Integrations.ML.NET.Tests/ActFlow.Integrations.ML.NET.Tests.csproj" Id="88e3d29e-6d75-4c9a-a36b-78d959796ae8" />
     <Project Path="Integrations/ML.NET/ActFlow.Integrations.ML.NET/ActFlow.Integrations.ML.NET.csproj" Id="59365ed6-ee88-45e3-801b-86afcf2d23af" />
