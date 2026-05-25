@@ -18,15 +18,19 @@ namespace ActFlow.Helpers
 					var value = prop.GetValue(activity);
 					if (value is string str)
 					{
+						var newStr = str;
 						var matches = _variableRegex.Matches(str);
 						foreach (Match match in matches)
 						{
 							var key = match.Groups[1].Value.ToLower();
 							if (state.ContextStore.Keys.Contains(key))
-								prop.SetValue(activity, state.ContextStore[key]);
+								newStr = newStr.Replace(match.Groups[0].Value, state.ContextStore[key]);
 							else
 								throw new Exception($"Variable '{key}' was not found in the current state!");
 						}
+
+						if (newStr != str)
+							prop.SetValue(activity, newStr);
 					}
 				}
 			}
