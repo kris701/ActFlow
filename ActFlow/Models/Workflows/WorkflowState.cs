@@ -92,7 +92,9 @@ namespace ActFlow.Models.Workflows
 			LogText = "";
 			ContextStore = new Dictionary<string, string>();
 			AddContext("constants.utcnow", DateTime.UtcNow.ToString("o"));
+			AddContext("constants.utcnow.safe", DateTime.UtcNow.ToString("yyyy-dd-M--HH-mm-ss"));
 			AddContext("constants.utc", DateTime.Now.ToString("o"));
+			AddContext("constants.utc.safe", DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss"));
 			AddContext("constants.stateid", ID.ToString());
 			AddContexts(workflow.Globals);
 			TokenSource = new CancellationTokenSource();
