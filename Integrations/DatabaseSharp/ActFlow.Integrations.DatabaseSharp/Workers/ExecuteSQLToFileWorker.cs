@@ -2,6 +2,7 @@
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using DatabaseSharp;
+using System.Data;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -33,35 +34,28 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 			if (result.Count >= act.ResultTable)
 			{
 				var targetTable = result[act.ResultTable];
-				var sb = new StringBuilder();
-				var headerCounter = 0;
-				foreach (var col in targetTable.Columns)
-					sb.Append(col + (headerCounter++ < targetTable.Columns.Count - 1 ? "," : ""));
-				sb.AppendLine();
-
-				foreach (var row in targetTable)
-				{
-					headerCounter = 0;
-					foreach (var col in targetTable.Columns)
-					{
-						var value = row.GetValueOrNull(typeof(string), col);
-						if (value is string str)
-						{
-							str = str.Replace("\r\n", "");
-							str = str.Replace("\r", "");
-							str = str.Replace("\n", "");
-							sb.Append(str + (headerCounter++ < targetTable.Columns.Count - 1 ? "," : ""));
-						}
-						else
-							sb.Append((headerCounter++ < targetTable.Columns.Count - 1 ? "," : ""));
-					}
-					sb.AppendLine();
-				}
-
-				await SaveFile(act.Path, sb.ToString(), act.Directory, tmpDirectory, token);
+				await SaveFile(act.Path, DataTableToCSV(targetTable.ToDataTable()), act.Directory, tmpDirectory, token);
 			}
 
 			return new WorkerResult();
+		}
+
+		private string DataTableToCSV(DataTable table)
+		{
+			StringBuilder sb = new StringBuilder();
+
+			IEnumerable<string> columnNames = table.Columns.Cast<DataColumn>().
+											  Select(column => column.ColumnName);
+			sb.AppendLine(string.Join(",", columnNames));
+
+			foreach (DataRow row in table.Rows)
+			{
+				IEnumerable<string> fields = row.ItemArray.Select(field =>
+				  string.Concat("\"", field.ToString().Replace("\"", "\"\""), "\""));
+				sb.AppendLine(string.Join(",", fields));
+			}
+
+			return sb.ToString();
 		}
 	}
 }
