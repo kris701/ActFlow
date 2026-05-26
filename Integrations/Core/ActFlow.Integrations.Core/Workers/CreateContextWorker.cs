@@ -14,8 +14,6 @@ namespace ActFlow.Integrations.Core.Workers
 		{
 		}
 
-		
-
 		public override async Task<WorkerResult> Execute(CreateContextActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			return new WorkerResult(act.Context);

@@ -3,19 +3,28 @@ using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using DatabaseSharp;
 using DatabaseSharp.Models;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
 namespace ActFlow.Integrations.DatabaseSharp.Workers
 {
 	public class InsertWorkflowFromDatabaseWorker : BaseWorker<InsertWorkflowFromDatabaseActivity>
 	{
+		[Required]
 		public string ConnectionString { get; set; }
+		
 		private readonly IDBClient _dBClient;
 
-		public InsertWorkflowFromDatabaseWorker(string iD, string connectionString) : base(iD)
+		public InsertWorkflowFromDatabaseWorker(string id, string connectionString) : base(id)
 		{
 			ConnectionString = connectionString;
 			_dBClient = new DBClient(connectionString);
+		}
+
+		public InsertWorkflowFromDatabaseWorker(string connectionString)
+		{
+			ConnectionString = connectionString;
+			_dBClient = new DBClient(ConnectionString);
 		}
 
 		public override async Task<WorkerResult> Execute(InsertWorkflowFromDatabaseActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)

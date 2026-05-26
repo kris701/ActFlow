@@ -1,4 +1,5 @@
 ﻿using ActFlow.Models.Activities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.DatabaseSharp.Activities
 {
@@ -7,26 +8,25 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 		public string Name { get; set; } = "insertworkflow";
 		public string WorkerID { get; set; } = "default";
 
+		[Required]
 		public string TargetSTP { get; set; }
+		[Required]
 		public Dictionary<string, string> Arguments { get; set; }
 
 		public bool HasInserted { get; set; } = false;
-
-		public InsertWorkflowFromDatabaseActivity(string name, string workerId, string targetSTP, Dictionary<string, string> arguments, bool hasInserted)
-		{
-			Name = name;
-			WorkerID = workerId;
-			TargetSTP = targetSTP;
-			Arguments = arguments;
-			HasInserted = hasInserted;
-		}
 
 		public IActivity Clone()
 		{
 			var arguments = new Dictionary<string, string>();
 			foreach (var key in Arguments.Keys)
 				arguments.Add(key, Arguments[key]);
-			return new InsertWorkflowFromDatabaseActivity(Name, WorkerID, TargetSTP, arguments, HasInserted);
+			return new InsertWorkflowFromDatabaseActivity() { 
+				Name = Name,
+				WorkerID = WorkerID,
+				TargetSTP = TargetSTP,
+				Arguments = arguments,
+				HasInserted = HasInserted
+			};
 		}
 	}
 }

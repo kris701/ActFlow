@@ -1,4 +1,5 @@
 ﻿using ActFlow.Models.Activities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.DatabaseSharp.Activities
 {
@@ -6,20 +7,14 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 	{
 		public string Name { get; set; } = "fetchitemsfromdatabases";
 		public string WorkerID { get; set; } = "default";
+
+		[Required]
 		public string TargetSTP { get; set; }
+		[Required]
 		public Dictionary<string, string> Arguments { get; set; }
 		public int ResultTable { get; set; } = 0;
+		[Required]
 		public Dictionary<string, string> ResultMap { get; set; }
-
-		public ExecuteSTPActivity(string name, string workerId, string targetSTP, Dictionary<string, string> arguments, int resultTable, Dictionary<string, string> resultMap)
-		{
-			Name = name;
-			WorkerID = workerId;
-			TargetSTP = targetSTP;
-			Arguments = arguments;
-			ResultTable = resultTable;
-			ResultMap = resultMap;
-		}
 
 		public IActivity Clone()
 		{
@@ -29,7 +24,14 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 			var resultMap = new Dictionary<string, string>();
 			foreach (var key in ResultMap.Keys)
 				resultMap.Add(key, ResultMap[key]);
-			return new ExecuteSTPActivity(Name, WorkerID, TargetSTP, arguments, ResultTable, resultMap);
+			return new ExecuteSTPActivity() {
+				Name = Name,
+				WorkerID = WorkerID,
+				TargetSTP = TargetSTP,
+				Arguments = arguments,
+				ResultTable = ResultTable,
+				ResultMap = resultMap
+			};
 		}
 	}
 }

@@ -3,26 +3,28 @@ using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using DatabaseSharp;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.DatabaseSharp.Workers
 {
 	public class ExecuteSQLWorker : BaseWorker<ExecuteSQLActivity>
 	{
+		[Required]
 		public string ConnectionString { get; set; }
+
 		private readonly IDBClient _dBClient;
 
-		[JsonConstructor]
-		public ExecuteSQLWorker(string iD, string connectionString) : base(iD)
+		public ExecuteSQLWorker(string id, string connectionString) : base(id)
 		{
 			ConnectionString = connectionString;
 			_dBClient = new DBClient(connectionString);
 		}
 
-		public ExecuteSQLWorker(string iD, IDBClient dbClient) : base(iD)
+		public ExecuteSQLWorker(string connectionString)
 		{
-			ConnectionString = dbClient.ConnectionString;
-			_dBClient = dbClient;
+			ConnectionString = connectionString;
+			_dBClient = new DBClient(ConnectionString);
 		}
 
 		public override async Task<WorkerResult> Execute(ExecuteSQLActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)

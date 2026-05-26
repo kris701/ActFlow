@@ -1,4 +1,5 @@
 ﻿using ActFlow.Models.Activities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.DatabaseSharp.Activities
 {
@@ -6,25 +7,25 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 	{
 		public string Name { get; set; } = "executesqlact";
 		public string WorkerID { get; set; } = "default";
+
+		[Required]
 		public string SQL { get; set; }
 		public int ResultTable { get; set; } = 0;
+		[Required]
 		public Dictionary<string, string> ResultMap { get; set; }
-
-		public ExecuteSQLActivity(string name, string workerId, string sql, int resultTable, Dictionary<string, string> resultMap)
-		{
-			Name = name;
-			WorkerID = workerId;
-			SQL = sql;
-			ResultTable = resultTable;
-			ResultMap = resultMap;
-		}
 
 		public IActivity Clone()
 		{
 			var resultMap = new Dictionary<string, string>();
 			foreach (var key in ResultMap.Keys)
 				resultMap.Add(key, ResultMap[key]);
-			return new ExecuteSQLActivity(Name, WorkerID, SQL, ResultTable, resultMap);
+			return new ExecuteSQLActivity() {
+				Name = Name,
+				WorkerID = WorkerID,
+				SQL = SQL,
+				ResultTable = ResultTable,
+				ResultMap = resultMap
+			};
 		}
 	}
 }

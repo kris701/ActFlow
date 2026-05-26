@@ -22,7 +22,6 @@ namespace ActFlow.Models.Workers
 		{
 		}
 
-
 		public abstract Task<WorkerResult> Execute(T act, WorkflowState state, CancellationToken token, string tmpDirectory);
 
 		public async Task<WorkerResult> ExecuteActionAsync(dynamic act, WorkflowState state, CancellationToken token, string tmpDirectory)

@@ -11,8 +11,6 @@ namespace ActFlow.Integrations.Core.Workers
 		[Required]
 		public int WaitDelayMs { get; set; }
 
-		
-
 		public ConditionalUserWorker(string id, int waitDelayMs) : base(id)
 		{
 			WaitDelayMs = waitDelayMs;
