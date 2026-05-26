@@ -3,16 +3,14 @@ using ActFlow.Integrations.OpenWebUISharp.OpenWebUI;
 using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.OpenWebUISharp.Workers
 {
 	public class QueryLLMWorker : BaseWorker<QueryLLMActivity>
 	{
+		[Required]
 		public IOpenWebUIService OpenWebUIService { get; set; }
-		public QueryLLMWorker(string iD, IOpenWebUIService openWebUIService) : base(iD)
-		{
-			OpenWebUIService = openWebUIService;
-		}
 
 		public override async Task<WorkerResult> Execute(QueryLLMActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{

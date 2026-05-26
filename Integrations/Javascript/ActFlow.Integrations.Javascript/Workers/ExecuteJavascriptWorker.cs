@@ -2,15 +2,20 @@
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using Jint;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.Javascript.Workers
 {
 	public class ExecuteJavascriptWorker : BaseWorker<ExecuteJavascriptActivity>
 	{
+		[Required]
 		public long MemoryLimit { get; set; }
+		[Required] 
 		public int MaxStatements { get; set; }
 
-		public ExecuteJavascriptWorker(string iD, long memoryLimit, int maxStatements) : base(iD)
+		[JsonConstructor]
+		public ExecuteJavascriptWorker(long memoryLimit, int maxStatements)
 		{
 			MemoryLimit = memoryLimit;
 			MaxStatements = maxStatements;

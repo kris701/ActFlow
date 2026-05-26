@@ -1,21 +1,20 @@
 ﻿using ActFlow.Models.Activities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.Javascript.Activities
 {
 	public class ExecuteJavascriptActivity : IActivity
 	{
-		public string WorkerID { get; set; }
-		public string Name { get; set; }
+		public string WorkerID { get; set; } = "default";
+		public string Name { get; set; } = "executejs";
 
+		[Required]
 		public string Code { get; set; }
 
-		public ExecuteJavascriptActivity(string workerID, string name, string code)
-		{
-			WorkerID = workerID;
-			Name = name;
-			Code = code;
-		}
-
-		public IActivity Clone() => new ExecuteJavascriptActivity(WorkerID, Name, Code);
+		public IActivity Clone() => new ExecuteJavascriptActivity() { 
+			Name = Name,
+			WorkerID = WorkerID,
+			Code = Code
+		};
 	}
 }

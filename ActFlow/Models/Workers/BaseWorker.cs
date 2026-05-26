@@ -13,15 +13,6 @@ namespace ActFlow.Models.Workers
 		[JsonIgnore]
 		public string PersistenDirectory { get; set; }
 
-		protected BaseWorker(string id)
-		{
-			ID = id;
-		}
-
-		protected BaseWorker()
-		{
-		}
-
 		public abstract Task<WorkerResult> Execute(T act, WorkflowState state, CancellationToken token, string tmpDirectory);
 
 		public async Task<WorkerResult> ExecuteActionAsync(dynamic act, WorkflowState state, CancellationToken token, string tmpDirectory)

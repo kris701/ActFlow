@@ -1,5 +1,6 @@
 ﻿using ActFlow.Models.Activities;
 using ActFlow.Models.Contexts;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.JSON.Activities
@@ -9,26 +10,25 @@ namespace ActFlow.Integrations.JSON.Activities
 		public string Name { get; set; } = "extractasinglevaluefromjsonpathtext";
 		public string WorkerID { get; set; } = "default";
 
+		[Required]
 		public string Path { get; set; }
+		[Required]
 		public FileDirectories Directory { get; set; } = FileDirectories.Temporary;
-		[JsonPropertyName("jsonPaths")]
+		[Required]
 		public Dictionary<string, string> JSONPaths { get; set; }
-
-		public ExtractValuesFromJSONFileActivity(string name, string workerId, string path, FileDirectories directory, Dictionary<string, string> jsonPaths)
-		{
-			Name = name;
-			WorkerID = workerId;
-			Path = path;
-			Directory = directory;
-			JSONPaths = jsonPaths;
-		}
 
 		public IActivity Clone()
 		{
 			var jsonPaths = new Dictionary<string, string>();
 			foreach (var key in JSONPaths.Keys)
 				jsonPaths.Add(key, JSONPaths[key]);
-			return new ExtractValuesFromJSONFileActivity(Name, WorkerID, Path, Directory, jsonPaths);
+			return new ExtractValuesFromJSONFileActivity() {
+				Name = Name,
+				WorkerID = WorkerID,
+				Path = Path,
+				Directory = Directory,
+				JSONPaths = jsonPaths
+			};
 		}
 	}
 }

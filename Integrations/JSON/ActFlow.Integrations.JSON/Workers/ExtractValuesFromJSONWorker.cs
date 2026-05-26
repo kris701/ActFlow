@@ -9,10 +9,6 @@ namespace ActFlow.Integrations.JSON.Workers
 {
 	public class ExtractValuesFromJSONWorker : BaseWorker<ExtractValuesFromJSONActivity>
 	{
-		public ExtractValuesFromJSONWorker(string iD) : base(iD)
-		{
-		}
-
 		public override async Task<WorkerResult> Execute(ExtractValuesFromJSONActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var resultDict = new Dictionary<string, string>();

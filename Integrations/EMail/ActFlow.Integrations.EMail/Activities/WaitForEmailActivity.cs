@@ -1,4 +1,5 @@
 ﻿using ActFlow.Models.Activities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.EMail.Activities
 {
@@ -6,19 +7,20 @@ namespace ActFlow.Integrations.EMail.Activities
 	{
 		public string Name { get; set; } = "waitforemail";
 		public string WorkerID { get; set; } = "default";
+
+		[Required]
 		public string SenderEmail { get; set; }
+		[Required] 
 		public string RecieverEmail { get; set; }
+		[Required] 
 		public string ConversationID { get; set; }
 
-		public WaitForEmailActivity(string name, string workerId, string senderEmail, string recieverEmail, string conversationID)
-		{
-			Name = name;
-			WorkerID = workerId;
-			SenderEmail = senderEmail;
-			RecieverEmail = recieverEmail;
-			ConversationID = conversationID;
-		}
-
-		public IActivity Clone() => new WaitForEmailActivity(Name, WorkerID, SenderEmail, RecieverEmail, ConversationID);
+		public IActivity Clone() => new WaitForEmailActivity() { 
+			Name = Name,
+			WorkerID = WorkerID,
+			SenderEmail = SenderEmail,
+			RecieverEmail = RecieverEmail,
+			ConversationID = ConversationID
+		};
 	}
 }

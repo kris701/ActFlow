@@ -12,10 +12,6 @@ namespace ActFlow.Integrations.ML.NET.Worker
 	{
 		private readonly TextClassifier _classifier = new TextClassifier();
 
-		public TrainTextClassifierWorker(string iD) : base(iD)
-		{
-		}
-
 		public override async Task<WorkerResult> Execute(TrainTextClassifierActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var data = JsonSerializer.Deserialize<List<ModelInput>>(act.Data);

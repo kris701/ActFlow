@@ -2,15 +2,21 @@
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Kiota.Abstractions.Authentication;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.EMail.EMail
 {
 	public class OutlookMailService
 	{
+		[Required]
 		public string TargetEmail { get; }
+		[Required]
 		public int TopN { get; }
+		[Required]
 		public string ClientID { get; }
+		[Required]
 		public string TenantID { get; }
+		[Required]
 		public string ClientSecret { get; }
 
 		private readonly GraphServiceClient _client;

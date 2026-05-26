@@ -8,10 +8,6 @@ namespace ActFlow.Integrations.SerializableHttps.Workers
 {
 	public class ExecuteHttpWorker : BaseWorker<ExecuteHttpActivity>
 	{
-		public ExecuteHttpWorker(string iD) : base(iD)
-		{
-		}
-
 		public override async Task<WorkerResult> Execute(ExecuteHttpActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var client = new SerializableHttpsClient();

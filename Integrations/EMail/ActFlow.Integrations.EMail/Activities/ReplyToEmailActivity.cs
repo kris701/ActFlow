@@ -1,5 +1,6 @@
 ﻿using ActFlow.Models.Activities;
 using ActFlow.Models.Contexts;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.EMail.Activities
 {
@@ -7,17 +8,18 @@ namespace ActFlow.Integrations.EMail.Activities
 	{
 		public string Name { get; set; } = "replytoemail";
 		public string WorkerID { get; set; } = "default";
+
+		[Required]
 		public string ToMessageID { get; set; }
+		[Required]
 		public IContext Answer { get; set; }
 
-		public ReplyToEmailActivity(string name, string workerId, string toMessageID, IContext answer)
+		public IActivity Clone() => new ReplyToEmailActivity()
 		{
-			Name = name;
-			WorkerID = workerId;
-			ToMessageID = toMessageID;
-			Answer = answer;
-		}
-
-		public IActivity Clone() => new ReplyToEmailActivity(Name, WorkerID, ToMessageID, Answer.Clone());
+			Name = Name,
+			WorkerID = WorkerID,
+			ToMessageID = ToMessageID,
+			Answer = Answer.Clone()
+		};
 	}
 }

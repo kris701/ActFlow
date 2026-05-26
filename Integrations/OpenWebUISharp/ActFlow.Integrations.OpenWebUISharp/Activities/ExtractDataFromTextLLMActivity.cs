@@ -1,4 +1,5 @@
 ﻿using ActFlow.Models.Activities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.OpenWebUISharp.Activities
 {
@@ -7,19 +8,19 @@ namespace ActFlow.Integrations.OpenWebUISharp.Activities
 		public string Name { get; set; } = "extractdatawithllm";
 		public string WorkerID { get; set; } = "default";
 
+		[Required]
 		public string Text { get; set; }
+		[Required]
 		public string Prompt { get; set; }
+		[Required]
 		public string Model { get; set; }
 
-		public ExtractDataFromTextLLMActivity(string name, string workerId, string text, string prompt, string model)
-		{
-			Name = name;
-			WorkerID = workerId;
-			Text = text;
-			Prompt = prompt;
-			Model = model;
-		}
-
-		public IActivity Clone() => new ExtractDataFromTextLLMActivity(Name, WorkerID, Text, Prompt, Model);
+		public IActivity Clone() => new ExtractDataFromTextLLMActivity() { 
+			Name = Name,
+			WorkerID = WorkerID,
+			Text = Text,
+			Prompt = Prompt,
+			Model = Model
+		};
 	}
 }

@@ -7,10 +7,6 @@ namespace ActFlow.Integrations.Time.Workers
 {
 	public class CronWaitWorker : BaseWorker<CronWaitActivity>
 	{
-		public CronWaitWorker(string iD) : base(iD)
-		{
-		}
-
 		public override async Task<WorkerResult> Execute(CronWaitActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			CronExpression expression = CronExpression.Parse(act.CronExpression);

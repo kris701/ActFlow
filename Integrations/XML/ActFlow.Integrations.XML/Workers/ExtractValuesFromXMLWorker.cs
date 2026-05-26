@@ -9,10 +9,6 @@ namespace ActFlow.Integrations.XML.Workers
 {
 	public class ExtractValuesFromXMLWorker : BaseWorker<ExtractValuesFromXMLActivity>
 	{
-		public ExtractValuesFromXMLWorker(string iD) : base(iD)
-		{
-		}
-
 		public override async Task<WorkerResult> Execute(ExtractValuesFromXMLActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var xmlText = XElement.Parse(act.XML);

@@ -6,16 +6,6 @@ namespace ActFlow.Integrations.Core.Workers
 {
 	public class InsertGlobalsWorker : BaseWorker<InsertGlobalsActivity>
 	{
-		public InsertGlobalsWorker()
-		{
-		}
-
-		public InsertGlobalsWorker(string id) : base(id)
-		{
-		}
-
-		
-
 		public override async Task<WorkerResult> Execute(InsertGlobalsActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			state.AddContexts(act.Arguments);

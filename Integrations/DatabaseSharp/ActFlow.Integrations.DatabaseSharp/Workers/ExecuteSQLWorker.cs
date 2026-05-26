@@ -15,12 +15,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 
 		private readonly IDBClient _dBClient;
 
-		public ExecuteSQLWorker(string id, string connectionString) : base(id)
-		{
-			ConnectionString = connectionString;
-			_dBClient = new DBClient(connectionString);
-		}
-
+		[JsonConstructor]
 		public ExecuteSQLWorker(string connectionString)
 		{
 			ConnectionString = connectionString;

@@ -7,16 +7,6 @@ namespace ActFlow.Integrations.Core.Workers
 {
 	public class ConditionalIfWorker : BaseWorker<ConditionalIfActivity>
 	{
-		public ConditionalIfWorker()
-		{
-		}
-
-		public ConditionalIfWorker(string id) : base(id)
-		{
-		}
-
-		
-
 		public override async Task<WorkerResult> Execute(ConditionalIfActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			state.AppendToLog($"Evaluated: '{act.LeftCondition}' '{Enum.GetName(act.Comparer)}' '{act.RightCondition}' = '{act.LeftCondition == act.RightCondition}'");

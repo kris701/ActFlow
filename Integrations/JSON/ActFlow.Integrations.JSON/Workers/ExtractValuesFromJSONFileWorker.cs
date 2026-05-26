@@ -9,10 +9,6 @@ namespace ActFlow.Integrations.JSON.Workers
 {
 	public class ExtractValuesFromJSONFileWorker : BaseWorker<ExtractValuesFromJSONFileActivity>
 	{
-		public ExtractValuesFromJSONFileWorker(string iD) : base(iD)
-		{
-		}
-
 		public override async Task<WorkerResult> Execute(ExtractValuesFromJSONFileActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var json = await LoadFile(act.Path, act.Directory, tmpDirectory, token);

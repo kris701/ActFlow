@@ -5,6 +5,7 @@ using DatabaseSharp;
 using DatabaseSharp.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.DatabaseSharp.Workers
 {
@@ -15,12 +16,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 		
 		private readonly IDBClient _dBClient;
 
-		public InsertWorkflowFromDatabaseWorker(string id, string connectionString) : base(id)
-		{
-			ConnectionString = connectionString;
-			_dBClient = new DBClient(connectionString);
-		}
-
+		[JsonConstructor]
 		public InsertWorkflowFromDatabaseWorker(string connectionString)
 		{
 			ConnectionString = connectionString;

@@ -1,5 +1,6 @@
 ﻿using ActFlow.Models.Activities;
 using ActFlow.Models.Contexts;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.EMail.Activities
 {
@@ -7,15 +8,14 @@ namespace ActFlow.Integrations.EMail.Activities
 	{
 		public string Name { get; set; } = "sendanemail";
 		public string WorkerID { get; set; } = "default";
+
+		[Required]
 		public IContext Answer { get; set; }
 
-		public SendEmailActivity(string name, string workerId, IContext answer)
-		{
-			Name = name;
-			WorkerID = workerId;
-			Answer = answer;
-		}
-
-		public IActivity Clone() => new SendEmailActivity(Name, WorkerID, Answer.Clone());
+		public IActivity Clone() => new SendEmailActivity() { 
+			Name = Name,
+			WorkerID = WorkerID,
+			Answer = Answer.Clone()
+		};
 	}
 }

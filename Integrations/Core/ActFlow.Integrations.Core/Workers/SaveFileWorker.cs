@@ -6,16 +6,6 @@ namespace ActFlow.Integrations.Core.Workers
 {
 	public class SaveFileWorker : BaseWorker<SaveFileActivity>
 	{
-		public SaveFileWorker()
-		{
-		}
-
-		public SaveFileWorker(string id) : base(id)
-		{
-		}
-
-		
-
 		public override async Task<WorkerResult> Execute(SaveFileActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			await SaveFile(act.Path, act.Data, act.Directory, tmpDirectory, token);

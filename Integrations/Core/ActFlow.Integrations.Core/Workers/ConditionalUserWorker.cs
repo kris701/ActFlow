@@ -3,6 +3,7 @@ using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.Core.Workers
 {
@@ -11,11 +12,7 @@ namespace ActFlow.Integrations.Core.Workers
 		[Required]
 		public int WaitDelayMs { get; set; }
 
-		public ConditionalUserWorker(string id, int waitDelayMs) : base(id)
-		{
-			WaitDelayMs = waitDelayMs;
-		}
-
+		[JsonConstructor]
 		public ConditionalUserWorker(int waitDelayMs)
 		{
 			WaitDelayMs = waitDelayMs;

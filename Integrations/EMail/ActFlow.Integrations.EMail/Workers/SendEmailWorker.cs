@@ -3,14 +3,18 @@ using ActFlow.Integrations.EMail.Contexts;
 using ActFlow.Integrations.EMail.EMail;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.EMail.Workers
 {
 	public class SendEmailWorker : BaseWorker<SendEmailActivity>
 	{
+		[Required]
 		public OutlookMailService MailService { get; set; }
 
-		public SendEmailWorker(string iD, OutlookMailService mailService) : base(iD)
+		[JsonConstructor]
+		public SendEmailWorker(OutlookMailService mailService)
 		{
 			MailService = mailService;
 		}

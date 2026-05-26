@@ -1,4 +1,5 @@
 ﻿using ActFlow.Models.Activities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.OpenWebUISharp.Activities
 {
@@ -7,17 +8,16 @@ namespace ActFlow.Integrations.OpenWebUISharp.Activities
 		public string Name { get; set; } = "queryllm";
 		public string WorkerID { get; set; } = "default";
 
+		[Required]
 		public string Prompt { get; set; }
+		[Required] 
 		public string Model { get; set; }
 
-		public QueryLLMActivity(string name, string workerId, string prompt, string model)
-		{
-			Name = name;
-			WorkerID = workerId;
-			Prompt = prompt;
-			Model = model;
-		}
-
-		public IActivity Clone() => new QueryLLMActivity(Name, WorkerID, Prompt, Model);
+		public IActivity Clone() => new QueryLLMActivity() { 
+			Name = Name,
+			WorkerID = WorkerID,
+			Prompt = Prompt,
+			Model = Model
+		};
 	}
 }

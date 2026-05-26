@@ -7,14 +7,6 @@ namespace ActFlow.Integrations.Core.Workers
 {
 	public class ListFilesWorker : BaseWorker<ListFilesActivity>
 	{
-		public ListFilesWorker()
-		{
-		}
-
-		public ListFilesWorker(string id) : base(id)
-		{
-		}
-
 		public override async Task<WorkerResult> Execute(ListFilesActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var files = ListFiles(act.Path, act.Directory, tmpDirectory);

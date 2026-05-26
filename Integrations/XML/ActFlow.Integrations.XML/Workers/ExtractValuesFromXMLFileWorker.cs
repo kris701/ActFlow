@@ -9,10 +9,6 @@ namespace ActFlow.Integrations.XML.Workers
 {
 	public class ExtractValuesFromXMLFileWorker : BaseWorker<ExtractValuesFromXMLFileActivity>
 	{
-		public ExtractValuesFromXMLFileWorker(string iD) : base(iD)
-		{
-		}
-
 		public override async Task<WorkerResult> Execute(ExtractValuesFromXMLFileActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var txt = await LoadFile(act.Path, act.Directory, tmpDirectory, token);

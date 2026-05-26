@@ -1,20 +1,20 @@
 ﻿using ActFlow.Models.Activities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.Time.Activities
 {
 	public class CronWaitActivity : IActivity
 	{
-		public string Name { get; set; }
-		public string WorkerID { get; set; }
+		public string Name { get; set; } = "cronwait";
+		public string WorkerID { get; set; } = "default";
+
+		[Required]
 		public string CronExpression { get; set; }
 
-		public CronWaitActivity(string name, string workerID, string cronExpression)
-		{
-			Name = name;
-			WorkerID = workerID;
-			CronExpression = cronExpression;
-		}
-
-		public IActivity Clone() => new CronWaitActivity(Name, WorkerID, CronExpression);
+		public IActivity Clone() => new CronWaitActivity() {
+			Name = Name,
+			WorkerID = WorkerID,
+			CronExpression = CronExpression
+		};
 	}
 }

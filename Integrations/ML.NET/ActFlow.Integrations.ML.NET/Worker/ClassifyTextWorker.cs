@@ -11,10 +11,6 @@ namespace ActFlow.Integrations.ML.NET.Worker
 	{
 		private readonly TextClassifier _classifier = new TextClassifier();
 
-		public ClassifyTextWorker(string iD) : base(iD)
-		{
-		}
-
 		public override async Task<WorkerResult> Execute(ClassifyTextActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var predict = _classifier.Predict(new ModelInput() { Value = act.Text }, act.Model, PersistenDirectory);

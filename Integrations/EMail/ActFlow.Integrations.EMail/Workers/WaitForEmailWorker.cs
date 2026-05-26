@@ -2,15 +2,20 @@
 using ActFlow.Integrations.EMail.EMail;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.EMail.Workers
 {
 	public class WaitForEmailWorker : BaseWorker<WaitForEmailActivity>
 	{
+		[Required]
 		public int WaitDelayMs { get; set; }
+		[Required]
 		public OutlookMailService MailService { get; set; }
 
-		public WaitForEmailWorker(string iD, int waitDelayMs, OutlookMailService mailService) : base(iD)
+		[JsonConstructor]
+		public WaitForEmailWorker(int waitDelayMs, OutlookMailService mailService)
 		{
 			WaitDelayMs = waitDelayMs;
 			MailService = mailService;

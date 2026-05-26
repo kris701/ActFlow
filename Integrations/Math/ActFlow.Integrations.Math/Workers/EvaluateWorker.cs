@@ -7,10 +7,6 @@ namespace ActFlow.Integrations.Math.Workers
 {
 	public class EvaluateWorker : BaseWorker<EvaluateActivity>
 	{
-		public EvaluateWorker(string iD) : base(iD)
-		{
-		}
-
 		public override async Task<WorkerResult> Execute(EvaluateActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			double leftVal = 0;

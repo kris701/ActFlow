@@ -1,4 +1,5 @@
 ﻿using ActFlow.Models.Activities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.ML.NET.Activity
 {
@@ -6,17 +7,17 @@ namespace ActFlow.Integrations.ML.NET.Activity
 	{
 		public string Name { get; set; } = "trainatextclassifier";
 		public string WorkerID { get; set; } = "default";
+
+		[Required]
 		public string ModelName { get; set; }
+		[Required]
 		public string Data { get; set; }
 
-		public TrainTextClassifierActivity(string name, string workerId, string modelName, string data)
-		{
-			Name = name;
-			WorkerID = workerId;
-			ModelName = modelName;
-			Data = data;
-		}
-
-		public IActivity Clone() => new TrainTextClassifierActivity(Name, WorkerID, ModelName, Data);
+		public IActivity Clone() => new TrainTextClassifierActivity() {
+			Name = Name,
+			WorkerID = WorkerID,
+			ModelName = ModelName,
+			Data = Data
+		};
 	}
 }

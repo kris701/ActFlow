@@ -1,4 +1,5 @@
 ﻿using ActFlow.Models.Activities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.OpenWebUISharp.Activities
 {
@@ -7,21 +8,22 @@ namespace ActFlow.Integrations.OpenWebUISharp.Activities
 		public string Name { get; set; } = "extractdatawithllmrag";
 		public string WorkerID { get; set; } = "default";
 
+		[Required]
 		public string Text { get; set; }
+		[Required]
 		public List<string> Collections { get; set; }
+		[Required]
 		public string Prompt { get; set; }
+		[Required]
 		public string Model { get; set; }
 
-		public ExtractDataFromTextRAGLLMActivity(string name, string workerId, string text, List<string> collections, string prompt, string model)
-		{
-			Name = name;
-			WorkerID = workerId;
-			Text = text;
-			Collections = collections;
-			Prompt = prompt;
-			Model = model;
-		}
-
-		public IActivity Clone() => new ExtractDataFromTextRAGLLMActivity(Name, WorkerID, Text, new List<string>(Collections), Prompt, Model);
+		public IActivity Clone() => new ExtractDataFromTextRAGLLMActivity() { 
+			Name = Name,
+			WorkerID = WorkerID,
+			Text = Text,
+			Collections = new List<string>(Collections),
+			Prompt = Prompt,
+			Model = Model
+		};
 	}
 }
