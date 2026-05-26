@@ -1,4 +1,5 @@
 ﻿using ActFlow.Models.Activities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.Core.Activities
 {
@@ -6,21 +7,19 @@ namespace ActFlow.Integrations.Core.Activities
 	{
 		public string Name { get; set; } = "insertglobal";
 		public string WorkerID { get; set; } = "default";
+		[Required]
 		public Dictionary<string, string> Arguments { get; set; }
-
-		public InsertGlobalsActivity(string name, string workerId, Dictionary<string, string> arguments)
-		{
-			Name = name;
-			WorkerID = workerId;
-			Arguments = arguments;
-		}
 
 		public IActivity Clone()
 		{
 			var arguments = new Dictionary<string, string>();
 			foreach (var key in Arguments.Keys)
 				arguments.Add(key, Arguments[key]);
-			return new InsertGlobalsActivity(Name, WorkerID, arguments);
+			return new InsertGlobalsActivity() { 
+				Name = Name,
+				WorkerID = WorkerID,
+				Arguments = arguments
+			};
 		}
 	}
 }

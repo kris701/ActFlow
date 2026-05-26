@@ -7,9 +7,15 @@ namespace ActFlow.Integrations.Core.Workers
 {
 	public class ConditionalIfWorker : BaseWorker<ConditionalIfActivity>
 	{
-		public ConditionalIfWorker(string iD) : base(iD)
+		public ConditionalIfWorker()
 		{
 		}
+
+		public ConditionalIfWorker(string id) : base(id)
+		{
+		}
+
+		
 
 		public override async Task<WorkerResult> Execute(ConditionalIfActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{

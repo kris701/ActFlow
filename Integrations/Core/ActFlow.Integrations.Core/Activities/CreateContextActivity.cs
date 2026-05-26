@@ -1,5 +1,6 @@
 ﻿using ActFlow.Models.Activities;
 using ActFlow.Models.Contexts;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.Core.Activities
 {
@@ -7,15 +8,13 @@ namespace ActFlow.Integrations.Core.Activities
 	{
 		public string Name { get; set; } = "createcontext";
 		public string WorkerID { get; set; } = "default";
+		[Required]
 		public IContext Context { get; set; }
 
-		public CreateContextActivity(string name, string workerId, IContext context)
-		{
-			Name = name;
-			WorkerID = workerId;
-			Context = context;
-		}
-
-		public IActivity Clone() => new CreateContextActivity(Name, WorkerID, Context);
+		public IActivity Clone() => new CreateContextActivity() {
+			Name = Name,
+			WorkerID = WorkerID,
+			Context = Context
+		};
 	}
 }

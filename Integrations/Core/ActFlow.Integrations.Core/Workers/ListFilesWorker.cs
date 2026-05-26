@@ -7,7 +7,11 @@ namespace ActFlow.Integrations.Core.Workers
 {
 	public class ListFilesWorker : BaseWorker<ListFilesActivity>
 	{
-		public ListFilesWorker(string iD) : base(iD)
+		public ListFilesWorker()
+		{
+		}
+
+		public ListFilesWorker(string id) : base(id)
 		{
 		}
 

@@ -47,6 +47,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.8" />
     <PackageReference Include="NuGet.Protocol" Version="7.6.0" />
     <PackageReference Include="NuGet.Resolver" Version="7.6.0" />
+	  <PackageReference Include="ToolsSharp" Version="1.1.10" />
   </ItemGroup>
 
   <ItemGroup>

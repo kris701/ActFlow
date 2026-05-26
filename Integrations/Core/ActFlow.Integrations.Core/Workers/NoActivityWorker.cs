@@ -6,9 +6,15 @@ namespace ActFlow.Integrations.Core.Workers
 {
 	public class NoActivityWorker : BaseWorker<NoActivity>
 	{
-		public NoActivityWorker(string iD) : base(iD)
+		public NoActivityWorker()
 		{
 		}
+
+		public NoActivityWorker(string id) : base(id)
+		{
+		}
+
+		
 
 		public override async Task<WorkerResult> Execute(NoActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{

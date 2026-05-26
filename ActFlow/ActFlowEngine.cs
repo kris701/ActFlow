@@ -4,6 +4,7 @@ using ActFlow.Models.Activities;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using System.Text.RegularExpressions;
+using ToolsSharp;
 
 namespace ActFlow
 {
@@ -60,6 +61,13 @@ namespace ActFlow
 				if (!_serviceCache.ContainsKey(key))
 					_serviceCache.Add(key, worker);
 			}
+
+			DirectoryHelper.DeleteDirectory(TemporaryDirectory);
+			if (!Directory.Exists(TemporaryDirectory))
+				Directory.CreateDirectory(TemporaryDirectory);
+
+			if (!Directory.Exists(PersistentDirectory))
+				Directory.CreateDirectory(PersistentDirectory);
 		}
 
 		#region Execute

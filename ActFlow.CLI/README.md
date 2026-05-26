@@ -48,5 +48,6 @@ You can only have one version of a given plugin installed at the same time!
 When you run the `serve` command, a small web server starts that has the following endpoints:
 * `/run`: Runs a workflow and returns the result
 * `/queue`: Starts a workflow, but doesnt wait for the result. It just returns the run ID.
-* `/result?id=<run ID>`: Gets the result of a given workflow run based on the run ID.
+* `/status`: Gets a simplified list of all currently active workflows.
+* `/status?id=<run ID>`: Gets the result of a given workflow run based on the run ID.
 

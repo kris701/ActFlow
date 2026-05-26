@@ -2,14 +2,23 @@
 using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.Core.Workers
 {
 	public class ConditionalUserWorker : BaseWorker<ConditionalUserActivity>
 	{
+		[Required]
 		public int WaitDelayMs { get; set; }
 
-		public ConditionalUserWorker(string iD, int waitDelayMs) : base(iD)
+		
+
+		public ConditionalUserWorker(string id, int waitDelayMs) : base(id)
+		{
+			WaitDelayMs = waitDelayMs;
+		}
+
+		public ConditionalUserWorker(int waitDelayMs)
 		{
 			WaitDelayMs = waitDelayMs;
 		}

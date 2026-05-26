@@ -1,5 +1,4 @@
-﻿using ActFlow.CLI.Helpers;
-using ActFlow.CLI.Models;
+﻿using ActFlow.CLI.Models;
 using ToolsSharp;
 
 namespace ActFlow.CLI.Programs
@@ -26,7 +25,7 @@ namespace ActFlow.CLI.Programs
 						ConsoleHelpers.WriteLineColor("Plugin does not exist!", ConsoleColor.Red);
 					else
 					{
-						DirectoryHelpers.DeleteDirectory(path);
+						DirectoryHelper.DeleteDirectory(path);
 						ConsoleHelpers.WriteLineColor("Plugin removed!", ConsoleColor.Green);
 					}
 					break;

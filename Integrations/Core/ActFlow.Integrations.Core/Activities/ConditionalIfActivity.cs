@@ -8,27 +8,29 @@ namespace ActFlow.Integrations.Core.Activities
 	{
 		public string Name { get; set; } = "conditionalif";
 		public string WorkerID { get; set; } = "default";
+		[Required]
 		public string LeftCondition { get; set; }
+		[Required] 
 		public string RightCondition { get; set; }
+		[Required]
 		public ConditionalComparerTypes Comparer { get; set; }
+		[Required]
 		[StringLength(256, MinimumLength = 1, ErrorMessage = "Name must be between 1 and 256 characters long!")]
 		[StictLowerCaseString]
 		public string TrueActivityName { get; set; }
+		[Required]
 		[StringLength(256, MinimumLength = 1, ErrorMessage = "Name must be between 1 and 256 characters long!")]
 		[StictLowerCaseString]
 		public string FalseActivityName { get; set; }
 
-		public ConditionalIfActivity(string name, string workerId, string leftCondition, string rightCondition, ConditionalComparerTypes comparer, string trueActivityName, string falseActivityName)
-		{
-			Name = name;
-			WorkerID = workerId;
-			LeftCondition = leftCondition;
-			RightCondition = rightCondition;
-			Comparer = comparer;
-			TrueActivityName = trueActivityName;
-			FalseActivityName = falseActivityName;
-		}
-
-		public IActivity Clone() => new ConditionalIfActivity(Name, WorkerID, LeftCondition, RightCondition, Comparer, TrueActivityName, FalseActivityName);
+		public IActivity Clone() => new ConditionalIfActivity() { 
+			Name = Name,
+			WorkerID = WorkerID,
+			LeftCondition = LeftCondition,
+			RightCondition = RightCondition,
+			Comparer = Comparer,
+			TrueActivityName = TrueActivityName,
+			FalseActivityName = FalseActivityName
+		};
 	}
 }

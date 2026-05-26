@@ -8,14 +8,18 @@ namespace ActFlow.Models.Workers
 	public abstract class BaseWorker<T> : IWorker where T : IActivity
 	{
 		[JsonPropertyName("id")]
-		public string ID { get; set; }
+		public string ID { get; set; } = "default";
 
 		[JsonIgnore]
 		public string PersistenDirectory { get; set; }
 
-		protected BaseWorker(string iD)
+		protected BaseWorker(string id)
 		{
-			ID = iD;
+			ID = id;
+		}
+
+		protected BaseWorker()
+		{
 		}
 
 

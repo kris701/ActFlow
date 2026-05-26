@@ -6,9 +6,15 @@ namespace ActFlow.Integrations.Core.Workers
 {
 	public class CreateContextWorker : BaseWorker<CreateContextActivity>
 	{
-		public CreateContextWorker(string iD) : base(iD)
+		public CreateContextWorker()
 		{
 		}
+
+		public CreateContextWorker(string id) : base(id)
+		{
+		}
+
+		
 
 		public override async Task<WorkerResult> Execute(CreateContextActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{

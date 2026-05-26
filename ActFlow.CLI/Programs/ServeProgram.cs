@@ -54,8 +54,8 @@ namespace ActFlow.CLI.Programs
 							await HandleRunRequest(engine, req, resp);
 						else if ((req.HttpMethod == "POST") && (req.Url.AbsolutePath == "/queue"))
 							await HandleQueueRequest(engine, req, resp);
-						else if ((req.HttpMethod == "GET") && (req.Url.AbsolutePath == "/result"))
-							await HandleResultRequest(engine, req, resp);
+						else if ((req.HttpMethod == "GET") && (req.Url.AbsolutePath == "/status"))
+							await HandleStatusRequest(engine, req, resp);
 					}
 
 					resp.Close();
@@ -93,12 +93,15 @@ namespace ActFlow.CLI.Programs
 			await WriteResponse(resp, result);
 		}
 
-		private static async Task HandleResultRequest(IActFlowEngine engine, HttpListenerRequest req, HttpListenerResponse resp)
+		private static async Task HandleStatusRequest(IActFlowEngine engine, HttpListenerRequest req, HttpListenerResponse resp)
 		{
 			var parsedString = HttpUtility.HtmlDecode(req.Url!.Query);
 			var idStr = HttpUtility.ParseQueryString(parsedString)["id"];
 			if (idStr == null)
+			{
+				await WriteResponse(resp, engine.ActiveWorkflows.Select(x => new { ID = x.ID, Status = x.Status, StartedAt = x.StartedAt, EndedAt = x.EndedAt }));
 				return;
+			}
 			var id = new Guid(idStr);
 			var result = engine.ActiveWorkflows.FirstOrDefault(x => x.ID == id);
 			await WriteResponse(resp, result);

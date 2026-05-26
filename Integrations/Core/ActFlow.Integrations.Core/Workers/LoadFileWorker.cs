@@ -7,9 +7,15 @@ namespace ActFlow.Integrations.Core.Workers
 {
 	public class LoadFileWorker : BaseWorker<LoadFileActivity>
 	{
-		public LoadFileWorker(string iD) : base(iD)
+		public LoadFileWorker()
 		{
 		}
+
+		public LoadFileWorker(string id) : base(id)
+		{
+		}
+
+		
 
 		public override async Task<WorkerResult> Execute(LoadFileActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{

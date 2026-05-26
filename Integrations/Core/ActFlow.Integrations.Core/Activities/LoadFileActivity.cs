@@ -1,5 +1,6 @@
 ﻿using ActFlow.Models.Activities;
 using ActFlow.Models.Contexts;
+using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.Core.Activities
 {
@@ -7,17 +8,16 @@ namespace ActFlow.Integrations.Core.Activities
 	{
 		public string Name { get; set; } = "loadfile";
 		public string WorkerID { get; set; } = "default";
-		public string Path { get; set; } = "file.txt";
-		public FileDirectories Directory { get; set; } = FileDirectories.Temporary;
+		[Required]
+		public string Path { get; set; }
+		[Required]
+		public FileDirectories Directory { get; set; }
 
-		public LoadFileActivity(string name, string workerId, string path, FileDirectories directory)
-		{
-			Name = name;
-			WorkerID = workerId;
-			Path = path;
-			Directory = directory;
-		}
-
-		public IActivity Clone() => new LoadFileActivity(Name, WorkerID, Path, Directory);
+		public IActivity Clone() => new LoadFileActivity() { 
+			Name = Name,
+			WorkerID = WorkerID,
+			Path = Path,
+			Directory = Directory
+		};
 	}
 }
