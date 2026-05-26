@@ -10,13 +10,13 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExecuteSTPWorker("a", "") };
+				new ExecuteSTPWorker("") };
 			yield return new object[] {
-				new InsertWorkflowFromDatabaseWorker("a", "") };
+				new InsertWorkflowFromDatabaseWorker("") };
 			yield return new object[] {
-				new ExecuteSQLWorker("a", "") };
+				new ExecuteSQLWorker("") };
 			yield return new object[] {
-				new ExecuteSQLToFileWorker("a", "") };
+				new ExecuteSQLToFileWorker("") };
 		}
 
 		[TestMethod]

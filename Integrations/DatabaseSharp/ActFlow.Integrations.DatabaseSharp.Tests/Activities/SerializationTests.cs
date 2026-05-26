@@ -10,11 +10,38 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExecuteSTPActivity("abc", "a", "sp_a", new Dictionary<string, string>(), 0, new Dictionary<string, string>()) };
+				new ExecuteSTPActivity(){ 
+					Name = "abc", 
+					WorkerID = "a", 
+					TargetSTP = "stp_val", 
+					Arguments = new Dictionary<string, string>(){
+						{ "abc","111" }
+					},
+					ResultMap = new Dictionary<string, string>(){
+						{ "bbb", "asdfadf" }
+					},
+					ResultTable = 3}};
 			yield return new object[] {
-				new InsertWorkflowFromDatabaseActivity("abc", "a", "sp_a", new Dictionary<string, string>(), false) };
+				new InsertWorkflowFromDatabaseActivity(){
+					Name = "abc",
+					WorkerID = "b",
+					TargetSTP = "stp_val",
+					Arguments = new Dictionary<string, string>()
+					{
+						{ "abc", "lll1" }
+					},
+					HasInserted = false
+				} };
 			yield return new object[] {
-				new ExecuteSQLActivity("abc", "a", "sp_a", 0, new Dictionary<string, string>()) };
+				new ExecuteSQLActivity(){ 
+					Name = "aaa",
+					WorkerID = "wo",
+					SQL = "SELECT ABC",
+					ResultMap = new Dictionary<string, string>(){
+						{ "bbb", "asdfadf" }
+					},
+					ResultTable = 3
+				} };
 			yield return new object[] {
 				new ExecuteSQLToFileActivity(){ WorkerID = "abc", Name = "a", Path = "path", Directory = Models.Contexts.FileDirectories.Persistent, ResultTable = 0, SQL = "SELECT" } };
 		}

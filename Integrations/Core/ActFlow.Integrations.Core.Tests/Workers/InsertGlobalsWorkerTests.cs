@@ -10,9 +10,9 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new InsertGlobalsActivity("", "", new Dictionary<string, string>(){ { "abc","123" } }) };
+				new InsertGlobalsActivity(){ Name = "abc", WorkerID = "bca", Arguments = new Dictionary<string, string>(){ { "abc","123" } } } };
 			yield return new object[] {
-				new InsertGlobalsActivity("", "", new Dictionary<string, string>(){ { "abc","123" }, { "aaaaa", "1" } }) };
+				new InsertGlobalsActivity(){ Name = "abc", WorkerID = "bca", Arguments = new Dictionary<string, string>(){ { "abc","123" }, { "123", "aaa" } } } };
 		}
 
 		[TestMethod]
@@ -20,7 +20,7 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 		public async Task Can_Execute(InsertGlobalsActivity activity)
 		{
 			// ARRANGE
-			var worker = new InsertGlobalsWorker("");
+			var worker = new InsertGlobalsWorker();
 			var state = new WorkflowState();
 
 			// ACT

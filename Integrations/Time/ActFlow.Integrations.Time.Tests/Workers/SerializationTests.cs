@@ -10,9 +10,9 @@ namespace ActFlow.Integrations.Time.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new DelayWorker("a") };
+				new DelayWorker() };
 			yield return new object[] {
-				new CronWaitWorker("a") };
+				new CronWaitWorker() };
 		}
 
 		[TestMethod]

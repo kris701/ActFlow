@@ -17,8 +17,17 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 		public async Task Can_Execute(string left, string right, ConditionalComparerTypes compare, string expected)
 		{
 			// ARRANGE
-			var worker = new ConditionalIfWorker("");
-			var activity = new ConditionalIfActivity("act", "", left, right, compare, "act2", "act3");
+			var worker = new ConditionalIfWorker();
+			var activity = new ConditionalIfActivity()
+			{
+				Name = "act",
+				WorkerID = "",
+				LeftCondition = left,
+				RightCondition = right,
+				Comparer = compare,
+				TrueActivityName = "act2",
+				FalseActivityName = "act3"
+			};
 
 			// ACT
 			var result = await worker.Execute(activity, new WorkflowState(), new CancellationToken(), "");

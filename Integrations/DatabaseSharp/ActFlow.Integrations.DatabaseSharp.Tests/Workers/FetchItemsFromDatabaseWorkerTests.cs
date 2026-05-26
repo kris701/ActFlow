@@ -19,13 +19,15 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Workers
 			var resultToGive = new DatabaseResult(resultToGiveDataset);
 			var dbClient = new MockDBClient();
 			dbClient.ResultToGive = resultToGive;
-			var worker = new ExecuteSTPWorker("", dbClient);
-			var activity = new ExecuteSTPActivity("", "", "", new Dictionary<string, string>(), 0,
-				new Dictionary<string, string>() {
+			var worker = new ExecuteSTPWorker(dbClient);
+			var activity = new ExecuteSTPActivity() { 
+				Arguments = new Dictionary<string, string>(),
+				ResultMap = new Dictionary<string, string>() {
 					{ "author", "authorkey" },
 					{ "price", "pricekey" },
 					{ "genre", "genrekey" }
-				});
+				}
+			};
 
 			// ACT
 			var result = await worker.Execute(activity, new WorkflowState(), new CancellationToken(), "");

@@ -10,9 +10,9 @@ namespace ActFlow.Integrations.ML.NET.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ClassifyTextWorker("a") };
+				new ClassifyTextWorker() };
 			yield return new object[] {
-				new TrainTextClassifierWorker("a") };
+				new TrainTextClassifierWorker() };
 		}
 
 		[TestMethod]

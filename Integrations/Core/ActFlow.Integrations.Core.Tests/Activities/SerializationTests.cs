@@ -11,21 +11,21 @@ namespace ActFlow.Integrations.Core.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new NoActivity("abc", "a")};
+				new NoActivity() { Name = "abc", WorkerID = "a" } };
 			yield return new object[] {
-				new ConditionalIfActivity("abc", "a", "a", "b", ConditionalComparerTypes.NotEqual, "abc", "abc") };
+				new ConditionalIfActivity() { Name = "abc", WorkerID = "a", Comparer = ConditionalComparerTypes.Contains, FalseActivityName = "abc", LeftCondition = "a", RightCondition = "q", TrueActivityName = "cba" } };
 			yield return new object[] {
-				new ConditionalUserActivity("abc", "a", "a", "b", ConditionalComparerTypes.NotEqual, "abc", "abc") };
+				new ConditionalUserActivity(){ Name = "abc", WorkerID = "a", Comparer = ConditionalComparerTypes.Contains, TrueActivityName = "abc", FalseActivityName = "bca", Condition = "a" } };
 			yield return new object[] {
-				new CreateContextActivity("abc", "a", new EmptyContext()) };
+				new CreateContextActivity(){ Name = "abc", WorkerID = "a", Context = new StringContext(){ Text = "abc" } } };
 			yield return new object[] {
-				new InsertGlobalsActivity("abc", "a", new Dictionary<string, string>() { { "a", "asdasdad" } })};
+				new InsertGlobalsActivity(){ Name = "abc", WorkerID = "a", Arguments = new Dictionary<string, string>(){ { "value","abc" } } }};
 			yield return new object[] {
-				new LoadFileActivity("abc", "a", "file.txt", FileDirectories.Temporary)};
+				new LoadFileActivity(){ Name = "abc", WorkerID = "a", Directory = FileDirectories.Temporary, Path = "abc.txt" }};
 			yield return new object[] {
-				new SaveFileActivity("abc", "a", "dat", "file.txt", FileDirectories.Temporary)};
+				new SaveFileActivity(){ Name = "abc", WorkerID = "a", Path = "abc.txt", Directory = FileDirectories.Persistent, Data = "abc" }};
 			yield return new object[] {
-				new ListFilesActivity("abc", "a", "", FileDirectories.Temporary)};
+				new ListFilesActivity(){ Name = "abc", WorkerID = "a", Directory = FileDirectories.Temporary, Path = "path" }};
 		}
 
 		[TestMethod]

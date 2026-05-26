@@ -11,11 +11,11 @@ namespace ActFlow.Integrations.EMail.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ReplyToEmailActivity("abc", "a", "123", new EmptyContext()) };
+				new ReplyToEmailActivity(){ Name = "abc", WorkerID = "ww", Answer = new EmptyContext(), ToMessageID = "123" } };
 			yield return new object[] {
-				new SendEmailActivity("abc", "a", new EmptyContext()) };
+				new SendEmailActivity(){ Name = "abc", WorkerID = "w", Answer = new EmptyContext() } };
 			yield return new object[] {
-				new WaitForEmailActivity("abc", "a", "a@a.com", "b@b.com", "123") };
+				new WaitForEmailActivity(){ Name = "abc", WorkerID = "w", ConversationID = "123", RecieverEmail = "abc@mail.com", SenderEmail = "sss@email.com" } };
 		}
 
 		[TestMethod]

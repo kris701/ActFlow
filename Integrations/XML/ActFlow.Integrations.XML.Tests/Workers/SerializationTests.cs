@@ -10,9 +10,9 @@ namespace ActFlow.Integrations.XML.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExtractValuesFromXMLWorker("a") };
+				new ExtractValuesFromXMLWorker() };
 			yield return new object[] {
-				new ExtractValuesFromXMLFileWorker("a") };
+				new ExtractValuesFromXMLFileWorker() };
 		}
 
 		[TestMethod]

@@ -11,11 +11,11 @@ namespace ActFlow.Integrations.OpenWebUISharp.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExtractDataFromTextLLMWorker("a", new OpenWebUIService("","")) };
+				new ExtractDataFromTextLLMWorker(){ OpenWebUIService = new OpenWebUIService("","") } };
 			yield return new object[] {
-				new ExtractDataFromTextRAGLLMWorker("a", new OpenWebUIService("","")) };
+				new ExtractDataFromTextRAGLLMWorker(){ OpenWebUIService = new OpenWebUIService("","") } };
 			yield return new object[] {
-				new QueryLLMWorker("a", new OpenWebUIService("","")) };
+				new QueryLLMWorker(){ OpenWebUIService = new OpenWebUIService("","") } };
 		}
 
 		[TestMethod]

@@ -10,9 +10,9 @@ namespace ActFlow.Integrations.Time.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new DelayActivity("abc", "a", "6") };
+				new DelayActivity(){ Name = "abc", WorkerID = "a", Delay = "10" } };
 			yield return new object[] {
-				new CronWaitActivity("abc", "a", "* * * * *") };
+				new CronWaitActivity(){ Name = "abc", WorkerID = "a", CronExpression = "* * * * *" } };
 		}
 
 		[TestMethod]

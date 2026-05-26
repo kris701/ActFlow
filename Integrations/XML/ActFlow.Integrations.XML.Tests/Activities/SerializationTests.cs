@@ -10,9 +10,9 @@ namespace ActFlow.Integrations.XML.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExtractValuesFromXMLActivity("abc", "a", "", new Dictionary<string, string>()) };
+				new ExtractValuesFromXMLActivity(){ Name = "abc", WorkerID = "a", XML = "ssxs", XPaths = new Dictionary<string, string>() } };
 			yield return new object[] {
-				new ExtractValuesFromXMLFileActivity("abc", "a", "", Models.Contexts.FileDirectories.Temporary, new Dictionary<string, string>()) };
+				new ExtractValuesFromXMLFileActivity(){ Name = "aaa", WorkerID = "b", XPaths = new Dictionary<string, string>(), Directory = Models.Contexts.FileDirectories.Temporary, Path = "bbb.xml" } };
 		}
 
 		[TestMethod]

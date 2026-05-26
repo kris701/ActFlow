@@ -1,6 +1,7 @@
 ﻿using NJsonSchema;
 using OpenWebUISharp;
 using OpenWebUISharp.Models.Query;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.OpenWebUISharp.OpenWebUI
@@ -9,9 +10,9 @@ namespace ActFlow.Integrations.OpenWebUISharp.OpenWebUI
 	{
 		private readonly IOpenWebUIWrapper _wrapper;
 
-		[JsonPropertyName("url")]
+		[Required]
 		public string URL { get; set; }
-		[JsonPropertyName("apiKey")]
+		[Required]
 		public string APIKey { get; set; }
 
 		public OpenWebUIService(string uRL, string aPIKey)

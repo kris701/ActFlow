@@ -10,11 +10,11 @@ namespace ActFlow.Integrations.EMail.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ReplyToEmailWorker("a", new EMail.OutlookMailService("",0,"","","")) };
+				new ReplyToEmailWorker(new EMail.OutlookMailService("",0,"","","")) };
 			yield return new object[] {
-				new SendEmailWorker("a", new EMail.OutlookMailService("",0,"","","")) };
+				new SendEmailWorker(new EMail.OutlookMailService("",0,"","","")) };
 			yield return new object[] {
-				new WaitForEmailWorker("a", 1000, new EMail.OutlookMailService("",0,"","","")) };
+				new WaitForEmailWorker(1000, new EMail.OutlookMailService("",0,"","","")) };
 		}
 
 		[TestMethod]

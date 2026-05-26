@@ -10,9 +10,9 @@ namespace ActFlow.Integrations.JSON.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExtractValuesFromJSONWorker("a") };
+				new ExtractValuesFromJSONWorker() };
 			yield return new object[] {
-				new ExtractValuesFromJSONFileWorker("a") };
+				new ExtractValuesFromJSONFileWorker() };
 		}
 
 		[TestMethod]

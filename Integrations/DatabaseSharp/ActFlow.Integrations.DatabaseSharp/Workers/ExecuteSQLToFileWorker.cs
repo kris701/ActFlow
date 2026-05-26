@@ -23,6 +23,12 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 			_dBClient = new DBClient(ConnectionString);
 		}
 
+		public ExecuteSQLToFileWorker(IDBClient dbClient)
+		{
+			ConnectionString = dbClient.ConnectionString;
+			_dBClient = dbClient;
+		}
+
 		public override async Task<WorkerResult> Execute(ExecuteSQLToFileActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var result = await _dBClient.ExecuteFreeAsync(
@@ -48,7 +54,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 			foreach (DataRow row in table.Rows)
 			{
 				IEnumerable<string> fields = row.ItemArray.Select(field =>
-				  string.Concat("\"", field.ToString().Replace("\"", "\"\""), "\""));
+				  string.Concat("\"", field.ToString().Replace("\"", "\"\"").Replace("\n", "\\n").Replace("\r", "\\r").Replace("\t", "\\t"), "\""));
 				sb.AppendLine(string.Join(",", fields));
 			}
 

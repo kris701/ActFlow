@@ -10,7 +10,7 @@ namespace ActFlow.Integrations.SerializableHttps.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExecuteHttpWorker("a") };
+				new ExecuteHttpWorker() };
 		}
 
 		[TestMethod]

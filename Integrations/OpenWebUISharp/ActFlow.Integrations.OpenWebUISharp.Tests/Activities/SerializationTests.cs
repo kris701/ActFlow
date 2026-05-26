@@ -10,11 +10,11 @@ namespace ActFlow.Integrations.OpenWebUISharp.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExtractDataFromTextLLMActivity("abc", "a", "", "", "") };
+				new ExtractDataFromTextLLMActivity(){ Name = "abc", WorkerID = "a", Text = "abc", Model = "mod", Prompt = "aaa" } };
 			yield return new object[] {
-				new ExtractDataFromTextRAGLLMActivity("abc", "a", "", new List<string>(), "", "") };
+				new ExtractDataFromTextRAGLLMActivity(){ Name = "abc", WorkerID = "a", Text = "ta", Model = "ddd", Prompt = "aaa", Collections = new List<string>(){ "set" } } };
 			yield return new object[] {
-				new QueryLLMActivity("abc", "a", "", "") };
+				new QueryLLMActivity(){ Name = "abc", WorkerID = "a", Prompt = "abc", Model = "mod" } };
 		}
 
 		[TestMethod]

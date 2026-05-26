@@ -17,8 +17,16 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 		public async Task Can_Execute(string user, string right, ConditionalComparerTypes compare, string expected)
 		{
 			// ARRANGE
-			var worker = new ConditionalUserWorker("", 10);
-			var activity = new ConditionalUserActivity("act", "", "", right, compare, "act2", "act3");
+			var worker = new ConditionalUserWorker(10);
+			var activity = new ConditionalUserActivity() { 
+				Name = "act",
+				WorkerID = "",
+				UserInput = "",
+				Condition = right,
+				Comparer = compare,
+				TrueActivityName = "act2",
+				FalseActivityName = "act3"
+			};
 
 			// ACT
 			Task.Run(async () =>

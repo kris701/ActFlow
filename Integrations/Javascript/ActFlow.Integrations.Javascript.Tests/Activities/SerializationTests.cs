@@ -10,7 +10,7 @@ namespace ActFlow.Integrations.Javascript.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExecuteJavascriptActivity("abc", "a", "log('Hello');") };
+				new ExecuteJavascriptActivity(){ Name = "abc", WorkerID = "b", Code = "log('Hello');" } };
 		}
 
 		[TestMethod]

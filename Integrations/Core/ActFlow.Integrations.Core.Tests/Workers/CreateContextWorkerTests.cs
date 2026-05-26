@@ -27,8 +27,10 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 		public async Task Can_Execute(IContext context)
 		{
 			// ARRANGE
-			var worker = new CreateContextWorker("");
-			var activity = new CreateContextActivity("act", "", context);
+			var worker = new CreateContextWorker();
+			var activity = new CreateContextActivity() {
+				Context = context
+			};
 
 			// ACT
 			var result = await worker.Execute(activity, new WorkflowState(), new CancellationToken(), "");

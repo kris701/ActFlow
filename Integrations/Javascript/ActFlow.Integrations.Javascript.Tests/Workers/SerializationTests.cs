@@ -10,7 +10,7 @@ namespace ActFlow.Integrations.Javascript.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExecuteJavascriptWorker("a", 10, 10) };
+				new ExecuteJavascriptWorker(10, 10) };
 		}
 
 		[TestMethod]

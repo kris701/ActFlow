@@ -10,9 +10,9 @@ namespace ActFlow.Integrations.ML.NET.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ClassifyTextActivity("abc", "a", "text", "mod") };
+				new ClassifyTextActivity() { Name = "abc", WorkerID = "w", Model = "mod", Text = "abc" } };
 			yield return new object[] {
-				new TrainTextClassifierActivity("abc", "a", "mod", "a;1") };
+				new TrainTextClassifierActivity(){ Name = "aaa", WorkerID = "w", Data = "dat", ModelName = "bbb" } };
 		}
 
 		[TestMethod]

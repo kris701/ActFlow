@@ -23,6 +23,12 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 			_dBClient = new DBClient(ConnectionString);
 		}
 
+		public ExecuteSTPWorker(IDBClient dbClient)
+		{
+			ConnectionString = dbClient.ConnectionString;
+			_dBClient = dbClient;
+		}
+
 		public override async Task<WorkerResult> Execute(ExecuteSTPActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var args = new List<ISQLParameter>();

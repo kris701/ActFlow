@@ -10,21 +10,21 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ConditionalIfWorker("a") };
+				new ConditionalIfWorker() };
 			yield return new object[] {
-				new ConditionalUserWorker("a", 1000) };
+				new ConditionalUserWorker(1000) };
 			yield return new object[] {
-				new CreateContextWorker("a") };
+				new CreateContextWorker() };
 			yield return new object[] {
-				new InsertGlobalsWorker("a") };
+				new InsertGlobalsWorker() };
 			yield return new object[] {
-				new NoActivityWorker("a") };
+				new NoActivityWorker() };
 			yield return new object[] {
-				new LoadFileWorker("a") };
+				new LoadFileWorker() };
 			yield return new object[] {
-				new SaveFileWorker("a") };
+				new SaveFileWorker() };
 			yield return new object[] {
-				new ListFilesWorker("a") };
+				new ListFilesWorker() };
 		}
 
 		[TestMethod]
