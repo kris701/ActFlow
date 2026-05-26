@@ -28,7 +28,8 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 		{
 			// ARRANGE
 			var worker = new CreateContextWorker();
-			var activity = new CreateContextActivity() {
+			var activity = new CreateContextActivity()
+			{
 				Context = context
 			};
 

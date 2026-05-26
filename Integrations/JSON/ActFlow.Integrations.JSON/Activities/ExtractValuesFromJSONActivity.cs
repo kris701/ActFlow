@@ -1,6 +1,5 @@
 ﻿using ActFlow.Models.Activities;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.JSON.Activities
 {

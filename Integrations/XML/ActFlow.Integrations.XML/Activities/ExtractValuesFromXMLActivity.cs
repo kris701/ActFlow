@@ -9,7 +9,7 @@ namespace ActFlow.Integrations.XML.Activities
 		public string WorkerID { get; set; } = "default";
 
 		[Required]
-		public string XML { get; set; } 
+		public string XML { get; set; }
 		[Required]
 		public Dictionary<string, string> XPaths { get; set; }
 

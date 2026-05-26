@@ -11,7 +11,8 @@ namespace ActFlow.Integrations.Javascript.Activities
 		[Required]
 		public string Code { get; set; }
 
-		public IActivity Clone() => new ExecuteJavascriptActivity() { 
+		public IActivity Clone() => new ExecuteJavascriptActivity()
+		{
 			Name = Name,
 			WorkerID = WorkerID,
 			Code = Code

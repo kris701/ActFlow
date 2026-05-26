@@ -10,10 +10,10 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Activities
 		public static IEnumerable<object[]> InputModels()
 		{
 			yield return new object[] {
-				new ExecuteSTPActivity(){ 
-					Name = "abc", 
-					WorkerID = "a", 
-					TargetSTP = "stp_val", 
+				new ExecuteSTPActivity(){
+					Name = "abc",
+					WorkerID = "a",
+					TargetSTP = "stp_val",
 					Arguments = new Dictionary<string, string>(){
 						{ "abc","111" }
 					},
@@ -33,7 +33,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Activities
 					HasInserted = false
 				} };
 			yield return new object[] {
-				new ExecuteSQLActivity(){ 
+				new ExecuteSQLActivity(){
 					Name = "aaa",
 					WorkerID = "wo",
 					SQL = "SELECT ABC",

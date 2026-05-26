@@ -18,7 +18,8 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 		{
 			// ARRANGE
 			var worker = new ConditionalUserWorker(10);
-			var activity = new ConditionalUserActivity() { 
+			var activity = new ConditionalUserActivity()
+			{
 				Name = "act",
 				WorkerID = "",
 				UserInput = "",

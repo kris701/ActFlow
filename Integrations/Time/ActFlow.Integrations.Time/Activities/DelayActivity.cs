@@ -11,7 +11,8 @@ namespace ActFlow.Integrations.Time.Activities
 		[Required]
 		public string Delay { get; set; }
 
-		public IActivity Clone() => new DelayActivity() { 
+		public IActivity Clone() => new DelayActivity()
+		{
 			Name = Name,
 			WorkerID = WorkerID,
 			Delay = Delay

@@ -13,7 +13,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 	{
 		[Required]
 		public string ConnectionString { get; set; }
-		
+
 		private readonly IDBClient _dBClient;
 
 		[JsonConstructor]

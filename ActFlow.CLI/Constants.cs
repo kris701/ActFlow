@@ -7,8 +7,9 @@ namespace ActFlow.CLI
 {
 	public class Constants
 	{
-		public static JsonSerializerOptions _serializerOpts = new JsonSerializerOptions() { 
-			WriteIndented = true, 
+		public static JsonSerializerOptions _serializerOpts = new JsonSerializerOptions()
+		{
+			WriteIndented = true,
 			TypeInfoResolver = new DefaultJsonTypeInfoResolver().WithAddedModifier(JsonExtensions.AddNativePolymorphicTypInfo),
 			AllowTrailingCommas = true,
 			ReadCommentHandling = JsonCommentHandling.Skip,

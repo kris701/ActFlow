@@ -2,7 +2,6 @@
 using OpenWebUISharp;
 using OpenWebUISharp.Models.Query;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.OpenWebUISharp.OpenWebUI
 {

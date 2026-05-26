@@ -8,7 +8,7 @@ namespace ActFlow.Integrations.SerializableHttps.Activities
 		public string Name { get; set; } = "executehttp";
 		public string WorkerID { get; set; } = "default";
 
-		[Required] 
+		[Required]
 		public string Route { get; set; }
 		[Required]
 		public string Content { get; set; }

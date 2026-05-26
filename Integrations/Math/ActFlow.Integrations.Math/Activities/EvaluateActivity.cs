@@ -12,9 +12,9 @@ namespace ActFlow.Integrations.Math.Activities
 
 		[Required]
 		public string Left { get; set; }
-		[Required] 
+		[Required]
 		public OperatorTypes Op { get; set; }
-		[Required] 
+		[Required]
 		public string Right { get; set; }
 
 		public IActivity Clone() => new EvaluateActivity()

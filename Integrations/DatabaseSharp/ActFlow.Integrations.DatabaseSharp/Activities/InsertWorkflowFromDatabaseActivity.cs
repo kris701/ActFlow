@@ -20,7 +20,8 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 			var arguments = new Dictionary<string, string>();
 			foreach (var key in Arguments.Keys)
 				arguments.Add(key, Arguments[key]);
-			return new InsertWorkflowFromDatabaseActivity() { 
+			return new InsertWorkflowFromDatabaseActivity()
+			{
 				Name = Name,
 				WorkerID = WorkerID,
 				TargetSTP = TargetSTP,

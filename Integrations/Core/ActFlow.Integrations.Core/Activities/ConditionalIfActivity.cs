@@ -10,7 +10,7 @@ namespace ActFlow.Integrations.Core.Activities
 		public string WorkerID { get; set; } = "default";
 		[Required]
 		public string LeftCondition { get; set; }
-		[Required] 
+		[Required]
 		public string RightCondition { get; set; }
 		[Required]
 		public ConditionalComparerTypes Comparer { get; set; }
@@ -23,7 +23,8 @@ namespace ActFlow.Integrations.Core.Activities
 		[StictLowerCaseString]
 		public string FalseActivityName { get; set; }
 
-		public IActivity Clone() => new ConditionalIfActivity() { 
+		public IActivity Clone() => new ConditionalIfActivity()
+		{
 			Name = Name,
 			WorkerID = WorkerID,
 			LeftCondition = LeftCondition,

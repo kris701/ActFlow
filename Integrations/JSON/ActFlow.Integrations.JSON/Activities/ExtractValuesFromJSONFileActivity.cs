@@ -1,7 +1,6 @@
 ﻿using ActFlow.Models.Activities;
 using ActFlow.Models.Contexts;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace ActFlow.Integrations.JSON.Activities
 {
@@ -22,7 +21,8 @@ namespace ActFlow.Integrations.JSON.Activities
 			var jsonPaths = new Dictionary<string, string>();
 			foreach (var key in JSONPaths.Keys)
 				jsonPaths.Add(key, JSONPaths[key]);
-			return new ExtractValuesFromJSONFileActivity() {
+			return new ExtractValuesFromJSONFileActivity()
+			{
 				Name = Name,
 				WorkerID = WorkerID,
 				Path = Path,

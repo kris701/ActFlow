@@ -15,7 +15,8 @@ namespace ActFlow.Integrations.Core.Activities
 		[Required]
 		public FileDirectories Directory { get; set; }
 
-		public IActivity Clone() => new SaveFileActivity() {
+		public IActivity Clone() => new SaveFileActivity()
+		{
 			Name = Name,
 			WorkerID = WorkerID,
 			Data = Data,

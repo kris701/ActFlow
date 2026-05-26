@@ -19,7 +19,8 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 			var resultMap = new Dictionary<string, string>();
 			foreach (var key in ResultMap.Keys)
 				resultMap.Add(key, ResultMap[key]);
-			return new ExecuteSQLActivity() {
+			return new ExecuteSQLActivity()
+			{
 				Name = Name,
 				WorkerID = WorkerID,
 				SQL = SQL,

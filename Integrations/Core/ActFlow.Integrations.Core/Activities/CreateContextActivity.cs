@@ -11,7 +11,8 @@ namespace ActFlow.Integrations.Core.Activities
 		[Required]
 		public IContext Context { get; set; }
 
-		public IActivity Clone() => new CreateContextActivity() {
+		public IActivity Clone() => new CreateContextActivity()
+		{
 			Name = Name,
 			WorkerID = WorkerID,
 			Context = Context

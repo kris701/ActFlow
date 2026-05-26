@@ -11,7 +11,7 @@ namespace ActFlow.Integrations.Javascript.Workers
 	{
 		[Required]
 		public long MemoryLimit { get; set; }
-		[Required] 
+		[Required]
 		public int MaxStatements { get; set; }
 
 		[JsonConstructor]

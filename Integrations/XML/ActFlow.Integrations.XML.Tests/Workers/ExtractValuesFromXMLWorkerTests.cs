@@ -13,7 +13,8 @@ namespace ActFlow.Integrations.XML.Tests.Workers
 			// ARRANGE
 			var xmlText = File.ReadAllText("TestFiles/books.xml");
 			var worker = new ExtractValuesFromXMLWorker();
-			var activity = new ExtractValuesFromXMLActivity() {
+			var activity = new ExtractValuesFromXMLActivity()
+			{
 				XML = xmlText,
 				XPaths = new Dictionary<string, string>() {
 					{ "v1", "//book[last()]/author" },

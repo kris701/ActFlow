@@ -15,7 +15,8 @@ namespace ActFlow.Integrations.Core.Activities
 			var arguments = new Dictionary<string, string>();
 			foreach (var key in Arguments.Keys)
 				arguments.Add(key, Arguments[key]);
-			return new InsertGlobalsActivity() { 
+			return new InsertGlobalsActivity()
+			{
 				Name = Name,
 				WorkerID = WorkerID,
 				Arguments = arguments

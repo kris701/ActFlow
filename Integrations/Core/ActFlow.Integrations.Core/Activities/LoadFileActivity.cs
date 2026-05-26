@@ -13,7 +13,8 @@ namespace ActFlow.Integrations.Core.Activities
 		[Required]
 		public FileDirectories Directory { get; set; }
 
-		public IActivity Clone() => new LoadFileActivity() { 
+		public IActivity Clone() => new LoadFileActivity()
+		{
 			Name = Name,
 			WorkerID = WorkerID,
 			Path = Path,

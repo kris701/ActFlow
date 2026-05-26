@@ -17,7 +17,8 @@ namespace ActFlow.Integrations.OpenWebUISharp.Activities
 		[Required]
 		public string Model { get; set; }
 
-		public IActivity Clone() => new ExtractDataFromTextRAGLLMActivity() { 
+		public IActivity Clone() => new ExtractDataFromTextRAGLLMActivity()
+		{
 			Name = Name,
 			WorkerID = WorkerID,
 			Text = Text,

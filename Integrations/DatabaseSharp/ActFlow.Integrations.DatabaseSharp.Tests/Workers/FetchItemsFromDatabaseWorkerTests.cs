@@ -20,7 +20,8 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Workers
 			var dbClient = new MockDBClient();
 			dbClient.ResultToGive = resultToGive;
 			var worker = new ExecuteSTPWorker(dbClient);
-			var activity = new ExecuteSTPActivity() { 
+			var activity = new ExecuteSTPActivity()
+			{
 				Arguments = new Dictionary<string, string>(),
 				ResultMap = new Dictionary<string, string>() {
 					{ "author", "authorkey" },

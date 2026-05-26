@@ -11,7 +11,8 @@ namespace ActFlow.Integrations.Time.Activities
 		[Required]
 		public string CronExpression { get; set; }
 
-		public IActivity Clone() => new CronWaitActivity() {
+		public IActivity Clone() => new CronWaitActivity()
+		{
 			Name = Name,
 			WorkerID = WorkerID,
 			CronExpression = CronExpression

@@ -13,7 +13,8 @@ namespace ActFlow.Integrations.ML.NET.Activity
 		[Required]
 		public string Data { get; set; }
 
-		public IActivity Clone() => new TrainTextClassifierActivity() {
+		public IActivity Clone() => new TrainTextClassifierActivity()
+		{
 			Name = Name,
 			WorkerID = WorkerID,
 			ModelName = ModelName,

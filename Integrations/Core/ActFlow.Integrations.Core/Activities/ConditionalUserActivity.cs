@@ -23,7 +23,8 @@ namespace ActFlow.Integrations.Core.Activities
 		[StictLowerCaseString]
 		public string FalseActivityName { get; set; }
 
-		public IActivity Clone() => new ConditionalUserActivity() { 
+		public IActivity Clone() => new ConditionalUserActivity()
+		{
 			Name = Name,
 			WorkerID = WorkerID,
 			UserInput = UserInput,

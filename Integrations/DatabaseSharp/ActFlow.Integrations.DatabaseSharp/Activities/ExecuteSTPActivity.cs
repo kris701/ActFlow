@@ -24,7 +24,8 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 			var resultMap = new Dictionary<string, string>();
 			foreach (var key in ResultMap.Keys)
 				resultMap.Add(key, ResultMap[key]);
-			return new ExecuteSTPActivity() {
+			return new ExecuteSTPActivity()
+			{
 				Name = Name,
 				WorkerID = WorkerID,
 				TargetSTP = TargetSTP,
