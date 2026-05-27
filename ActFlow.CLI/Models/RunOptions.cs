@@ -19,5 +19,7 @@ namespace ActFlow.CLI.Models
 		public string PersistentDirectory { get; set; } = ".persistent";
 		[Option("runner", Required = false, HelpText = "Directory to keep active workflow runs in", Default = ".runners")]
 		public string RunnerDirectory { get; set; } = ".runners";
+		[Option("completed", Required = false, HelpText = "Directory to store completed workflows", Default = ".completed")]
+		public string CompletedDirectory { get; set; } = ".completed";
 	}
 }

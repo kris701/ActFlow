@@ -21,18 +21,19 @@ namespace ActFlow.CLI.Programs
 			PluginLoader.LoadPlugins();
 
 			ConsoleHelpers.WriteLineColor("Parsing Config...", ConsoleColor.Blue);
-			var workers = JsonSerializer.Deserialize<List<IWorker>>(configFile, Constants._serializerOpts);
+			var workers = JsonSerializer.Deserialize<List<IWorker>>(configFile, Constants.SerializerOpts);
 			if (workers == null)
 				throw new Exception("Config is malformed!");
 
 			ConsoleHelpers.WriteLineColor("Initializing engine...", ConsoleColor.Blue);
 			IActFlowEngine engine = new ActFlowEngine(workers)
 			{
-				RemoveDelay = TimeSpan.FromSeconds(opts.Lifetime),
 				ActivityLimiter = opts.Limiter,
 				PersistentDirectory = opts.PersistentDirectory,
-				TemporaryDirectory = opts.RunnerDirectory
+				TemporaryDirectory = opts.RunnerDirectory,
+				CompletedDirectory = opts.CompletedDirectory
 			};
+			await engine.Initialize();
 
 			HttpListener listener = new HttpListener();
 			listener.Prefixes.Add(opts.Host);
@@ -54,8 +55,8 @@ namespace ActFlow.CLI.Programs
 							await HandleRunRequest(engine, req, resp);
 						else if ((req.HttpMethod == "POST") && (req.Url.AbsolutePath == "/queue"))
 							await HandleQueueRequest(engine, req, resp);
-						else if ((req.HttpMethod == "GET") && (req.Url.AbsolutePath == "/status"))
-							await HandleStatusRequest(engine, req, resp);
+						else if ((req.HttpMethod == "GET") && (req.Url.AbsolutePath == "/results"))
+							await HandleResultsRequest(engine, req, resp);
 					}
 
 					resp.Close();
@@ -72,7 +73,7 @@ namespace ActFlow.CLI.Programs
 			var body = GetRequestPostData(req);
 			if (body == null)
 				return;
-			var workflow = JsonSerializer.Deserialize<Workflow>(body, Constants._serializerOpts);
+			var workflow = JsonSerializer.Deserialize<Workflow>(body, Constants.SerializerOpts);
 			if (workflow == null)
 				return;
 
@@ -85,7 +86,7 @@ namespace ActFlow.CLI.Programs
 			var body = GetRequestPostData(req);
 			if (body == null)
 				return;
-			var workflow = JsonSerializer.Deserialize<Workflow>(body, Constants._serializerOpts);
+			var workflow = JsonSerializer.Deserialize<Workflow>(body, Constants.SerializerOpts);
 			if (workflow == null)
 				return;
 
@@ -93,7 +94,7 @@ namespace ActFlow.CLI.Programs
 			await WriteResponse(resp, result);
 		}
 
-		private static async Task HandleStatusRequest(IActFlowEngine engine, HttpListenerRequest req, HttpListenerResponse resp)
+		private static async Task HandleResultsRequest(IActFlowEngine engine, HttpListenerRequest req, HttpListenerResponse resp)
 		{
 			var parsedString = HttpUtility.HtmlDecode(req.Url!.Query);
 			var idStr = HttpUtility.ParseQueryString(parsedString)["id"];
@@ -109,7 +110,7 @@ namespace ActFlow.CLI.Programs
 
 		private static async Task WriteResponse(HttpListenerResponse resp, object? result)
 		{
-			byte[] data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(result, Constants._serializerOpts));
+			byte[] data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(result, Constants.SerializerOpts));
 			resp.ContentType = "application/json";
 			resp.ContentEncoding = Encoding.UTF8;
 			resp.ContentLength64 = data.LongLength;

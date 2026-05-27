@@ -19,12 +19,12 @@ namespace ActFlow.CLI.Programs
 			PluginLoader.LoadPlugins();
 
 			ConsoleHelpers.WriteLineColor("Parsing Config...", ConsoleColor.Blue);
-			var workers = JsonSerializer.Deserialize<List<IWorker>>(configFile, Constants._serializerOpts);
+			var workers = JsonSerializer.Deserialize<List<IWorker>>(configFile, Constants.SerializerOpts);
 			if (workers == null)
 				throw new Exception("Config is malformed!");
 
 			ConsoleHelpers.WriteLineColor("Parsing input workflow...", ConsoleColor.Blue);
-			var workflow = JsonSerializer.Deserialize<Workflow>(inputFile, Constants._serializerOpts);
+			var workflow = JsonSerializer.Deserialize<Workflow>(inputFile, Constants.SerializerOpts);
 			if (workflow == null)
 				throw new Exception("Input workflow is malformed!");
 
@@ -33,8 +33,10 @@ namespace ActFlow.CLI.Programs
 			{
 				ActivityLimiter = opts.Limiter,
 				PersistentDirectory = opts.PersistentDirectory,
-				TemporaryDirectory = opts.RunnerDirectory
+				TemporaryDirectory = opts.RunnerDirectory,
+				CompletedDirectory = opts.CompletedDirectory,
 			};
+			await engine.Initialize();
 
 			ConsoleHelpers.WriteLineColor("Executing workflow...", ConsoleColor.Blue);
 			var result = await engine.ExecuteAsync(workflow);
@@ -45,7 +47,7 @@ namespace ActFlow.CLI.Programs
 				ConsoleHelpers.WriteLineColor("\tWorkflow succeeded!", ConsoleColor.Green);
 
 			ConsoleHelpers.WriteLineColor("Workflow completed! Outputting result...", ConsoleColor.Blue);
-			File.WriteAllText(opts.OutputPath, JsonSerializer.Serialize(result, Constants._serializerOpts));
+			File.WriteAllText(opts.OutputPath, JsonSerializer.Serialize(result, Constants.SerializerOpts));
 		}
 	}
 }

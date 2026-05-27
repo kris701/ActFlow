@@ -9,7 +9,9 @@ namespace ActFlow.CLI
 	{
 		static async Task Main(string[] args)
 		{
-			Constants._serializerOpts.Converters.Add(new JsonStringEnumConverter());
+			if (!Constants.SerializerOpts.Converters.Any(x => x.GetType() == typeof(JsonStringEnumConverter)) &&
+				!Constants.SerializerOpts.Converters.IsReadOnly)
+				Constants.SerializerOpts.Converters.Add(new JsonStringEnumConverter());
 
 			var parser = new Parser(config => config.HelpWriter = Console.Out);
 			var parserResult = parser.ParseArguments<RunOptions, PluginsOptions, ServeOptions>(args);

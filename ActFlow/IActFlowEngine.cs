@@ -20,10 +20,6 @@ namespace ActFlow
 		/// A limiter to how many activities a workflow can execute (to prevent infinite workflows)
 		/// </summary>
 		public int ActivityLimiter { get; set; }
-		/// <summary>
-		/// How many ms should pass before removing a completed workflow from the <seealso cref="ActiveWorkflows"/> list
-		/// </summary>
-		public TimeSpan RemoveDelay { get; set; }
 
 		/// <summary>
 		/// The path to the persistent data folder
@@ -34,6 +30,17 @@ namespace ActFlow
 		/// The path to the temporary data folder
 		/// </summary>
 		public string TemporaryDirectory { get; set; }
+
+		/// <summary>
+		/// The path to where to save completed workflow runs
+		/// </summary>
+		public string CompletedDirectory { get; set; }
+
+		/// <summary>
+		/// Initialize all the needed directories and workers
+		/// </summary>
+		/// <returns></returns>
+		public Task Initialize();
 
 		/// <summary>
 		/// Execute a workflow and gets its state ID

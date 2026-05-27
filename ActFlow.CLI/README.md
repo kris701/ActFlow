@@ -10,6 +10,7 @@ actflow run <workflow file> -c <config file>
 * `--limiter` limiter on how many activities are allowed to run pr workflow.
 * `--persistent` Directory to keep persistent data in.
 * `--runner` Directory to keep active workflow runs in
+* `--completed` Directory to store completed workflows in
 
 The syntax are as follows for running a small HTTP server that can run workflows:
 ```
@@ -17,10 +18,10 @@ actflow serve -c <config file>
 ```
 * `-c|--config` a path to the config file to use.
 * `-h|--host` host o serve the HTTP server on.
-* `--lifetime` Amount of time (seconds) before completed workflows gets removed from memory.
 * `--limiter` limiter on how many activities are allowed to run pr workflow.
 * `--persistent` Directory to keep persistent data in.
 * `--runner` Directory to keep active workflow runs in
+* `--completed` Directory to store completed workflows in
 
 The syntax are as follows for managing installed plugins.
 ```
@@ -48,6 +49,6 @@ You can only have one version of a given plugin installed at the same time!
 When you run the `serve` command, a small web server starts that has the following endpoints:
 * `/run`: Runs a workflow and returns the result
 * `/queue`: Starts a workflow, but doesnt wait for the result. It just returns the run ID.
-* `/status`: Gets a simplified list of all currently active workflows.
-* `/status?id=<run ID>`: Gets the result of a given workflow run based on the run ID.
+* `/results`: Gets a simplified list of all currently active workflows.
+* `/results?id=<run ID>`: Gets the result of a given workflow run based on the run ID.
 

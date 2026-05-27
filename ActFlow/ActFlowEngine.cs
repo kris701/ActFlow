@@ -3,6 +3,8 @@ using ActFlow.Models;
 using ActFlow.Models.Activities;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using ToolsSharp;
 
@@ -25,10 +27,6 @@ namespace ActFlow
 		/// A limiter to how many activities a workflow can execute (to prevent infinite workflows)
 		/// </summary>
 		public int ActivityLimiter { get; set; } = 100;
-		/// <summary>
-		/// How many ms should pass before removing a completed workflow from the <seealso cref="ActiveWorkflows"/> list
-		/// </summary>
-		public TimeSpan RemoveDelay { get; set; } = TimeSpan.FromSeconds(60);
 
 		/// <summary>
 		/// The path to the persistent data folder
@@ -40,6 +38,11 @@ namespace ActFlow
 		/// </summary>
 		public string TemporaryDirectory { get; set; } = ".runners";
 
+		/// <summary>
+		/// The path to where to save completed workflow runs
+		/// </summary>
+		public string CompletedDirectory { get; set; } = ".completed";
+
 		private readonly Dictionary<ServiceKey, IWorker> _serviceCache = new Dictionary<ServiceKey, IWorker>();
 		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);
 
@@ -50,7 +53,19 @@ namespace ActFlow
 		public ActFlowEngine(List<IWorker> workers)
 		{
 			Workers = workers;
-			foreach (var worker in workers)
+
+			if (!Constants.SerializerOpts.Converters.Any(x => x.GetType() == typeof(JsonStringEnumConverter)) &&
+				!Constants.SerializerOpts.Converters.IsReadOnly)
+				Constants.SerializerOpts.Converters.Add(new JsonStringEnumConverter());
+		}
+
+		/// <summary>
+		/// Initialize all the needed directories and workers
+		/// </summary>
+		/// <returns></returns>
+		public async Task Initialize()
+		{
+			foreach (var worker in Workers)
 			{
 				worker.PersistenDirectory = PersistentDirectory;
 
@@ -68,6 +83,9 @@ namespace ActFlow
 
 			if (!Directory.Exists(PersistentDirectory))
 				Directory.CreateDirectory(PersistentDirectory);
+
+			if (!Directory.Exists(CompletedDirectory))
+				Directory.CreateDirectory(CompletedDirectory);
 		}
 
 		#region Execute
@@ -206,18 +224,26 @@ namespace ActFlow
 			}
 			else
 			{
-				state.AppendToLog($"Removing from Active List in {RemoveDelay}ms");
+				state.AppendToLog($"Moving workflow state to completed folder...");
 				await state.Update();
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-				Task.Run(async () =>
-				{
-					await Task.Delay(RemoveDelay);
-					var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
-					if (Directory.Exists(tmpDirectory))
-						Directory.Delete(tmpDirectory);
-					ActiveWorkflows.Remove(state);
-				});
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+				var path = Path.Combine(CompletedDirectory, state.ID.ToString());
+				if (Directory.Exists(path))
+					DirectoryHelper.DeleteDirectory(path);
+				Directory.CreateDirectory(path);
+
+				var workflowFile = Path.Combine(path, "state.json");
+				await File.WriteAllTextAsync(workflowFile, JsonSerializer.Serialize(state, Constants.SerializerOpts));
+
+				var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
+				var newTmpDirectory = Path.Combine(path, "tmp");
+				if (Directory.Exists(newTmpDirectory))
+					Directory.CreateDirectory(newTmpDirectory);
+				if (Directory.Exists(tmpDirectory))
+					DirectoryHelper.CopyFilesRecursively(tmpDirectory, newTmpDirectory);
+
+				ActiveWorkflows.Remove(state);
+				if (Directory.Exists(tmpDirectory))
+					Directory.Delete(tmpDirectory);
 			}
 		}
 

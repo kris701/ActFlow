@@ -15,7 +15,7 @@
 
 	<PropertyGroup>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<Version>1.0.17</Version>
+		<Version>1.0.18</Version>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -41,6 +41,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ToolsSharp" Version="1.1.10" />
+    <PackageReference Include="ToolsSharp" Version="1.1.11" />
   </ItemGroup>
 </Project>

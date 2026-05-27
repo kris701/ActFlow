@@ -10,7 +10,7 @@ namespace ActFlow.CLI.Programs
 			switch (opts.Action.ToLower())
 			{
 				case "add":
-					if (Directory.Exists(Path.Combine(Constants._pluginPath, opts.PluginName + "." + opts.PluginVersion)))
+					if (Directory.Exists(Path.Combine(StaticDirectories._pluginPath, opts.PluginName + "." + opts.PluginVersion)))
 						ConsoleHelpers.WriteLineColor("Plugin already installed!", ConsoleColor.DarkYellow);
 					else
 					{
@@ -20,7 +20,7 @@ namespace ActFlow.CLI.Programs
 					}
 					break;
 				case "remove":
-					var path = Path.Combine(Constants._pluginPath, opts.PluginName + "." + opts.PluginVersion);
+					var path = Path.Combine(StaticDirectories._pluginPath, opts.PluginName + "." + opts.PluginVersion);
 					if (!Directory.Exists(path))
 						ConsoleHelpers.WriteLineColor("Plugin does not exist!", ConsoleColor.Red);
 					else
@@ -30,7 +30,7 @@ namespace ActFlow.CLI.Programs
 					}
 					break;
 				case "list":
-					var dirs = Directory.GetDirectories(Constants._pluginPath);
+					var dirs = Directory.GetDirectories(StaticDirectories._pluginPath);
 					foreach (var dir in dirs)
 						ConsoleHelpers.WriteLineColor("\tPackage: " + dir, ConsoleColor.DarkGray);
 					if (dirs.Length == 0)
