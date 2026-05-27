@@ -52,3 +52,11 @@ When you run the `serve` command, a small web server starts that has the followi
 * `/results`: Gets a simplified list of all currently active workflows.
 * `/results?id=<run ID>`: Gets the result of a given workflow run based on the run ID.
 
+### The `archive` command
+
+Use the `archive` command to interact with completed workflow runs.
+```
+actflow archive get <run id>
+actflow archive remove <run id>
+actflow archive list
+```

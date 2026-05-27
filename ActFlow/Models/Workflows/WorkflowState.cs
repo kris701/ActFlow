@@ -26,7 +26,6 @@ namespace ActFlow.Models.Workflows
 		/// <summary>
 		/// The ID of this state
 		/// </summary>
-		[JsonPropertyName("id")]
 		public Guid ID { get; set; }
 		/// <summary>
 		/// Current workflow state status

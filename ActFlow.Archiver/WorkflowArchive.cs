@@ -6,12 +6,11 @@ using ToolsSharp;
 
 namespace ActFlow.Archiver
 {
+	/// <summary>
+	/// Implementation to handle archival of completed workflows
+	/// </summary>
 	public class WorkflowArchive : IWorkflowArchive
 	{
-		/// <summary>
-		/// Amount of completed workflows stored
-		/// </summary>
-		public int CompletedWorkflows { get; private set; } = 0;
 		/// <summary>
 		/// The path to where to save completed workflow runs
 		/// </summary>
@@ -21,6 +20,9 @@ namespace ActFlow.Archiver
 		private Dictionary<Guid, ListWorkflowState> _cache = new Dictionary<Guid, ListWorkflowState>();
 		private FileSystemWatcher _watcher = new FileSystemWatcher();
 
+		/// <summary>
+		/// Main constructor
+		/// </summary>
 		public WorkflowArchive()
 		{
 			if (!Constants.SerializerOpts.Converters.Any(x => x.GetType() == typeof(JsonStringEnumConverter)) &&
@@ -28,6 +30,10 @@ namespace ActFlow.Archiver
 				Constants.SerializerOpts.Converters.Add(new JsonStringEnumConverter());
 		}
 
+		/// <summary>
+		/// Initialize the archiver
+		/// </summary>
+		/// <returns></returns>
 		public async Task Initialize()
 		{
 			if (!Directory.Exists(CompletedDirectory))
@@ -72,7 +78,7 @@ namespace ActFlow.Archiver
 
 				if (!File.Exists(stateFile))
 					continue;
-				var state = JsonSerializer.Deserialize<WorkflowState>(stateFile, Constants.SerializerOpts);
+				var state = JsonSerializer.Deserialize<SimpleWorkflowState>(File.ReadAllText(stateFile), Constants.SerializerOpts);
 				if (state == null)
 					continue;
 
@@ -88,8 +94,17 @@ namespace ActFlow.Archiver
 			_updatingCache = false;
 		}
 
+		/// <summary>
+		/// Get a simplified list of all completed workflows
+		/// </summary>
+		/// <returns></returns>
 		public List<ListWorkflowState> GetAllCompletedWorkflows() => _cache.Values.ToList();
 
+		/// <summary>
+		/// Gets details information on a single workflow
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
 		public CompletedWorkflowState GetCompletedWorkflow(Guid id)
 		{
 			if (!_cache.ContainsKey(id))
@@ -97,20 +112,26 @@ namespace ActFlow.Archiver
 			var listState = _cache[id];
 
 			var stateFile = Path.Combine(CompletedDirectory, id.ToString(), "state.json");
-			var state = JsonSerializer.Deserialize<WorkflowState>(stateFile, Constants.SerializerOpts);
+			var state = JsonSerializer.Deserialize<WorkflowState>(File.ReadAllText(stateFile), Constants.SerializerOpts);
 			if (state == null)
 				throw new Exception("Could not deserialize the state file!");
 
 			var tmpFilesPath = Path.Combine(CompletedDirectory, id.ToString(), "tmp");
-			string[] allfiles = Directory.GetFiles(tmpFilesPath, "*.*", SearchOption.AllDirectories);
+			var allFiles = new List<string>();
+			if (Directory.Exists(tmpFilesPath))
+				allFiles = Directory.GetFiles(tmpFilesPath, "*.*", SearchOption.AllDirectories).ToList();
 
 			return new CompletedWorkflowState()
 			{
 				State = state,
-				Files = allfiles.ToList(),
+				Files = allFiles
 			};
 		}
 
+		/// <summary>
+		/// Removed a completed workflow
+		/// </summary>
+		/// <param name="id"></param>
 		public void RemoveCompletedWorkflow(Guid id)
 		{
 			if (!_cache.ContainsKey(id))
