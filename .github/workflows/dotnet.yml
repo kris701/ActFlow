@@ -163,9 +163,9 @@ jobs:
           dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
           cd ../../..
 
-      - name: Build (Release) and Publish [ActFlow.Archive]
+      - name: Build (Release) and Publish [ActFlow.Archiver]
         run: |  
-          cd ActFlow.Archive
+          cd ActFlow.Archiver
           dotnet build --configuration Release
           dotnet pack --configuration Release
           cd bin

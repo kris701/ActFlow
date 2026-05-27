@@ -2,7 +2,6 @@
   "profiles": {
     "ActFlow.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "archive list",
       "workingDirectory": "C:\\Users\\kris7\\Downloads\\tmptst"
     }
   }
