@@ -1,13 +1,16 @@
 ﻿using ActFlow.Models.Activities;
+using ActFlow.Models.Attributes;
 using ActFlow.Models.Contexts;
 using ActFlow.Models.Workflows;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ActFlow.Models.Workers
 {
 	public abstract class BaseWorker<T> : IWorker where T : IActivity
 	{
-		[JsonPropertyName("id")]
+		[StringLength(256, MinimumLength = 1, ErrorMessage = "Name must be between 1 and 256 characters long!")]
+		[StictLowerCaseString]
 		public string ID { get; set; } = "default";
 
 		[JsonIgnore]
