@@ -1,24 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ActFlow.Models.Workflows
+﻿namespace ActFlow.Models.Workflows
 {
 	public class WorkflowLog
 	{
-		public WorkflowLogTypes Type { get; set; }
+		public WorkflowLogTypes LogType { get; set; }
 		public string Text { get; set; }
 
-		public WorkflowLog(WorkflowLogTypes type, string text)
+		public WorkflowLog(WorkflowLogTypes logType, string text)
 		{
-			Type = type;
+			LogType = logType;
 			Text = text;
 		}
 
 		public WorkflowLog(string text)
 		{
-			Type = WorkflowLogTypes.Info;
+			LogType = WorkflowLogTypes.Info;
 			Text = text;
+		}
+
+		public WorkflowLog()
+		{
+			LogType = WorkflowLogTypes.Info;
+			Text = "";
 		}
 	}
 }
