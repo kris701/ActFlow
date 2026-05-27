@@ -22,16 +22,5 @@ namespace ActFlow.Integrations.Core.Activities
 		[StringLength(256, MinimumLength = 1, ErrorMessage = "Name must be between 1 and 256 characters long!")]
 		[StictLowerCaseString]
 		public string FalseActivityName { get; set; }
-
-		public IActivity Clone() => new ConditionalIfActivity()
-		{
-			Name = Name,
-			WorkerID = WorkerID,
-			LeftCondition = LeftCondition,
-			RightCondition = RightCondition,
-			Comparer = Comparer,
-			TrueActivityName = TrueActivityName,
-			FalseActivityName = FalseActivityName
-		};
 	}
 }

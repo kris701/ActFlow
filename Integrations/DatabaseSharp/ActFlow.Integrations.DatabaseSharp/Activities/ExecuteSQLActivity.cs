@@ -13,20 +13,5 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 		public int ResultTable { get; set; } = 0;
 		[Required]
 		public Dictionary<string, string> ResultMap { get; set; }
-
-		public IActivity Clone()
-		{
-			var resultMap = new Dictionary<string, string>();
-			foreach (var key in ResultMap.Keys)
-				resultMap.Add(key, ResultMap[key]);
-			return new ExecuteSQLActivity()
-			{
-				Name = Name,
-				WorkerID = WorkerID,
-				SQL = SQL,
-				ResultTable = ResultTable,
-				ResultMap = resultMap
-			};
-		}
 	}
 }

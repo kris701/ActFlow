@@ -254,7 +254,7 @@ namespace ActFlow
 
 		private async Task ExecuteActivityAsync(WorkflowState state, string tmpDirectory)
 		{
-			var activity = state.Workflow.Activities[state.ActivityIndex].Clone();
+			var activity = state.Workflow.Activities[state.ActivityIndex];
 			state.AppendToLog($"Initializing activity {activity.Name}");
 
 			activity = ActivityHelpers.ApplyContexts(state, activity);

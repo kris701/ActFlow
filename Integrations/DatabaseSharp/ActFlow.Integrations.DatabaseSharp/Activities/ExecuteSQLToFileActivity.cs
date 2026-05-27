@@ -16,15 +16,5 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 		public string Path { get; set; }
 		[Required]
 		public FileDirectories Directory { get; set; }
-
-		public IActivity Clone() => new ExecuteSQLToFileActivity()
-		{
-			Name = Name,
-			WorkerID = WorkerID,
-			SQL = SQL,
-			ResultTable = ResultTable,
-			Path = Path,
-			Directory = Directory
-		};
 	}
 }

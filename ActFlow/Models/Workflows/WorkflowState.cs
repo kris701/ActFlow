@@ -156,7 +156,7 @@ namespace ActFlow.Models.Workflows
 		/// <param name="value"></param>
 		public void AddContext(string key, string value)
 		{
-			ContextStore.Add(key.ToLower(), value);
+			ContextStore.TryAdd(key.ToLower(), value);
 		}
 		/// <summary>
 		/// Add a dictionary of contexts to the context store

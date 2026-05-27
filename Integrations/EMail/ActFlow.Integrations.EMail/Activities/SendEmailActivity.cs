@@ -11,12 +11,5 @@ namespace ActFlow.Integrations.EMail.Activities
 
 		[Required]
 		public IContext Answer { get; set; }
-
-		public IActivity Clone() => new SendEmailActivity()
-		{
-			Name = Name,
-			WorkerID = WorkerID,
-			Answer = Answer.Clone()
-		};
 	}
 }

@@ -12,13 +12,5 @@ namespace ActFlow.Integrations.OpenWebUISharp.Activities
 		public string Prompt { get; set; }
 		[Required]
 		public string Model { get; set; }
-
-		public IActivity Clone() => new QueryLLMActivity()
-		{
-			Name = Name,
-			WorkerID = WorkerID,
-			Prompt = Prompt,
-			Model = Model
-		};
 	}
 }

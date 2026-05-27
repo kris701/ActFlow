@@ -16,22 +16,5 @@ namespace ActFlow.Integrations.SerializableHttps.Activities
 		public Dictionary<string, string> Headers { get; set; }
 		[Required]
 		public HttpTypes Type { get; set; }
-
-		public IActivity Clone()
-		{
-			var headers = new Dictionary<string, string>();
-			foreach (var key in Headers.Keys)
-				headers.Add(key, Headers[key]);
-
-			return new ExecuteHttpActivity()
-			{
-				Name = Name,
-				WorkerID = WorkerID,
-				Content = Content,
-				Route = Route,
-				Headers = headers,
-				Type = Type
-			};
-		}
 	}
 }

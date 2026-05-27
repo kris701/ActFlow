@@ -12,13 +12,5 @@ namespace ActFlow.Integrations.ML.NET.Activity
 		public string Text { get; set; }
 		[Required]
 		public string Model { get; set; }
-
-		public IActivity Clone() => new ClassifyTextActivity()
-		{
-			Name = Name,
-			WorkerID = WorkerID,
-			Text = Text,
-			Model = Model
-		};
 	}
 }

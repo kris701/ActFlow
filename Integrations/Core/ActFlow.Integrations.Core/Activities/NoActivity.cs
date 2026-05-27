@@ -6,11 +6,5 @@ namespace ActFlow.Integrations.Core.Activities
 	{
 		public string Name { get; set; } = "noaction";
 		public string WorkerID { get; set; } = "default";
-
-		public IActivity Clone() => new NoActivity()
-		{
-			Name = Name,
-			WorkerID = WorkerID
-		};
 	}
 }

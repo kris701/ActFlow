@@ -9,6 +9,8 @@ namespace ActFlow.Integrations.Core.Activities
 	{
 		public string Name { get; set; } = "waitforuserinput";
 		public string WorkerID { get; set; } = "default";
+		[Required]
+		public bool Persistent { get; set; }
 		public string? HumanInput { get; set; }
 		[Required]
 		public string Condition { get; set; }
@@ -34,16 +36,5 @@ namespace ActFlow.Integrations.Core.Activities
 					throw new Exception("Invalid context type!");
 			}
 		}
-
-		public IActivity Clone() => new ConditionalUserActivity()
-		{
-			Name = Name,
-			WorkerID = WorkerID,
-			HumanInput = HumanInput,
-			Condition = Condition,
-			Comparer = Comparer,
-			TrueActivityName = TrueActivityName,
-			FalseActivityName = FalseActivityName
-		};
 	}
 }

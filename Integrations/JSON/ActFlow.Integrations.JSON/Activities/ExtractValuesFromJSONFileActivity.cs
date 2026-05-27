@@ -15,20 +15,5 @@ namespace ActFlow.Integrations.JSON.Activities
 		public FileDirectories Directory { get; set; } = FileDirectories.Temporary;
 		[Required]
 		public Dictionary<string, string> JSONPaths { get; set; }
-
-		public IActivity Clone()
-		{
-			var jsonPaths = new Dictionary<string, string>();
-			foreach (var key in JSONPaths.Keys)
-				jsonPaths.Add(key, JSONPaths[key]);
-			return new ExtractValuesFromJSONFileActivity()
-			{
-				Name = Name,
-				WorkerID = WorkerID,
-				Path = Path,
-				Directory = Directory,
-				JSONPaths = jsonPaths
-			};
-		}
 	}
 }

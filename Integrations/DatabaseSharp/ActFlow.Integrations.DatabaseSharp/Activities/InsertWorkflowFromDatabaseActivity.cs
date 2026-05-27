@@ -14,20 +14,5 @@ namespace ActFlow.Integrations.DatabaseSharp.Activities
 		public Dictionary<string, string> Arguments { get; set; }
 
 		public bool HasInserted { get; set; } = false;
-
-		public IActivity Clone()
-		{
-			var arguments = new Dictionary<string, string>();
-			foreach (var key in Arguments.Keys)
-				arguments.Add(key, Arguments[key]);
-			return new InsertWorkflowFromDatabaseActivity()
-			{
-				Name = Name,
-				WorkerID = WorkerID,
-				TargetSTP = TargetSTP,
-				Arguments = arguments,
-				HasInserted = HasInserted
-			};
-		}
 	}
 }

@@ -16,14 +16,5 @@ namespace ActFlow.Integrations.Math.Activities
 		public OperatorTypes Op { get; set; }
 		[Required]
 		public string Right { get; set; }
-
-		public IActivity Clone() => new EvaluateActivity()
-		{
-			WorkerID = WorkerID,
-			Name = Name,
-			Left = Left,
-			Op = Op,
-			Right = Right
-		};
 	}
 }

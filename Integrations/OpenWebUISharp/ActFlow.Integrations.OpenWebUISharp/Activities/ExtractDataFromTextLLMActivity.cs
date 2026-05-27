@@ -14,14 +14,5 @@ namespace ActFlow.Integrations.OpenWebUISharp.Activities
 		public string Prompt { get; set; }
 		[Required]
 		public string Model { get; set; }
-
-		public IActivity Clone() => new ExtractDataFromTextLLMActivity()
-		{
-			Name = Name,
-			WorkerID = WorkerID,
-			Text = Text,
-			Prompt = Prompt,
-			Model = Model
-		};
 	}
 }

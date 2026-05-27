@@ -75,22 +75,26 @@ namespace ActFlow.Archiver
 			var folders = Directory.GetDirectories(CompletedDirectory);
 			foreach (var folder in folders)
 			{
-				var stateFile = Path.Combine(folder, "state.json");
-
-				if (!File.Exists(stateFile))
-					continue;
-				var state = JsonSerializer.Deserialize<SimpleWorkflowState>(File.ReadAllText(stateFile), Constants.SerializerOpts);
-				if (state == null)
-					continue;
-
-				_cache.Add(state.ID, new ListWorkflowState()
+				try
 				{
-					ID = state.ID,
-					Status = state.Status,
-					Name = state.Workflow.Name,
-					StartedAt = state.StartedAt,
-					EndedAt = state.EndedAt
-				});
+					var stateFile = Path.Combine(folder, "state.json");
+
+					if (!File.Exists(stateFile))
+						continue;
+					var state = JsonSerializer.Deserialize<SimpleWorkflowState>(File.ReadAllText(stateFile), Constants.SerializerOpts);
+					if (state == null)
+						continue;
+
+					_cache.Add(state.ID, new ListWorkflowState()
+					{
+						ID = state.ID,
+						Status = state.Status,
+						Name = state.Workflow.Name,
+						StartedAt = state.StartedAt,
+						EndedAt = state.EndedAt
+					});
+				}
+				catch (Exception) { }
 			}
 			_updatingCache = false;
 		}

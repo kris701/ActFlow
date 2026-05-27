@@ -20,6 +20,9 @@ namespace ActFlow.Integrations.Core.Workers
 
 		public override async Task<WorkerResult> Execute(ConditionalUserActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
+			if (!act.Persistent)
+				act.HumanInput = null;
+
 			if (act.HumanInput == null)
 			{
 				state.Status = WorkflowStatuses.AwaitingHumanInput;

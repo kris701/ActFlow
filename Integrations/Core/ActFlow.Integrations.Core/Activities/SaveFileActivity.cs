@@ -14,14 +14,5 @@ namespace ActFlow.Integrations.Core.Activities
 		public string Path { get; set; }
 		[Required]
 		public FileDirectories Directory { get; set; }
-
-		public IActivity Clone() => new SaveFileActivity()
-		{
-			Name = Name,
-			WorkerID = WorkerID,
-			Data = Data,
-			Path = Path,
-			Directory = Directory
-		};
 	}
 }

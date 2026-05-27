@@ -14,14 +14,5 @@ namespace ActFlow.Integrations.EMail.Activities
 		public string RecieverEmail { get; set; }
 		[Required]
 		public string ConversationID { get; set; }
-
-		public IActivity Clone() => new WaitForEmailActivity()
-		{
-			Name = Name,
-			WorkerID = WorkerID,
-			SenderEmail = SenderEmail,
-			RecieverEmail = RecieverEmail,
-			ConversationID = ConversationID
-		};
 	}
 }

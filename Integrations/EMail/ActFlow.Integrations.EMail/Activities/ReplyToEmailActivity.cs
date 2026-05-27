@@ -13,13 +13,5 @@ namespace ActFlow.Integrations.EMail.Activities
 		public string ToMessageID { get; set; }
 		[Required]
 		public IContext Answer { get; set; }
-
-		public IActivity Clone() => new ReplyToEmailActivity()
-		{
-			Name = Name,
-			WorkerID = WorkerID,
-			ToMessageID = ToMessageID,
-			Answer = Answer.Clone()
-		};
 	}
 }
