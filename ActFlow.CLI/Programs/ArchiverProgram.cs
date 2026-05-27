@@ -1,9 +1,6 @@
 ﻿using ActFlow.Archiver;
 using ActFlow.CLI.Helpers;
 using ActFlow.CLI.Models;
-using ActFlow.Models.Workers;
-using ActFlow.Models.Workflows;
-using System.Text.Json;
 using ToolsSharp;
 
 namespace ActFlow.CLI.Programs
@@ -13,7 +10,8 @@ namespace ActFlow.CLI.Programs
 		public static async Task Run(ArchiverOptions opts)
 		{
 			ConsoleHelpers.WriteLineColor("Initializing archive...", ConsoleColor.Blue);
-			var archiver = new WorkflowArchive() { 
+			var archiver = new WorkflowArchive()
+			{
 				CompletedDirectory = opts.CompletedDirectory
 			};
 			await archiver.Initialize();
