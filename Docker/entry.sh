@@ -8,4 +8,4 @@ for i in "${PLGS[@]}"; do
 done
 
 echo " -- Starting HTTP Server -- "
-dotnet ActFlow.CLI.dll serve -c actflowconfig.json --host http://+:6234/ --lifetime ${LIFETIME} --limiter ${LIMITER} --persistent .persistent --runner .runners
+dotnet ActFlow.CLI.dll serve -c actflowconfig.json --host http://+:6234/ --limiter ${LIMITER} --persistent .persistent --runner .runners --completed .completed

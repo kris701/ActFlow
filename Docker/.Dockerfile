@@ -16,4 +16,4 @@ COPY --from=build /out ./
 EXPOSE 5523/tcp
 COPY ./Docker/entry.sh ./
 RUN ["chmod", "+x", "/opt/ActFlow/entry.sh"]
-CMD PLUGINS=$PLUGINS LIMITER=$LIMITER LIFETIME=$LIFETIME /opt/ActFlow/entry.sh
+CMD PLUGINS=$PLUGINS LIMITER=$LIMITER /opt/ActFlow/entry.sh
