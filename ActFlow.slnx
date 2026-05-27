@@ -56,6 +56,7 @@
     <File Path="LICENSE.txt" />
     <File Path="README.md" />
   </Folder>
+  <Project Path="ActFlow.Archiver/ActFlow.Archiver.csproj" Id="c77ce7e9-48e8-4710-bf9e-d76550f8c0a3" />
   <Project Path="ActFlow.CLI/ActFlow.CLI.csproj" Id="0b92afe1-f053-422a-9fcc-c009845639b5">
     <Build Solution="Debug|*" Project="false" />
   </Project>

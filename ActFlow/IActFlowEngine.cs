@@ -32,9 +32,10 @@ namespace ActFlow
 		public string TemporaryDirectory { get; set; }
 
 		/// <summary>
-		/// The path to where to save completed workflow runs
+		/// The path to where to save completed workflow runs.
+		/// If this is set to null, the workflows will simply be discarded on completion.
 		/// </summary>
-		public string CompletedDirectory { get; set; }
+		public string? CompletedDirectory { get; set; }
 
 		/// <summary>
 		/// Initialize all the needed directories and workers

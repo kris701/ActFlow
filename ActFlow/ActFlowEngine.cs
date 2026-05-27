@@ -40,8 +40,9 @@ namespace ActFlow
 
 		/// <summary>
 		/// The path to where to save completed workflow runs
+		/// If this is set to null, the workflows will simply be discarded on completion.
 		/// </summary>
-		public string CompletedDirectory { get; set; } = ".completed";
+		public string? CompletedDirectory { get; set; } = ".completed";
 
 		private readonly Dictionary<ServiceKey, IWorker> _serviceCache = new Dictionary<ServiceKey, IWorker>();
 		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);
@@ -84,7 +85,7 @@ namespace ActFlow
 			if (!Directory.Exists(PersistentDirectory))
 				Directory.CreateDirectory(PersistentDirectory);
 
-			if (!Directory.Exists(CompletedDirectory))
+			if (CompletedDirectory != null && !Directory.Exists(CompletedDirectory))
 				Directory.CreateDirectory(CompletedDirectory);
 		}
 
@@ -224,24 +225,28 @@ namespace ActFlow
 			}
 			else
 			{
-				state.AppendToLog($"Moving workflow state to completed folder...");
-				await state.Update();
-				var path = Path.Combine(CompletedDirectory, state.ID.ToString());
-				if (Directory.Exists(path))
-					DirectoryHelper.DeleteDirectory(path);
-				Directory.CreateDirectory(path);
+				if (CompletedDirectory != null)
+				{
+					state.AppendToLog($"Moving workflow state to completed folder...");
+					await state.Update();
+					var path = Path.Combine(CompletedDirectory, state.ID.ToString());
+					if (Directory.Exists(path))
+						DirectoryHelper.DeleteDirectory(path);
+					Directory.CreateDirectory(path);
 
-				var workflowFile = Path.Combine(path, "state.json");
-				await File.WriteAllTextAsync(workflowFile, JsonSerializer.Serialize(state, Constants.SerializerOpts));
+					var workflowFile = Path.Combine(path, "state.json");
+					await File.WriteAllTextAsync(workflowFile, JsonSerializer.Serialize(state, Constants.SerializerOpts));
 
-				var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
-				var newTmpDirectory = Path.Combine(path, "tmp");
-				if (Directory.Exists(newTmpDirectory))
-					Directory.CreateDirectory(newTmpDirectory);
-				if (Directory.Exists(tmpDirectory))
-					DirectoryHelper.CopyFilesRecursively(tmpDirectory, newTmpDirectory);
+					var orgTmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
+					var newTmpDirectory = Path.Combine(path, "tmp");
+					if (Directory.Exists(newTmpDirectory))
+						Directory.CreateDirectory(newTmpDirectory);
+					if (Directory.Exists(orgTmpDirectory))
+						DirectoryHelper.CopyFilesRecursively(orgTmpDirectory, newTmpDirectory);
+				}
 
 				ActiveWorkflows.Remove(state);
+				var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
 				if (Directory.Exists(tmpDirectory))
 					Directory.Delete(tmpDirectory);
 			}
