@@ -62,7 +62,8 @@ namespace ActFlow.Archiver
 
 		private void OnChanged(object sender, FileSystemEventArgs e)
 		{
-			LoadArchive();
+			if (e.ChangeType == WatcherChangeTypes.Changed)
+				LoadArchive();
 		}
 
 		private void LoadArchive()
@@ -105,16 +106,16 @@ namespace ActFlow.Archiver
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public CompletedWorkflowState GetCompletedWorkflow(Guid id)
+		public CompletedWorkflowState? GetCompletedWorkflow(Guid id)
 		{
 			if (!_cache.ContainsKey(id))
-				throw new Exception("No completed workflow exists with that ID!");
+				return null;
 			var listState = _cache[id];
 
 			var stateFile = Path.Combine(CompletedDirectory, id.ToString(), "state.json");
 			var state = JsonSerializer.Deserialize<WorkflowState>(File.ReadAllText(stateFile), Constants.SerializerOpts);
 			if (state == null)
-				throw new Exception("Could not deserialize the state file!");
+				return null;
 
 			var tmpFilesPath = Path.Combine(CompletedDirectory, id.ToString(), "tmp");
 			var allFiles = new List<string>();

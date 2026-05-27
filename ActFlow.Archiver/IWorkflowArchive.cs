@@ -28,7 +28,7 @@ namespace ActFlow.Archiver
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public CompletedWorkflowState GetCompletedWorkflow(Guid id);
+		public CompletedWorkflowState? GetCompletedWorkflow(Guid id);
 		/// <summary>
 		/// Removed a completed workflow
 		/// </summary>
