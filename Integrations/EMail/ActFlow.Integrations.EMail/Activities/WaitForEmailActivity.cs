@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.EMail.Activities
 {
-	public class WaitForEmailActivity : IActivity, IUpdatableWorkflowActivity
+	public class WaitForEmailActivity : IActivity
 	{
 		public string Name { get; set; } = "waitforemail";
 		public string WorkerID { get; set; } = "default";

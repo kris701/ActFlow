@@ -1,4 +1,5 @@
-﻿using ActFlow.Models.Workers;
+﻿using ActFlow.Models.Contexts;
+using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 
 namespace ActFlow
@@ -92,13 +93,13 @@ namespace ActFlow
 		public Task CancelAllAsync();
 
 		/// <summary>
-		/// Updates a currently running workflow state with a new workflow definition.
-		/// This is only possible if the workflow is at an activity that implements <seealso cref="Models.Activities.IUpdatableWorkflowActivity"/>
-		/// and that the workflow state is <seealso cref="ActFlow.Models.Workflows.WorkflowStatuses.AwaitingUpdate"/>
+		/// Apply human input to a given workflow.
+		/// This is only possible if the workflow is at an activity that implements <seealso cref="Models.Activities.IHumanInput"/>
+		/// and that the workflow state is <seealso cref="ActFlow.Models.Workflows.WorkflowStatuses.AwaitingHumanInput"/>
 		/// </summary>
 		/// <param name="stateId"></param>
-		/// <param name="workflow"></param>
+		/// <param name="input"></param>
 		/// <returns></returns>
-		public Task<WorkflowState> UpdateWorkflowAsync(Guid stateId, Workflow workflow);
+		public void ApplyHumanInput(Guid stateId, IContext input);
 	}
 }

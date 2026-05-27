@@ -1,6 +1,7 @@
 ﻿using ActFlow.Helpers;
 using ActFlow.Models;
 using ActFlow.Models.Activities;
+using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using System.Text.Json;
@@ -152,11 +153,10 @@ namespace ActFlow
 			await state.Update();
 			while (state.ActivityIndex < state.Workflow.Activities.Count)
 			{
-				state.AppendToLog();
-				state.AppendToLog($"\tStarting activity: {state.ActivityIndex}");
+				state.AppendToLog($"Starting activity: {state.ActivityIndex}");
 				if (state.Status == WorkflowStatuses.Canceled)
 				{
-					state.AppendToLog($"\tManual cancellation requested.");
+					state.AppendToLog($"Manual cancellation requested.");
 					break;
 				}
 
@@ -166,8 +166,8 @@ namespace ActFlow
 				}
 				catch (Exception ex)
 				{
-					state.AppendToLogError($"Message: {ex.Message}");
-					state.AppendToLogError($"Trace: {ex.StackTrace}");
+					state.AppendToLog(WorkflowLogTypes.Error, $"Message: {ex.Message}");
+					state.AppendToLog(WorkflowLogTypes.Error, $"Trace: {ex.StackTrace}");
 
 					if (state.Workflow.RetryBehaviour == WorkflowRetryBehaviour.None)
 					{
@@ -176,13 +176,13 @@ namespace ActFlow
 					}
 					else if (state.Workflow.RetryBehaviour == WorkflowRetryBehaviour.Activity)
 					{
-						state.AppendToLogError($"Retrying activity in 10 seconds...");
+						state.AppendToLog(WorkflowLogTypes.Warn, $"Retrying activity in 10 seconds...");
 						await Task.Delay(TimeSpan.FromSeconds(10));
 						continue;
 					}
 					else if (state.Workflow.RetryBehaviour == WorkflowRetryBehaviour.Workflow)
 					{
-						state.AppendToLogError($"Retrying entire workflow in 10 seconds...");
+						state.AppendToLog(WorkflowLogTypes.Warn, $"Retrying entire workflow in 10 seconds...");
 						await Task.Delay(TimeSpan.FromSeconds(10));
 						ActiveWorkflows.Remove(state);
 						return await ExecuteAsync(state.Workflow);
@@ -195,7 +195,7 @@ namespace ActFlow
 				activityCount++;
 				if (activityCount > ActivityLimiter)
 				{
-					state.AppendToLogError($"Workflow exceded the activity limiter (of {ActivityLimiter} steps)! This most likely means something broke or you somehow managed to make the workflow loop.");
+					state.AppendToLog(WorkflowLogTypes.Warn, $"Workflow exceded the activity limiter (of {ActivityLimiter} steps)! This most likely means something broke or you somehow managed to make the workflow loop.");
 					state.Status = WorkflowStatuses.Canceled;
 					break;
 				}
@@ -255,22 +255,22 @@ namespace ActFlow
 		private async Task ExecuteActivityAsync(WorkflowState state, string tmpDirectory)
 		{
 			var activity = state.Workflow.Activities[state.ActivityIndex].Clone();
-			state.AppendToLog($"\tInitializing activity {activity.Name}");
+			state.AppendToLog($"Initializing activity {activity.Name}");
 
 			activity = ActivityHelpers.ApplyContexts(state, activity);
 
-			state.AppendToLog($"\tExecuting activity");
+			state.AppendToLog($"Executing activity");
 			await state.Update();
 			var executionResult = await ExecuteActivityAsync(activity, state, state.TokenSource.Token, tmpDirectory);
 			if (state.Status != WorkflowStatuses.Canceled)
 				state.Status = WorkflowStatuses.Running;
 			if (state.TokenSource.IsCancellationRequested)
 				return;
-			state.AppendToLog($"\tResulting activity context is a {executionResult.Context.GetType()}");
+			state.AppendToLog($"Resulting activity context is a {executionResult.Context.GetType()}");
 			var contextString = executionResult.Context.ToString();
 			if (contextString != null)
 				contextString = contextString.Length > 100 ? contextString.Substring(0, 100) : contextString;
-			state.AppendToLog($"\tResulting activity context content is {contextString}");
+			state.AppendToLog($"Resulting activity context content is {contextString}");
 
 			WorkflowStateHelpers.InsertResultIntoContextStore(state, activity.Name, executionResult);
 
@@ -310,7 +310,7 @@ namespace ActFlow
 			var target = ActiveWorkflows.FirstOrDefault(x => x.ID == id);
 			if (target != null)
 			{
-				target.AppendToLog("Cancellation requested");
+				target.AppendToLog(WorkflowLogTypes.Warn, "Cancellation requested");
 				target.TokenSource.Cancel();
 				while (ActiveWorkflows.Contains(target))
 					await Task.Delay(500);
@@ -340,34 +340,28 @@ namespace ActFlow
 
 		/// <summary>
 		/// Updates a currently running workflow state with a new workflow definition.
-		/// This is only possible if the workflow is at an activity that implements <seealso cref="Models.Activities.IUpdatableWorkflowActivity"/>
-		/// and that the workflow state is <seealso cref="ActFlow.Models.Workflows.WorkflowStatuses.AwaitingUpdate"/>
+		/// This is only possible if the workflow is at an activity that implements <seealso cref="Models.Activities.IHumanInput"/>
+		/// and that the workflow state is <seealso cref="ActFlow.Models.Workflows.WorkflowStatuses.AwaitingHumanInput"/>
 		/// </summary>
 		/// <param name="stateId"></param>
-		/// <param name="workflow"></param>
+		/// <param name="input"></param>
 		/// <returns></returns>
-		public async Task<WorkflowState> UpdateWorkflowAsync(Guid stateId, Workflow workflow)
+		public void ApplyHumanInput(Guid stateId, IContext input)
 		{
 			var state = ActiveWorkflows.FirstOrDefault(x => x.ID == stateId);
 			if (state != null)
 			{
-				if (state.Workflow.Activities[state.ActivityIndex] is not IUpdatableWorkflowActivity)
-					throw new Exception($"Can only update the workflow on activities that implements '{nameof(IUpdatableWorkflowActivity)}'");
-				if (state.Status != WorkflowStatuses.AwaitingUpdate)
+				var currentAct = state.Workflow.Activities[state.ActivityIndex];
+				if (currentAct is not IHumanInput humanAct)
+					throw new Exception($"Can only update the workflow on activities that implements '{nameof(IHumanInput)}'");
+				if (state.Status != WorkflowStatuses.AwaitingHumanInput)
 					throw new Exception("Current state is not awaiting any updates!");
 
-				state.AppendToLog("Applying user input");
-				var combinedState = new WorkflowState(state);
-				combinedState.Workflow = workflow;
-				state.IsProcessingUserInput = true;
-				await CancelAsync(state.ID);
-				combinedState.Status = WorkflowStatuses.NotStarted;
-				combinedState.AppendToLog("Rerunning workflow...");
-				await combinedState.Update();
-				Execute(combinedState);
-				return combinedState;
+				state.AppendToLog(WorkflowLogTypes.Warn, "Applying human input");
+				humanAct.Apply(input);
 			}
-			throw new Exception($"No workflow log item with the id '{stateId}' found!");
+			else
+				throw new Exception($"No workflow log item with the id '{stateId}' found!");
 		}
 	}
 }

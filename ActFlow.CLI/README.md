@@ -51,6 +51,7 @@ When you run the `serve` command, a small web server starts that has the followi
 * `/queue`: Starts a workflow, but doesnt wait for the result. It just returns the run ID.
 * `/results`: Gets a simplified list of all currently active workflows.
 * `/results?id=<run ID>`: Gets the result of a given workflow run based on the run ID.
+* `/input`: Updates a workflow that is in a "awaiting human input" state
 
 ### The `archive` command
 

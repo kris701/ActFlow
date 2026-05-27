@@ -64,6 +64,8 @@ namespace ActFlow.CLI.Programs
 							await HandleQueueRequest(engine, req, resp);
 						else if ((req.HttpMethod == "GET") && (req.Url.AbsolutePath == "/results"))
 							await HandleResultsRequest(engine, archive, req, resp);
+						else if ((req.HttpMethod == "PATCH") && (req.Url.AbsolutePath == "/input"))
+							await HandleHumanInputRequest(engine, req, resp);
 					}
 
 					resp.Close();
@@ -128,6 +130,18 @@ namespace ActFlow.CLI.Programs
 					result = archived.State;
 			}
 			await WriteResponse(resp, result);
+		}
+
+		private static async Task HandleHumanInputRequest(IActFlowEngine engine, HttpListenerRequest req, HttpListenerResponse resp)
+		{
+			var body = GetRequestPostData(req);
+			if (body == null)
+				return;
+			var input = JsonSerializer.Deserialize<UpdateHumanInput>(body, Constants.SerializerOpts);
+			if (input == null)
+				return;
+			engine.ApplyHumanInput(input.ID, input.Input);
+			await WriteResponse(resp, true);
 		}
 
 		private static async Task WriteResponse(HttpListenerResponse resp, object? result)

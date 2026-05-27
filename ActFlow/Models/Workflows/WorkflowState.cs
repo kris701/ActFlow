@@ -50,7 +50,7 @@ namespace ActFlow.Models.Workflows
 		/// <summary>
 		/// Log text made during execution of the state
 		/// </summary>
-		public string LogText { get; set; }
+		public List<WorkflowLog> LogText { get; set; }
 		/// <summary>
 		/// The workflow file used
 		/// </summary>
@@ -72,7 +72,7 @@ namespace ActFlow.Models.Workflows
 			Status = WorkflowStatuses.None;
 			StartedAt = null;
 			EndedAt = null;
-			LogText = "";
+			LogText = new List<WorkflowLog>();
 			ContextStore = new Dictionary<string, string>();
 		}
 
@@ -88,7 +88,7 @@ namespace ActFlow.Models.Workflows
 			Status = WorkflowStatuses.NotStarted;
 			StartedAt = null;
 			EndedAt = null;
-			LogText = "";
+			LogText = new List<WorkflowLog>();
 			ContextStore = new Dictionary<string, string>();
 			AddContext("constants.utcnow", DateTime.UtcNow.ToString("o"));
 			AddContext("constants.utcnow.safe", DateTime.UtcNow.ToString("yyyy-dd-M--HH-mm-ss"));
@@ -121,26 +121,17 @@ namespace ActFlow.Models.Workflows
 		}
 
 		/// <summary>
-		/// Append a spacer to the log
-		/// </summary>
-		public void AppendToLog() => AppendToLog("");
-		/// <summary>
 		/// Append some text to the log
 		/// </summary>
+		/// <param name="type"></param>
 		/// <param name="text"></param>
-		public void AppendToLog(string text)
-		{
-			LogText += $"{text}{Environment.NewLine}";
-		}
+		public void AppendToLog(WorkflowLogTypes type, string text) => LogText.Add(new WorkflowLog(type, text));
 
 		/// <summary>
-		/// Append an error to the log
+		/// Append some text to the log, as a "Info" type
 		/// </summary>
 		/// <param name="text"></param>
-		public void AppendToLogError(string text)
-		{
-			LogText += $"ERR: {text}{Environment.NewLine}";
-		}
+		public void AppendToLog(string text) => LogText.Add(new WorkflowLog(text));
 
 		/// <summary>
 		/// Force indicate an update occured

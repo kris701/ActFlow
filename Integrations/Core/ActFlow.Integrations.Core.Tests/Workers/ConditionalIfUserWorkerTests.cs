@@ -22,7 +22,7 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 			{
 				Name = "act",
 				WorkerID = "",
-				UserInput = "",
+				HumanInput = "",
 				Condition = right,
 				Comparer = compare,
 				TrueActivityName = "act2",
@@ -33,7 +33,7 @@ namespace ActFlow.Integrations.Core.Tests.Workers
 			Task.Run(async () =>
 			{
 				await Task.Delay(100);
-				activity.UserInput = user;
+				activity.HumanInput = user;
 			});
 
 			var result = await worker.Execute(activity, new WorkflowState(), new CancellationToken(), "");

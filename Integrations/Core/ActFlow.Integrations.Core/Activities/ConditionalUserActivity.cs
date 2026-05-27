@@ -1,15 +1,15 @@
 ﻿using ActFlow.Models.Activities;
 using ActFlow.Models.Attributes;
+using ActFlow.Models.Contexts;
 using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.Integrations.Core.Activities
 {
-	public class ConditionalUserActivity : IActivity, IUpdatableWorkflowActivity
+	public class ConditionalUserActivity : IActivity, IHumanInput
 	{
 		public string Name { get; set; } = "waitforuserinput";
 		public string WorkerID { get; set; } = "default";
-		[Required]
-		public string UserInput { get; set; }
+		public string? HumanInput { get; set; }
 		[Required]
 		public string Condition { get; set; }
 		[Required]
@@ -23,11 +23,23 @@ namespace ActFlow.Integrations.Core.Activities
 		[StictLowerCaseString]
 		public string FalseActivityName { get; set; }
 
+		public void Apply(IContext context)
+		{
+			switch (context)
+			{
+				case StringContext c:
+					HumanInput = c.Text;
+					break;
+				default:
+					throw new Exception("Invalid context type!");
+			}
+		}
+
 		public IActivity Clone() => new ConditionalUserActivity()
 		{
 			Name = Name,
 			WorkerID = WorkerID,
-			UserInput = UserInput,
+			HumanInput = HumanInput,
 			Condition = Condition,
 			Comparer = Comparer,
 			TrueActivityName = TrueActivityName,

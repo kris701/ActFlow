@@ -30,8 +30,8 @@
 		/// </summary>
 		Canceled,
 		/// <summary>
-		/// Workflow is awaiting manual input
+		/// Workflow is awaiting human input
 		/// </summary>
-		AwaitingUpdate
+		AwaitingHumanInput
 	}
 }

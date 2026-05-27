@@ -23,6 +23,7 @@ namespace ActFlow.Integrations.EMail.Workers
 
 		public override async Task<WorkerResult> Execute(WaitForEmailActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
+			state.AppendToLog("Awaiting email...");
 			var startTime = DateTime.UtcNow;
 			while (true)
 			{
@@ -32,12 +33,6 @@ namespace ActFlow.Integrations.EMail.Workers
 				foreach (var mail in mails)
 					if (mail.ConversationID == act.ConversationID)
 						return new WorkerResult(mail);
-
-				if (state.Status != WorkflowStatuses.AwaitingUpdate)
-				{
-					state.Status = WorkflowStatuses.AwaitingUpdate;
-					await state.Update();
-				}
 
 				await Task.Delay(WaitDelayMs, token);
 				if (token.IsCancellationRequested)

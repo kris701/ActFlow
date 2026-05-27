@@ -20,33 +20,33 @@ namespace ActFlow.Integrations.Core.Workers
 
 		public override async Task<WorkerResult> Execute(ConditionalUserActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
-			if (act.UserInput == "")
+			if (act.HumanInput == null)
 			{
-				state.Status = WorkflowStatuses.AwaitingUpdate;
+				state.Status = WorkflowStatuses.AwaitingHumanInput;
 				await state.Update();
 			}
 
-			while (act.UserInput == "")
+			while (act.HumanInput == null)
 			{
 				await Task.Delay(WaitDelayMs);
 				if (token.IsCancellationRequested)
 					return new WorkerResult();
 			}
 
-			state.AppendToLog($"Evaluated: '{act.UserInput}' '{Enum.GetName(act.Comparer)}' '{act.Condition}' = '{act.UserInput == act.Condition}'");
+			state.AppendToLog($"Evaluated: '{act.HumanInput}' '{Enum.GetName(act.Comparer)}' '{act.Condition}' = '{act.HumanInput == act.Condition}'");
 
 			switch (act.Comparer)
 			{
 				case ConditionalComparerTypes.Equal:
-					if (act.UserInput == act.Condition)
+					if (act.HumanInput == act.Condition)
 						return new WorkerResult(new EmptyContext(), act.TrueActivityName);
 					break;
 				case ConditionalComparerTypes.NotEqual:
-					if (act.UserInput != act.Condition)
+					if (act.HumanInput != act.Condition)
 						return new WorkerResult(new EmptyContext(), act.TrueActivityName);
 					break;
 				case ConditionalComparerTypes.Contains:
-					if (act.UserInput.Contains(act.Condition))
+					if (act.HumanInput.Contains(act.Condition))
 						return new WorkerResult(new EmptyContext(), act.TrueActivityName);
 					break;
 				default:
