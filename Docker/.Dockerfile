@@ -3,6 +3,7 @@ WORKDIR /source
 
 # Copy ActFlow and the CLI
 COPY ./ActFlow.CLI ./ActFlow.CLI/
+COPY ./ActFlow.Archiver ./ActFlow.Archiver/
 COPY ./ActFlow ./ActFlow/
 COPY ./README.md ./README.md
 COPY ./LICENSE.txt ./LICENSE.txt
