@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 namespace ActFlow.CLI.Controllers
 {
 	[ApiController]
+	[Route("api")]
 	public class ExecuteController : ControllerBase
 	{
 		private readonly IActFlowEngine _engine;

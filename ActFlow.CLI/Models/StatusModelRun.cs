@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ActFlow.CLI.Models
+﻿namespace ActFlow.CLI.Models
 {
 	public class StatusModelRun
 	{

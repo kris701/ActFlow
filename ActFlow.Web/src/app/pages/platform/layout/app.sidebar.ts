@@ -78,7 +78,7 @@ export class AppSidebar {
     async ngOnInit() {
         this.model = [
             {
-                label: 'Dashboard',
+                label: 'Status',
                 icon: 'pi pi-fw pi-objects-column',
                 routerLink: '/',
                 visible: true,

@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { Routes } from '@angular/router';
 import { AppLayout } from './layout/app.layout';
-import { Dashboard } from './pages/dsh/dsh';
+import { Status } from './pages/sta/sta';
 
 export default [
     {
@@ -9,7 +9,7 @@ export default [
         component: AppLayout,
         providers: [provideHttpClient()],
         children: [
-            { path: '', component: Dashboard },
+            { path: '', component: Status },
         ]
     }
 ] as Routes;

@@ -3,11 +3,12 @@ using ActFlow.Archiver.Models;
 using ActFlow.CLI.Models;
 using ActFlow.Models.Workflows;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.CLI.Controllers
 {
 	[ApiController]
+	[Route("api")]
+
 	public class StatusController : ControllerBase
 	{
 		private readonly IActFlowEngine _engine;
@@ -44,7 +45,8 @@ namespace ActFlow.CLI.Controllers
 			{
 				var item = items.Where(x => x.StartedAt != null && x.EndedAt != null).OrderByDescending(x => ((DateTime)x.EndedAt! - (DateTime)x.StartedAt!).TotalSeconds).FirstOrDefault();
 				if (item != null)
-					mostExpensiveWorkflow = new StatusModelRun() {
+					mostExpensiveWorkflow = new StatusModelRun()
+					{
 						ID = item.ID,
 						Name = item.Name
 					};
