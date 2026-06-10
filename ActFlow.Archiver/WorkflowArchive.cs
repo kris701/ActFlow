@@ -91,7 +91,8 @@ namespace ActFlow.Archiver
 						Status = state.Status,
 						Name = state.Workflow.Name,
 						StartedAt = state.StartedAt,
-						EndedAt = state.EndedAt
+						EndedAt = state.EndedAt,
+						IsArchived = true
 					});
 				}
 				catch (Exception) { }
