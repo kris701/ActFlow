@@ -19,6 +19,12 @@ namespace ActFlow.Archiver
 		public Task Initialize();
 
 		/// <summary>
+		/// Get a count on the completed workflows
+		/// </summary>
+		/// <returns></returns>
+		public int GetCompletedWorkflowCount();
+
+		/// <summary>
 		/// Get a simplified list of all completed workflows
 		/// </summary>
 		/// <returns></returns>

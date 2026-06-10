@@ -101,6 +101,12 @@ namespace ActFlow.Archiver
 		}
 
 		/// <summary>
+		/// Get a count on the completed workflows
+		/// </summary>
+		/// <returns></returns>
+		public int GetCompletedWorkflowCount() => _cache.Values.Count;
+
+		/// <summary>
 		/// Get a simplified list of all completed workflows
 		/// </summary>
 		/// <returns></returns>

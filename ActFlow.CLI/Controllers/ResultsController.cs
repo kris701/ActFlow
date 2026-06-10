@@ -38,8 +38,8 @@ namespace ActFlow.CLI.Controllers
 		public async Task<ActionResult<List<ListWorkflowState>>> Get_Results()
 		{
 			var items = new List<ListWorkflowState>();
-			items.AddRange(_engine.ActiveWorkflows.Select(x => new ListWorkflowState() { ID = x.ID, Status = x.Status, StartedAt = x.StartedAt, EndedAt = x.EndedAt, IsArchived = false }));
-			items.AddRange(_archive.GetAllCompletedWorkflows().Select(x => new ListWorkflowState() { ID = x.ID, Status = x.Status, StartedAt = x.StartedAt, EndedAt = x.EndedAt, IsArchived = x.IsArchived }));
+			items.AddRange(_engine.ActiveWorkflows.Select(x => new ListWorkflowState() { ID = x.ID, Status = x.Status, StartedAt = x.StartedAt, EndedAt = x.EndedAt, Name = x.Workflow.Name, IsArchived = false }));
+			items.AddRange(_archive.GetAllCompletedWorkflows().Select(x => new ListWorkflowState() { ID = x.ID, Status = x.Status, StartedAt = x.StartedAt, EndedAt = x.EndedAt, Name = x.Name, IsArchived = x.IsArchived }));
 			items = items.OrderByDescending(x => x.StartedAt).ThenBy(x => x.EndedAt).ToList();
 
 			return Ok(items);
