@@ -91,13 +91,20 @@ namespace ActFlow.Archiver
 						Status = state.Status,
 						Name = state.Workflow.Name,
 						StartedAt = state.StartedAt,
-						EndedAt = state.EndedAt
+						EndedAt = state.EndedAt,
+						IsArchived = true
 					});
 				}
 				catch (Exception) { }
 			}
 			_updatingCache = false;
 		}
+
+		/// <summary>
+		/// Get a count on the completed workflows
+		/// </summary>
+		/// <returns></returns>
+		public int GetCompletedWorkflowCount() => _cache.Values.Count;
 
 		/// <summary>
 		/// Get a simplified list of all completed workflows

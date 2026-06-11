@@ -15,7 +15,7 @@
 
 	<PropertyGroup>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<Version>1.0.12</Version>
+		<Version>1.1.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -33,7 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DatabaseSharp" Version="1.6.6" />
+		<PackageReference Include="DatabaseSharp" Version="1.6.7" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -8,8 +8,8 @@ namespace ActFlow.CLI.Models
 		[Option('c', "config", Required = true, HelpText = "Target config file to use. This should be a JSON file, being a list of IWorker configs", Default = "")]
 		public string ConfigPath { get; set; } = "";
 
-		[Option('h', "host", Required = false, HelpText = "Host to run it on", Default = "http://localhost:5523/")]
-		public string Host { get; set; } = "http://localhost:5523/";
+		[Option('p', "port", Required = false, HelpText = "Port to listen on", Default = 5523)]
+		public int Port { get; set; } = 5523;
 
 		[Option("limiter", Required = false, HelpText = "Limit how many activities are allowed to run for a single workflow", Default = 100)]
 		public int Limiter { get; set; } = 100;

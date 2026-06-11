@@ -166,6 +166,12 @@ namespace ActFlow
 				}
 				catch (Exception ex)
 				{
+					if (state.TokenSource.IsCancellationRequested)
+					{
+						state.Status = WorkflowStatuses.Canceled;
+						break;
+					}
+
 					state.AppendToLog(WorkflowLogTypes.Error, $"Message: {ex.Message}");
 					state.AppendToLog(WorkflowLogTypes.Error, $"Trace: {ex.StackTrace}");
 
@@ -216,40 +222,30 @@ namespace ActFlow
 			if (!state.IsProcessingUserInput)
 				await state.Complete();
 
-			if (state.TokenSource.IsCancellationRequested)
+			if (CompletedDirectory != null)
 			{
-				var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
-				if (Directory.Exists(tmpDirectory))
-					Directory.Delete(tmpDirectory);
-				ActiveWorkflows.Remove(state);
+				state.AppendToLog($"Moving workflow state to completed folder...");
+				await state.Update();
+				var path = Path.Combine(CompletedDirectory, state.ID.ToString());
+				if (Directory.Exists(path))
+					DirectoryHelper.DeleteDirectory(path);
+				Directory.CreateDirectory(path);
+
+				var workflowFile = Path.Combine(path, "state.json");
+				await File.WriteAllTextAsync(workflowFile, JsonSerializer.Serialize(state, Constants.SerializerOpts));
+
+				var orgTmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
+				var newTmpDirectory = Path.Combine(path, "tmp");
+				if (Directory.Exists(newTmpDirectory))
+					Directory.CreateDirectory(newTmpDirectory);
+				if (Directory.Exists(orgTmpDirectory))
+					DirectoryHelper.CopyFilesRecursively(orgTmpDirectory, newTmpDirectory);
 			}
-			else
-			{
-				if (CompletedDirectory != null)
-				{
-					state.AppendToLog($"Moving workflow state to completed folder...");
-					await state.Update();
-					var path = Path.Combine(CompletedDirectory, state.ID.ToString());
-					if (Directory.Exists(path))
-						DirectoryHelper.DeleteDirectory(path);
-					Directory.CreateDirectory(path);
 
-					var workflowFile = Path.Combine(path, "state.json");
-					await File.WriteAllTextAsync(workflowFile, JsonSerializer.Serialize(state, Constants.SerializerOpts));
-
-					var orgTmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
-					var newTmpDirectory = Path.Combine(path, "tmp");
-					if (Directory.Exists(newTmpDirectory))
-						Directory.CreateDirectory(newTmpDirectory);
-					if (Directory.Exists(orgTmpDirectory))
-						DirectoryHelper.CopyFilesRecursively(orgTmpDirectory, newTmpDirectory);
-				}
-
-				ActiveWorkflows.Remove(state);
-				var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
-				if (Directory.Exists(tmpDirectory))
-					Directory.Delete(tmpDirectory);
-			}
+			ActiveWorkflows.Remove(state);
+			var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
+			if (Directory.Exists(tmpDirectory))
+				Directory.Delete(tmpDirectory);
 		}
 
 		private async Task ExecuteActivityAsync(WorkflowState state, string tmpDirectory)

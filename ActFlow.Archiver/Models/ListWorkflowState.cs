@@ -9,5 +9,6 @@ namespace ActFlow.Archiver.Models
 		public WorkflowStatuses Status { get; set; }
 		public DateTime? StartedAt { get; set; }
 		public DateTime? EndedAt { get; set; }
+		public bool IsArchived { get; set; }
 	}
 }

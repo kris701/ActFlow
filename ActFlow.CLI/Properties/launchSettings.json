@@ -3,7 +3,7 @@
     "ActFlow.CLI": {
       "commandName": "Project",
       "commandLineArgs": "serve -c \"C:\\Users\\kris7\\OneDrive\\ActFlow\\config.json\"",
-      "workingDirectory": "C:\\Users\\kris7\\Downloads\\tmptst"
+      "workingDirectory": "C:\\Users\\kris7\\OneDrive\\ActFlow"
     }
   }
 }
