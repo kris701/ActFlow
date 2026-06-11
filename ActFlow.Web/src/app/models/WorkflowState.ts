@@ -12,4 +12,5 @@ export interface WorkflowState {
     endedAt : Date | null;
     logText : WorkflowStateLog[];
     workflow : Workflow;
+    sourceWorkflow : Workflow;
 }

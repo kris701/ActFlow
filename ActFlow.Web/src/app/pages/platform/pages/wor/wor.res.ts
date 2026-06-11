@@ -177,12 +177,26 @@ import { WorkflowStateService } from './services/wor.stateservice';
                             <div class="result-details-border">
                                 <p-inplace>
                                     <ng-template #display>
-                                        <span>View Workflow</span>
+                                        <span>View State Workflow</span>
                                     </ng-template>
                                     <ng-template #content>
                                         <div class="flex flex-col gap-2">
-                                            <span>Workflow</span>
+                                            <span>Workflow that ActFlow has modified</span>
                                             <ngx-monaco-editor [options]="editorOptions" [ngModel]="JSON.stringify(fullItem.workflow, null, 4)" [disabled]="true"> </ngx-monaco-editor>
+                                        </div>
+                                    </ng-template>
+                                </p-inplace>
+                            </div>
+
+                            <div class="result-details-border">
+                                <p-inplace>
+                                    <ng-template #display>
+                                        <span>View Source Workflow</span>
+                                    </ng-template>
+                                    <ng-template #content>
+                                        <div class="flex flex-col gap-2">
+                                            <span>The original Workflow</span>
+                                            <ngx-monaco-editor [options]="editorOptions" [ngModel]="JSON.stringify(fullItem.sourceWorkflow, null, 4)" [disabled]="true"> </ngx-monaco-editor>
                                         </div>
                                     </ng-template>
                                 </p-inplace>
@@ -295,15 +309,15 @@ export class Results {
     async cancelWorkflowRun(id : string){
         this.isLoading = true;
         await firstValueFrom(this.http.delete("/api/cancel?id=" + id))
-        this.service.add({ severity: 'success', summary: 'Workflow Canceled!', detail: 'The active workflow has been canceled' });
+        this.service.add({ severity: 'success', summary: 'Workflow Cancel Requested!', detail: 'A request to cancel the workflow have been send!' });
         this.isLoading = false;
         await this.workflowStateService.Load();
     }
 
     async rerunWorkflow(id : string){
         if (this.itemCache[id])
-            sessionStorage.setItem("tmpWorkflowTransfer", this.JSON.stringify((this.itemCache[id]).workflow, null, 4));
-        sessionStorage.setItem("tmpWorkflowTransfer", this.JSON.stringify((await this.workflowStateService.Get(id)).workflow, null, 4));
+            sessionStorage.setItem("tmpWorkflowTransfer", this.JSON.stringify((this.itemCache[id]).sourceWorkflow, null, 4));
+        sessionStorage.setItem("tmpWorkflowTransfer", this.JSON.stringify((await this.workflowStateService.Get(id)).sourceWorkflow, null, 4));
         this.router.navigateByUrl("workflows/run");
     }
 }

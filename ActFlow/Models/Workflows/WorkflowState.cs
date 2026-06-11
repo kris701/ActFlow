@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ActFlow.Models.Workflows
 {
@@ -55,6 +56,10 @@ namespace ActFlow.Models.Workflows
 		/// The workflow file used
 		/// </summary>
 		public Workflow Workflow { get; set; }
+		/// <summary>
+		/// The original workflow passed to the state
+		/// </summary>
+		public Workflow SourceWorkflow { get; set; }
 
 		[JsonIgnore]
 		internal bool IsProcessingUserInput { get; set; } = false;
@@ -68,6 +73,7 @@ namespace ActFlow.Models.Workflows
 		{
 			ID = Guid.NewGuid();
 			Workflow = new Workflow();
+			SourceWorkflow = new Workflow();
 			ActivityIndex = 0;
 			Status = WorkflowStatuses.None;
 			StartedAt = null;
@@ -84,6 +90,10 @@ namespace ActFlow.Models.Workflows
 		{
 			ID = Guid.NewGuid();
 			Workflow = workflow;
+			var clone = JsonSerializer.Deserialize<Workflow>(JsonSerializer.Serialize(workflow, Constants.SerializerOpts), Constants.SerializerOpts);
+			if (clone == null)
+				throw new Exception("Could not make a copy of the input workflow!");
+			SourceWorkflow = clone;
 			ActivityIndex = 0;
 			Status = WorkflowStatuses.NotStarted;
 			StartedAt = null;
@@ -107,6 +117,7 @@ namespace ActFlow.Models.Workflows
 		{
 			ID = other.ID;
 			Workflow = other.Workflow;
+			SourceWorkflow = other.SourceWorkflow;
 			ActivityIndex = other.ActivityIndex;
 			Status = other.Status;
 			StartedAt = other.StartedAt;
