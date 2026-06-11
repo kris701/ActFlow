@@ -61,7 +61,7 @@ import { TableEmptyMessage } from './tables/emptymessage';
                         }
                         <ng-container [ngTemplateOutlet]="additionalheader"></ng-container>
                         @if (showRefresh) {
-                            <p-button icon="pi pi-refresh" (click)="onLoadItems.emit()" />
+                            <p-button icon="pi pi-refresh" (click)="expandedRows = {};onLoadItems.emit()" />
                         }
                     </div>
                 </ng-template>

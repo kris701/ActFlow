@@ -62,15 +62,14 @@ namespace ActFlow.CLI.Programs
 				c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 				c.AddServer(new OpenApiServer() { Description = "Primary", Url = $"http://localhost:{opts.Port}" });
 			});
-			builder.Services.ConfigureHttpJsonOptions(o =>
+			builder.Services.AddControllers().AddJsonOptions(o =>
 			{
-				o.SerializerOptions.WriteIndented = Constants.SerializerOpts.WriteIndented;
-				o.SerializerOptions.TypeInfoResolver = Constants.SerializerOpts.TypeInfoResolver;
-				o.SerializerOptions.AllowTrailingCommas = Constants.SerializerOpts.AllowTrailingCommas;
-				o.SerializerOptions.ReadCommentHandling = Constants.SerializerOpts.ReadCommentHandling;
-				o.SerializerOptions.NumberHandling = Constants.SerializerOpts.NumberHandling;
+				o.JsonSerializerOptions.WriteIndented = Constants.SerializerOpts.WriteIndented;
+				o.JsonSerializerOptions.TypeInfoResolver = Constants.SerializerOpts.TypeInfoResolver;
+				o.JsonSerializerOptions.AllowTrailingCommas = Constants.SerializerOpts.AllowTrailingCommas;
+				o.JsonSerializerOptions.ReadCommentHandling = Constants.SerializerOpts.ReadCommentHandling;
+				o.JsonSerializerOptions.NumberHandling = Constants.SerializerOpts.NumberHandling;
 			});
-			builder.Services.AddControllers();
 			builder.Services.AddSingleton<IActFlowEngine>(engine);
 			builder.Services.AddSingleton<IWorkflowArchive>(archive);
 

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { EditorComponent } from "ngx-monaco-editor-v2";
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -14,27 +15,29 @@ import { firstValueFrom } from 'rxjs';
 import { FloatTable } from "../../../../common/components/floattable";
 import { TableDateFilterColumn, TableTextFilterColumn } from '../../../../common/components/tables/filtercolumns';
 import { TableDateRow, TableTagRow } from '../../../../common/components/tables/filterrows';
+import { WorkflowState } from '../../../../models/WorkflowState';
+import { WorkflowStateService } from './services/wor.stateservice';
 
 @Component({
     selector: 'app-wor-res',
     imports: [
-    CommonModule,
-    FormsModule,
-    ButtonModule,
-    FloatTable,
-    TableTextFilterColumn,
-    TableDateFilterColumn,
-    TableTagRow,
-    TableDateRow,
-    TableModule,
-    Tag,
-    InputGroup,
-    InputGroupAddon,
-    InplaceModule,
-    EditorComponent
-],
+        CommonModule,
+        FormsModule,
+        ButtonModule,
+        FloatTable,
+        TableTextFilterColumn,
+        TableDateFilterColumn,
+        TableTagRow,
+        TableDateRow,
+        TableModule,
+        Tag,
+        InputGroup,
+        InputGroupAddon,
+        InplaceModule,
+        EditorComponent
+    ],
     template: `
-        <app-floattable [values]="allItems" [isLoading]="isLoading" (onLoadItems)="loadResults()" [rowSelectable]="false" [showAdd]="false">
+        <app-floattable [values]="workflowStateService.items" [isLoading]="isLoading" (onLoadItems)="workflowStateService.Load()" [rowSelectable]="false" [showAdd]="false">
             <ng-template #tableHeader>
                 <th style="width:2rem"></th>
                 <th textfiltercolumn pSortableColumn="name" displayName="Name"></th>
@@ -53,7 +56,10 @@ import { TableDateRow, TableTagRow } from '../../../../common/components/tables/
                 <td daterow [value]="item.endedAt"></td>
                 <td style="width:2rem">
                     @if(item.isArchived){
-                        <p-button icon="pi pi-times" text severity="danger" (onClick)="deleteWorkflowRun(item.id)" />
+                        <div class="flex flex-row gap-2">
+                            <p-button icon="pi pi-times" text severity="danger" (onClick)="deleteWorkflowRun(item.id)" />
+                            <p-button icon="pi pi-refresh" text severity="info" (onClick)="rerunWorkflow(item.id)" />
+                        </div>
                     }
                     @else {
                         <p-button icon="pi pi-times" text severity="warn" (onClick)="cancelWorkflowRun(item.id)" />
@@ -233,7 +239,6 @@ import { TableDateRow, TableTagRow } from '../../../../common/components/tables/
     `
 })
 export class Results {
-    allItems : ListWorkflowState[] = []
     isLoading : boolean = false;
 
     itemCache : { [id:string]:WorkflowState } = {}
@@ -268,23 +273,13 @@ export class Results {
     Object = Object;
     JSON = JSON;
 
-    constructor(private http : HttpClient, public service: MessageService){}
-
-    async ngOnInit(){
-        await this.loadResults();
-    }
-
-    async loadResults(){
-        this.isLoading = true;
-        this.allItems = await firstValueFrom(this.http.get<ListWorkflowState[]>("/api/results"))
-        this.isLoading = false;
-    }
+    constructor(private http : HttpClient, public service: MessageService, public workflowStateService : WorkflowStateService, public router : Router){}
 
     async checkCache(id : string){
         if (this.itemCache[id])
             return;
         this.isLoading = true;
-        var item = await firstValueFrom(this.http.get<WorkflowState>("/api/result?id=" + id))
+        var item = await this.workflowStateService.Get(id);
         this.itemCache[id] = item;
         this.isLoading = false;
     }
@@ -294,7 +289,7 @@ export class Results {
         await firstValueFrom(this.http.delete("/api/result?id=" + id))
         this.service.add({ severity: 'success', summary: 'Workflow Deleted!', detail: 'The archived workflow has been deleted' });
         this.isLoading = false;
-        await this.loadResults();
+        await this.workflowStateService.Load();
     }
 
     async cancelWorkflowRun(id : string){
@@ -302,55 +297,13 @@ export class Results {
         await firstValueFrom(this.http.delete("/api/cancel?id=" + id))
         this.service.add({ severity: 'success', summary: 'Workflow Canceled!', detail: 'The active workflow has been canceled' });
         this.isLoading = false;
-        await this.loadResults();
+        await this.workflowStateService.Load();
     }
-}
 
-interface ListWorkflowState {
-    id : string;
-    name: string;
-    status : WorkflowStatuses;
-    startedAt : Date | null;
-    endedAt : Date | null;
-    isArchived : boolean;
-}
-
-enum WorkflowStatuses {
-    None,
-    NotStarted,
-    Running,
-    Failed,
-    Succeeded,
-    Canceled,
-    AwaitingHumanInput,
-}
-
-interface WorkflowState {
-    id : string;
-    name: string;
-    status : WorkflowStatuses;
-    activityIndex: number;
-    contextStore : {[id:string]:string};
-    startedAt : Date | null;
-    endedAt : Date | null;
-    logText : WorkflowStateLog[];
-    workflow : Workflow;
-}
-
-interface WorkflowStateLog {
-    logType : WorkflowLogTypes;
-    text : string;
-}
-
-enum WorkflowLogTypes {
-    Info,
-    Warn,
-    Error
-}
-
-interface Workflow {
-    name: string;
-    retryBehaviour: number;
-    globals : {[id:string]:string};
-    activities : any[];
+    async rerunWorkflow(id : string){
+        if (this.itemCache[id])
+            sessionStorage.setItem("tmpWorkflowTransfer", this.JSON.stringify((this.itemCache[id]).workflow, null, 4));
+        sessionStorage.setItem("tmpWorkflowTransfer", this.JSON.stringify((await this.workflowStateService.Get(id)).workflow, null, 4));
+        this.router.navigateByUrl("workflows/run");
+    }
 }

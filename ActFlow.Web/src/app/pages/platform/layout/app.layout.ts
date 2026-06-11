@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { CardModule } from 'primeng/card';
 import { ConfirmDialog } from "primeng/confirmdialog";
+import { ProgressBarModule } from 'primeng/progressbar';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
+import { WorkflowStateService } from '../pages/wor/services/wor.stateservice';
 import { AppFooter } from './app.footer';
 import { AppSidebar } from './app.sidebar';
 import { AppTopbar } from './app.topbar';
@@ -11,7 +14,7 @@ import { AppTopbar } from './app.topbar';
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter, TagModule, TooltipModule, ConfirmDialog],
+    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter, TagModule, TooltipModule, ConfirmDialog, CardModule, ProgressBarModule],
     template: `
     <div class="layout-wrapper">
         <div class="flex flex-col w-full h-full">
@@ -27,6 +30,11 @@ import { AppTopbar } from './app.topbar';
             </div>
         </div>
         <p-confirmdialog />
+        @if(!cachesLoaded){
+            <p-card header="Loading Caches..." [style]="{'position':'fixed', 'bottom':'0', 'right':'0', 'margin':'10px', 'border':'1px solid #415B61'}">
+                <p-progressbar [value]="cacheLoadStage" />
+            </p-card>
+        }
     </div>
     `,
     styles: `
@@ -58,4 +66,22 @@ import { AppTopbar } from './app.topbar';
     `
 })
 export class AppLayout {
+    cachesLoaded : boolean = false;
+    cacheLoadStage : number = 0;
+
+    constructor(
+        public workflowStateService : WorkflowStateService
+    ){
+    }
+
+    async ngOnInit(){
+        this.cachesLoaded = false;
+        var loadMax = 1;
+
+        await this.workflowStateService.Load();
+        this.cacheLoadStage = (1 / loadMax) * 100;
+
+        this.cacheLoadStage = 100;
+        this.cachesLoaded = true;
+    }
 }
