@@ -32,7 +32,9 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 		public override async Task<WorkerResult> Execute(ExecuteSQLToFileActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
 			var result = await _dBClient.ExecuteFreeAsync(
-				act.SQL);
+				act.SQL, token);
+			if (token.IsCancellationRequested)
+				return new WorkerResult();
 
 			if (result.Count >= act.ResultTable)
 			{

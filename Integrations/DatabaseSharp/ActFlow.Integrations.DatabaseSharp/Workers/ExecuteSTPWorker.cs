@@ -37,7 +37,10 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 
 			var result = await _dBClient.ExecuteAsync(
 				act.TargetSTP,
-				args);
+				args,
+				token);
+			if (token.IsCancellationRequested)
+				return new WorkerResult();
 
 			var results = new List<Dictionary<string, string>>();
 

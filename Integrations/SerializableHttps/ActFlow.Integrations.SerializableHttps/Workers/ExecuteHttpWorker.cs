@@ -12,7 +12,7 @@ namespace ActFlow.Integrations.SerializableHttps.Workers
 		{
 			var client = new SerializableHttpsClient();
 			foreach (var key in act.Headers.Keys)
-				client.Headers.Add(key, act.Headers[key]);
+				client.AddHeader(key, act.Headers[key]);
 
 			var result = "";
 			switch (act.Type)

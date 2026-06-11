@@ -34,7 +34,9 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 
 			var result = await _dBClient.ExecuteAsync(
 				act.TargetSTP,
-				args);
+				args, token);
+			if (token.IsCancellationRequested)
+				return new WorkerResult();
 			var chainStr = result[0][0].GetValue<string>("Script");
 			var chain = JsonSerializer.Deserialize<Workflow>(chainStr);
 			if (chain is Workflow script)

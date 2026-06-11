@@ -41,6 +41,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ToolsSharp" Version="1.1.11" />
+    <PackageReference Include="ToolsSharp" Version="1.1.13" />
   </ItemGroup>
 </Project>

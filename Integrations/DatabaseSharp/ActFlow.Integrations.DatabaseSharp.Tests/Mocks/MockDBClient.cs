@@ -10,9 +10,9 @@ namespace ActFlow.Integrations.DatabaseSharp.Tests.Mocks
 		public DatabaseResult ResultToGive { get; set; }
 		public Dictionary<string, IDatabaseSerializer> Serializers => new Dictionary<string, IDatabaseSerializer>();
 
-		public async Task<DatabaseResult> ExecuteAsync(string procedureName, List<ISQLParameter>? parameters = null) => ResultToGive;
-		public async Task<DatabaseResult> ExecuteAsync(string procedureName, object item) => ResultToGive;
+		public async Task<DatabaseResult> ExecuteAsync(string procedureName, List<ISQLParameter>? parameters = null, CancellationToken? token = null) => ResultToGive;
+		public async Task<DatabaseResult> ExecuteAsync(string procedureName, object item, CancellationToken? token = null) => ResultToGive;
 
-		public async Task<DatabaseResult> ExecuteFreeAsync(string freeSql) => ResultToGive;
+		public async Task<DatabaseResult> ExecuteFreeAsync(string freeSql, CancellationToken? token = null) => ResultToGive;
 	}
 }
