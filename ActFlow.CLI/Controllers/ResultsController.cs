@@ -31,7 +31,7 @@ namespace ActFlow.CLI.Controllers
 					result = archived.State;
 			}
 			if (result == null)
-				throw new Exception("Could not find any workflow with that id!");
+				throw new Exception($"Could not find any workflow with that id ({id})!");
 
 			return Ok(result);
 		}

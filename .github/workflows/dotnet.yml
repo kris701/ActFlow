@@ -203,16 +203,30 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
-      - name: Build and push
+      - name: Build and push (CLI)
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: ./Docker/.Dockerfile
+          file: ./Docker/cli.Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/actflow:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/actflow:${{ steps.get-version.outputs.package-version }}
-            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/actflow:latest
-            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/actflow:${{ steps.get-version.outputs.package-version }}
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/actflow:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/actflow-cli:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/actflow-cli:${{ steps.get-version.outputs.package-version }}
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/actflow-cli:latest
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/actflow-cli:${{ steps.get-version.outputs.package-version }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/actflow-cli:latest
+          cache-to: type=inline,mode=min
+
+      - name: Build and push (Web)
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Docker/web.Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/actflow-web:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/actflow-web:${{ steps.get-version.outputs.package-version }}
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/actflow-web:latest
+            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/actflow-web:${{ steps.get-version.outputs.package-version }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/actflow-web:latest
           cache-to: type=inline,mode=min

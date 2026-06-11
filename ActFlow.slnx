@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/Docker/">
-    <File Path="Docker/.Dockerfile" />
+    <File Path="Docker/cli.Dockerfile" />
     <File Path="Docker/entry.sh" />
+    <File Path="Docker/nginx.conf" />
     <File Path="Docker/README.md" />
+    <File Path="Docker/web.Dockerfile" />
   </Folder>
   <Folder Name="/Integrations/" />
   <Folder Name="/Integrations/Core/">

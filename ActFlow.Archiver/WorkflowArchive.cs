@@ -1,5 +1,7 @@
 ﻿using ActFlow.Archiver.Models;
 using ActFlow.Models.Workflows;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Primitives;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ToolsSharp;
@@ -18,7 +20,8 @@ namespace ActFlow.Archiver
 
 		private bool _updatingCache;
 		private Dictionary<Guid, ListWorkflowState> _cache = new Dictionary<Guid, ListWorkflowState>();
-		private FileSystemWatcher _watcher = new FileSystemWatcher();
+		private PhysicalFileProvider _watcher;
+		private static IChangeToken _fileChangeToken;
 
 		/// <summary>
 		/// Main constructor
@@ -39,31 +42,22 @@ namespace ActFlow.Archiver
 			if (!Directory.Exists(CompletedDirectory))
 				Directory.CreateDirectory(CompletedDirectory);
 
-			_watcher = new FileSystemWatcher(CompletedDirectory);
-			_watcher.NotifyFilter = NotifyFilters.Attributes
-								 | NotifyFilters.CreationTime
-								 | NotifyFilters.DirectoryName
-								 | NotifyFilters.FileName
-								 | NotifyFilters.LastAccess
-								 | NotifyFilters.LastWrite
-								 | NotifyFilters.Security
-								 | NotifyFilters.Size;
-
-			_watcher.IncludeSubdirectories = true;
-			_watcher.EnableRaisingEvents = true;
-
-			_watcher.Changed += OnChanged;
-			_watcher.Created += OnChanged;
-			_watcher.Deleted += OnChanged;
-			_watcher.Renamed += OnChanged;
+			var path = DirectoryHelper.RootPath(CompletedDirectory);
+			_watcher = new PhysicalFileProvider(Path.Combine(path, "."));
+			_watcher.UsePollingFileWatcher = true;
+			_watcher.UseActivePolling = true;
+			_fileChangeToken = _watcher.Watch("**/state.json");
+			_fileChangeToken.RegisterChangeCallback(OnChanged, default);
 
 			LoadArchive();
 		}
 
-		private void OnChanged(object sender, FileSystemEventArgs e)
+		private void OnChanged(object? state)
 		{
-			if (e.ChangeType == WatcherChangeTypes.Changed)
-				LoadArchive();
+			LoadArchive();
+
+			_fileChangeToken = _watcher.Watch("**/state.json");
+			_fileChangeToken.RegisterChangeCallback(OnChanged, default);
 		}
 
 		private void LoadArchive()
@@ -85,15 +79,16 @@ namespace ActFlow.Archiver
 					if (state == null)
 						continue;
 
-					_cache.Add(state.ID, new ListWorkflowState()
-					{
-						ID = state.ID,
-						Status = state.Status,
-						Name = state.Workflow.Name,
-						StartedAt = state.StartedAt,
-						EndedAt = state.EndedAt,
-						IsArchived = true
-					});
+					if (!_cache.ContainsKey(state.ID))
+						_cache.Add(state.ID, new ListWorkflowState()
+						{
+							ID = state.ID,
+							Status = state.Status,
+							Name = state.Workflow.Name,
+							StartedAt = state.StartedAt,
+							EndedAt = state.EndedAt,
+							IsArchived = true
+						});
 				}
 				catch (Exception) { }
 			}
