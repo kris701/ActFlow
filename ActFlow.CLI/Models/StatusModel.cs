@@ -17,5 +17,7 @@ namespace ActFlow.CLI.Models
 
 		public Dictionary<WorkflowStatuses, int> ActiveStateMap { get; set; }
 		public Dictionary<WorkflowStatuses, int> ArchivedStateMap { get; set; }
+
+		public Dictionary<DateTime, int> RunsPrDay { get; set; }
 	}
 }

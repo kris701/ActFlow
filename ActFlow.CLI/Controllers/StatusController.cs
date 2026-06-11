@@ -48,7 +48,8 @@ namespace ActFlow.CLI.Controllers
 					mostExpensiveWorkflow = new StatusModelRun()
 					{
 						ID = item.ID,
-						Name = item.Name
+						Name = item.Name,
+						Runtime = ((DateTime)item.EndedAt! - (DateTime)item.StartedAt!)
 					};
 			}
 
@@ -60,7 +61,8 @@ namespace ActFlow.CLI.Controllers
 					leastExpensiveWorkflow = new StatusModelRun()
 					{
 						ID = item.ID,
-						Name = item.Name
+						Name = item.Name,
+						Runtime = ((DateTime)item.EndedAt! - (DateTime)item.StartedAt!)
 					};
 			}
 
@@ -71,6 +73,10 @@ namespace ActFlow.CLI.Controllers
 
 			var oldestRun = items.Where(x => x.EndedAt != null).OrderBy(x => x.EndedAt).FirstOrDefault()?.EndedAt;
 			var newestRun = items.Where(x => x.EndedAt != null).OrderByDescending(x => x.EndedAt).FirstOrDefault()?.EndedAt;
+
+			var runsPrDay = new Dictionary<DateTime, int>();
+			for (int i = 0; i < 7; i++)
+				runsPrDay.Add(DateTime.UtcNow.AddDays(- i), items.Where(x => x.EndedAt != null).Where(x => ((DateTime)x.EndedAt!).DayOfYear == DateTime.UtcNow.AddDays(-i).DayOfYear).Count());
 
 			return Ok(new StatusModel()
 			{
@@ -87,6 +93,8 @@ namespace ActFlow.CLI.Controllers
 
 				ActiveStateMap = activeStateMap,
 				ArchivedStateMap = archivedStateMap,
+
+				RunsPrDay = runsPrDay
 			});
 		}
 	}
