@@ -10,6 +10,7 @@ export default [
         providers: [provideHttpClient()],
         children: [
             { path: '', component: Status },
+            { path: 'workflows', loadChildren: () => import('./pages/wor/wor.routes') }
         ]
     }
 ] as Routes;

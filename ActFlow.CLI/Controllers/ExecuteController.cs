@@ -36,5 +36,12 @@ namespace ActFlow.CLI.Controllers
 			_engine.ApplyHumanInput(inputModel.ID, inputModel.Input);
 			return Ok();
 		}
+
+		[HttpDelete("cancel")]
+		public async Task<ActionResult> Delete_Cancel([Required][FromQuery] Guid id)
+		{
+			_engine.Cancel(id);
+			return Ok();
+		}
 	}
 }

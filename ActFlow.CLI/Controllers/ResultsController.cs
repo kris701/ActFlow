@@ -12,6 +12,7 @@ namespace ActFlow.CLI.Controllers
 	{
 		private readonly IActFlowEngine _engine;
 		private readonly IWorkflowArchive _archive;
+		private readonly int _pageSize = 25;
 
 		public ResultsController(IActFlowEngine engine, IWorkflowArchive archive)
 		{
@@ -33,6 +34,13 @@ namespace ActFlow.CLI.Controllers
 				throw new Exception("Could not find any workflow with that id!");
 
 			return Ok(result);
+		}
+
+		[HttpDelete("result")]
+		public async Task<ActionResult> Delete_Result([Required][FromQuery] Guid id)
+		{
+			_archive.RemoveCompletedWorkflow(id);
+			return Ok();
 		}
 
 		[HttpGet("results")]

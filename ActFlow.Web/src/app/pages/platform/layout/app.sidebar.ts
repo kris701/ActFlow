@@ -91,7 +91,12 @@ export class AppSidebar {
                 expanded: true,
                 items: [
                     {
-                        label:"tmp"
+                        label:"Results",
+                        routerLink: '/workflows/results',
+                    },
+                    {
+                        label:"Run",
+                        routerLink: '/workflows/run',
                     }
                 ]
             }

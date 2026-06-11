@@ -44,6 +44,7 @@ import { TableEmptyMessage } from './tables/emptymessage';
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
             [(contextMenuSelection)]="contextMenuSelection"
             [contextMenu]="cm"
+            [expandedRowKeys]="expandedRows"
         >
             @if (showClear || showAdd || showRefresh || additionalheader) {
                 <ng-template #caption>
@@ -72,15 +73,20 @@ import { TableEmptyMessage } from './tables/emptymessage';
                     </tr>
                 }
             </ng-template>
-            <ng-template pTemplate="body" let-item>
+            <ng-template pTemplate="expandedrow" let-item>
+                <tr>
+                    <ng-container [ngTemplateOutlet]="tableExpandedrow" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item let-expanded="expanded">
                 @if (tableRows) {
                     @if (rowSelectable) {
                         <tr (click)="onShowItem.emit(item.id)" class="rowclickable" [pContextMenuRow]="item">
-                            <ng-container [ngTemplateOutlet]="tableRows" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+                            <ng-container [ngTemplateOutlet]="tableRows" [ngTemplateOutletContext]="{ $implicit: item, expanded: expanded  }"></ng-container>
                         </tr>
                     } @else {
                         <tr [pContextMenuRow]="item">
-                            <ng-container [ngTemplateOutlet]="tableRows" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+                            <ng-container [ngTemplateOutlet]="tableRows" [ngTemplateOutletContext]="{ $implicit: item, expanded: expanded  }"></ng-container>
                         </tr>
                     }
                 }
@@ -134,6 +140,7 @@ export class FloatTable {
     @ViewChild('dt1', { static: true }) table!: Table;
     @ContentChild('tableHeader', { static: false }) tableHeader: TemplateRef<any> | undefined;
     @ContentChild('tableRows', { static: false }) tableRows: TemplateRef<any> | undefined;
+    @ContentChild('tableExpandedrow', { static: false }) tableExpandedrow: TemplateRef<any> | undefined;
     @ContentChild('additionalheader', { static: false }) additionalheader: TemplateRef<any> | undefined;
 
     @Input() flexheight: boolean = false;
@@ -149,13 +156,15 @@ export class FloatTable {
     @Input() rowSelectable: boolean = true;
 
     @Input() dataKey: string = 'id';
-    @Input() stateKey: string = 'floattable-state';
+    @Input() stateKey: string | undefined = undefined;
 
     @Input() noItemsMessage: string = 'No items to see...';
 
     @Input() values: any[] = [];
 
     localStorage = localStorage;
+
+    expandedRows: any = {};
 
     constructor(private http : HttpClient){
     }

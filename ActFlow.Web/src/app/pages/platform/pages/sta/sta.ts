@@ -169,20 +169,17 @@ export class Status {
             this.status.leastExpensiveRun.runtime = "Less than a second"
 
         this.runsPrDayData = {
-
             datasets: [
                 {
-                    backgroundColor: Object.keys(this.status.runsPrDay).map(x => this.getRandomColor()),
                     fill:true,
                     data: Object.keys(this.status.runsPrDay).map(l => { return {
                         x: new Date(l),
                         y: this.status.runsPrDay[l]
-                    }; })
+                    }; }),
+                    tension: 0.5
                 }
             ]
         };
-
-        console.log(this.runsPrDayData)
     }
 
     buildChart(data : { [name:string]:number }){
@@ -190,20 +187,10 @@ export class Status {
             labels: Object.keys(data),
             datasets: [
                 {
-                    backgroundColor: Object.keys(data).map(x => this.getRandomColor()),
                     data: Object.values(data)
                 }
             ]
         }
-    }
-
-    getRandomColor() {
-        var letters = '0123456789ABCDEF'.split('');
-        var color = '#';
-        for (var i = 0; i < 6; i++ ) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
     }
 }
 
