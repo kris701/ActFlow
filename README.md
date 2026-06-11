@@ -17,6 +17,8 @@ The intention for this is to enable you to run complex business logic by means o
 This makes it significantly easier to make workflows such as one for waiting and answering emails, keep a database updated with data an LLM found from an email, integrity check data in a database, etc.
 The ActFlow engine in of itself is very independent and does not require any complex scheduling system to run.
 
+<img alt="ezgif-38bb13d50e11c73e" src="https://github.com/user-attachments/assets/ab0b15c4-cb63-4206-88c4-fcab62f7cb6d" />
+
 By its core, it consists of a set of workers and activities.
 Workers execute activities, while activities define some input data for the workers.
 
@@ -25,13 +27,14 @@ All workers and activities are JSON serializable
 > [!IMPORTANT]
 > To make this work, you must add a modifier to the default TypeInfoResolver for a JsonSerializer instance like this: `JsonSerializerOptions(){ TypeInfoResolver = new DefaultJsonTypeInfoResolver().WithAddedModifier(JsonExtensions.AddNativePolymorphicTypInfo) }`
 
-## How to Use
+## How to Use (CLI)
 For just using ActFlow, you can install the CLI tool by entering
 ```
 dotnet tool install ActFlow.CLI -g
 ```
 You can then call the CLI tool by the `actflow` command.
 
+## How to Use (Docker)
 You can also choose to use the Docker image.
 This requires that you have a `config.json` config on your computer that contains the `IWorker` configuration.
 Simply change the bind mount in the `docker-compose.yaml`
@@ -42,7 +45,7 @@ After you have set that up, you can start the docker container:
 docker compose up -d
 ```
 
-This will then start the HTTP server of the CLI, open on port 5523.
+This will then start the HTTP server of the CLI, open on port 5523 as well as a web server where you can interact with your workflows.
 
 ## Developing
 Start by installing the [NuGet package](https://www.nuget.org/packages/ActFlow/) `ActFlow` into your project.
