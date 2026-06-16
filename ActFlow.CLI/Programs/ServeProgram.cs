@@ -69,6 +69,9 @@ namespace ActFlow.CLI.Programs
 				o.JsonSerializerOptions.AllowTrailingCommas = Constants.SerializerOpts.AllowTrailingCommas;
 				o.JsonSerializerOptions.ReadCommentHandling = Constants.SerializerOpts.ReadCommentHandling;
 				o.JsonSerializerOptions.NumberHandling = Constants.SerializerOpts.NumberHandling;
+				o.JsonSerializerOptions.Converters.Clear();
+				foreach (var converter in Constants.SerializerOpts.Converters)
+					o.JsonSerializerOptions.Converters.Add(converter);
 			});
 			builder.Services.AddSingleton<IActFlowEngine>(engine);
 			builder.Services.AddSingleton<IWorkflowArchive>(archive);

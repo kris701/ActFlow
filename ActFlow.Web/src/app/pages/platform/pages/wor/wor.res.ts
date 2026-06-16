@@ -16,26 +16,28 @@ import { FloatTable } from "../../../../common/components/floattable";
 import { TableDateFilterColumn, TableTextFilterColumn } from '../../../../common/components/tables/filtercolumns';
 import { TableDateRow, TableTagRow } from '../../../../common/components/tables/filterrows';
 import { WorkflowState } from '../../../../models/WorkflowState';
+import { WorkflowEditor } from "./components/wor.components.workfloweditor";
 import { WorkflowStateService } from './services/wor.stateservice';
 
 @Component({
     selector: 'app-wor-res',
     imports: [
-        CommonModule,
-        FormsModule,
-        ButtonModule,
-        FloatTable,
-        TableTextFilterColumn,
-        TableDateFilterColumn,
-        TableTagRow,
-        TableDateRow,
-        TableModule,
-        Tag,
-        InputGroup,
-        InputGroupAddon,
-        InplaceModule,
-        EditorComponent
-    ],
+    CommonModule,
+    FormsModule,
+    ButtonModule,
+    FloatTable,
+    TableTextFilterColumn,
+    TableDateFilterColumn,
+    TableTagRow,
+    TableDateRow,
+    TableModule,
+    Tag,
+    InputGroup,
+    InputGroupAddon,
+    InplaceModule,
+    EditorComponent,
+    WorkflowEditor
+],
     template: `
         <app-floattable [values]="workflowStateService.items" [isLoading]="isLoading" (onLoadItems)="workflowStateService.Load()" [rowSelectable]="false" [showAdd]="false">
             <ng-template #tableHeader>
@@ -177,40 +179,11 @@ import { WorkflowStateService } from './services/wor.stateservice';
                             <div class="result-details-border">
                                 <p-inplace>
                                     <ng-template #display>
-                                        <span>View State Workflow</span>
+                                        <span>View Workflow</span>
                                     </ng-template>
                                     <ng-template #content>
                                         <div class="flex flex-col gap-2">
-                                            <span>Workflow that ActFlow has modified</span>
-                                            <ngx-monaco-editor [options]="editorOptions" [ngModel]="JSON.stringify(fullItem.workflow, null, 4)" [disabled]="true"> </ngx-monaco-editor>
-                                        </div>
-                                    </ng-template>
-                                </p-inplace>
-                            </div>
-
-                            <div class="result-details-border">
-                                <p-inplace>
-                                    <ng-template #display>
-                                        <span>View Source Workflow</span>
-                                    </ng-template>
-                                    <ng-template #content>
-                                        <div class="flex flex-col gap-2">
-                                            <span>The original Workflow</span>
-                                            <ngx-monaco-editor [options]="editorOptions" [ngModel]="JSON.stringify(fullItem.sourceWorkflow, null, 4)" [disabled]="true"> </ngx-monaco-editor>
-                                        </div>
-                                    </ng-template>
-                                </p-inplace>
-                            </div>
-
-                            <div class="result-details-border">
-                                <p-inplace>
-                                    <ng-template #display>
-                                        <span>View Raw State</span>
-                                    </ng-template>
-                                    <ng-template #content>
-                                        <div class="flex flex-col gap-2">
-                                            <span>Raw State</span>
-                                            <ngx-monaco-editor [options]="editorOptions" [ngModel]="JSON.stringify(fullItem, null, 4)" [disabled]="true"> </ngx-monaco-editor>
+                                            <app-workflows-components-workfloweditor [workflow]="fullItem.sourceWorkflow" [workflowState]="fullItem" [disabled]="true"/>
                                         </div>
                                     </ng-template>
                                 </p-inplace>
@@ -259,29 +232,29 @@ export class Results {
 
     editorOptions = {theme: 'vs-dark', language: 'json', automaticLayout: true};
 
-    statusNameMap : {[id:number]:string} = {
-        0 : "None",
-        1 : "NotStarted",
-        2 : "Running",
-        3 : "Failed",
-        4 : "Succeeded",
-        5 : "Canceled",
-        6 : "AwaitingHumanInput",
+    statusNameMap : {[id:string]:string} = {
+        "None" : "None",
+        "NotStarted" : "Not Started",
+        "Running" : "Running",
+        "Failed" : "Failed",
+        "Succeeded" : "Succeeded",
+        "Canceled" : "Canceled",
+        "AwaitingHumanInput" : "Awaiting Human Input",
     };
-    statusSeverityMap : {[id:number]:'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | undefined | null} = {
-        0 : "secondary",
-        1 : "secondary",
-        2 : "info",
-        3 : "danger",
-        4 : "success",
-        5 : "warn",
-        6 : "contrast",
+    statusSeverityMap : {[id:string]:'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | undefined | null} = {
+        "None" : "secondary",
+        "NotStarted" : "secondary",
+        "Running" : "info",
+        "Failed" : "danger",
+        "Succeeded" : "success",
+        "Canceled" : "warn",
+        "AwaitingHumanInput" : "contrast",
     };
 
-    logSeverityMap : {[id:number]:'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | undefined | null} = {
-        0 : "info",
-        1 : "warn",
-        2 : "danger",
+    logSeverityMap : {[id:string]:'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | undefined | null} = {
+        "Info" : "info",
+        "Warn" : "warn",
+        "Error" : "danger",
     };
 
     Object = Object;

@@ -1,6 +1,7 @@
 ﻿using ActFlow.CLI.Models;
 using ActFlow.Models.Activities;
 using ActFlow.Models.Contexts;
+using ActFlow.Models.Workers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActFlow.CLI.Controllers
@@ -85,7 +86,25 @@ namespace ActFlow.CLI.Controllers
 					.Where(p => typeof(IActivity).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
 
 			foreach (var type in contextTypes)
-				result.Add((IActivity)Activator.CreateInstance(type));
+			{
+				var item = Activator.CreateInstance(type);
+				if (item is IActivity act)
+				{
+					foreach(var worker in _engine.Workers)
+					{
+						var wType = worker.GetType();
+						if (wType.BaseType != null && wType.BaseType.GenericTypeArguments.ToList().Contains(act.GetType()))
+						{
+							var clone = Activator.CreateInstance(type);
+							if (clone is IActivity cAct)
+							{
+								cAct.WorkerID = worker.ID;
+								result.Add(cAct);
+							}
+						}
+					}
+				}
+			}
 
 			return Ok(result);
 		}

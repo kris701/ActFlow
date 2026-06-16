@@ -1,6 +1,6 @@
 export interface Workflow {
     name: string;
-    retryBehaviour: number;
+    retryBehaviour: 'None' | 'Workflow' | "Activity";
     globals : {[id:string]:string};
     activities : any[];
 }
