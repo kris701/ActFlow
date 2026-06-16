@@ -6,21 +6,32 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ActFlow.CLI.Controllers
 {
+	/// <summary>
+	/// Endpoints 
+	/// </summary>
 	[ApiController]
-	[Route("api")]
-
+	[Route("api/status")]
 	public class StatusController : ControllerBase
 	{
 		private readonly IActFlowEngine _engine;
 		private readonly IWorkflowArchive _archive;
 
+		/// <summary>
+		/// Main constructor
+		/// </summary>
+		/// <param name="engine"></param>
+		/// <param name="archive"></param>
 		public StatusController(IActFlowEngine engine, IWorkflowArchive archive)
 		{
 			_engine = engine;
 			_archive = archive;
 		}
 
-		[HttpGet("status")]
+		/// <summary>
+		/// Get the status of the ActFlow system
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet]
 		public async Task<ActionResult<StatusModel>> Get_Status()
 		{
 			var items = new List<ListWorkflowState>();

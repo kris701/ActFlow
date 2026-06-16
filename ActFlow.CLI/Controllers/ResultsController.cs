@@ -6,21 +6,35 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ActFlow.CLI.Controllers
 {
+	/// <summary>
+	/// Controller endpoints to get workflow results
+	/// </summary>
 	[ApiController]
-	[Route("api")]
+	[Route("api/results")]
 	public class ResultsController : ControllerBase
 	{
 		private readonly IActFlowEngine _engine;
 		private readonly IWorkflowArchive _archive;
-		private readonly int _pageSize = 25;
 
+		/// <summary>
+		/// Main constructor
+		/// </summary>
+		/// <param name="engine"></param>
+		/// <param name="archive"></param>
 		public ResultsController(IActFlowEngine engine, IWorkflowArchive archive)
 		{
 			_engine = engine;
 			_archive = archive;
 		}
 
-		[HttpGet("result")]
+		/// <summary>
+		/// Get a detailed result from a workflow run.
+		/// This can both be an active run or an archived one.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		/// <exception cref="Exception"></exception>
+		[HttpGet]
 		public async Task<ActionResult<WorkflowState>> Get_Result([Required][FromQuery] Guid id)
 		{
 			var result = _engine.ActiveWorkflows.FirstOrDefault(x => x.ID == id);
@@ -36,14 +50,23 @@ namespace ActFlow.CLI.Controllers
 			return Ok(result);
 		}
 
-		[HttpDelete("result")]
+		/// <summary>
+		/// Delete a completed workflow from the archive
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		[HttpDelete]
 		public async Task<ActionResult> Delete_Result([Required][FromQuery] Guid id)
 		{
 			_archive.RemoveCompletedWorkflow(id);
 			return Ok();
 		}
 
-		[HttpGet("results")]
+		/// <summary>
+		/// Get a overview of all completed workflows
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet("all")]
 		public async Task<ActionResult<List<ListWorkflowState>>> Get_Results()
 		{
 			var items = new List<ListWorkflowState>();

@@ -300,7 +300,7 @@ export class Results {
 
     async deleteWorkflowRun(id : string){
         this.isLoading = true;
-        await firstValueFrom(this.http.delete("/api/result?id=" + id))
+        await firstValueFrom(this.http.delete("/api/results?id=" + id))
         this.service.add({ severity: 'success', summary: 'Workflow Deleted!', detail: 'The archived workflow has been deleted' });
         this.isLoading = false;
         await this.workflowStateService.Load();
@@ -308,7 +308,7 @@ export class Results {
 
     async cancelWorkflowRun(id : string){
         this.isLoading = true;
-        await firstValueFrom(this.http.delete("/api/cancel?id=" + id))
+        await firstValueFrom(this.http.delete("/api/execute/cancel?id=" + id))
         this.service.add({ severity: 'success', summary: 'Workflow Cancel Requested!', detail: 'A request to cancel the workflow have been send!' });
         this.isLoading = false;
         await this.workflowStateService.Load();

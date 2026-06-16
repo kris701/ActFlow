@@ -52,7 +52,7 @@ export class WorkflowRun {
     }
 
     async queueWorkflow(){
-        await firstValueFrom(this.http.post("api/queue", JSON.parse(this.workflowRun)));
+        await firstValueFrom(this.http.post("api/execute/queue", JSON.parse(this.workflowRun)));
         this.service.add({ severity: 'success', summary: 'Workflow Started!', detail: 'The workflow have been started!' });
         await this.workflowStateService.Load();
     }
