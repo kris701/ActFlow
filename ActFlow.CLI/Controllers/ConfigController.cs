@@ -32,7 +32,7 @@ namespace ActFlow.CLI.Controllers
 		{
 			var plugins = Directory.GetDirectories(Path.Combine(Environment.CurrentDirectory, StaticDirectories._pluginPath));
 			var pluginNames = new List<string>();
-			foreach(var plugin in plugins)
+			foreach (var plugin in plugins)
 			{
 				var dirInfo = new DirectoryInfo(plugin);
 				pluginNames.Add(dirInfo.Name);
@@ -41,7 +41,8 @@ namespace ActFlow.CLI.Controllers
 			var actFlowPlugins = pluginNames.Where(x => x.StartsWith("ActFlow.Integrations.")).ToList();
 			var dependencyPlugins = pluginNames.Where(x => !actFlowPlugins.Contains(x)).ToList();
 
-			var result = new ConfigPluginsResult() { 
+			var result = new ConfigPluginsResult()
+			{
 				ActFlowPluginCount = actFlowPlugins.Count,
 				ActFlowPlugins = actFlowPlugins,
 				PluginDependencyCount = dependencyPlugins.Count,

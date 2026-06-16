@@ -87,7 +87,7 @@ namespace ActFlow.CLI.Controllers
 
 			var runsPrDay = new Dictionary<DateTime, int>();
 			for (int i = 0; i < 7; i++)
-				runsPrDay.Add(DateTime.UtcNow.AddDays(- i), items.Where(x => x.EndedAt != null).Where(x => ((DateTime)x.EndedAt!).DayOfYear == DateTime.UtcNow.AddDays(-i).DayOfYear).Count());
+				runsPrDay.Add(DateTime.UtcNow.AddDays(-i), items.Where(x => x.EndedAt != null).Where(x => ((DateTime)x.EndedAt!).DayOfYear == DateTime.UtcNow.AddDays(-i).DayOfYear).Count());
 
 			return Ok(new StatusModel()
 			{
