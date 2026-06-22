@@ -2,7 +2,7 @@
   "profiles": {
     "ActFlow.CLI": {
       "commandName": "Project",
-      "commandLineArgs": "serve -c \"C:\\Users\\kris7\\OneDrive\\ActFlow\\config.json\"",
+      "commandLineArgs": "serve -c \"C:\\Users\\kris7\\OneDrive\\ActFlow\\config.json\" --persistent \"C:\\Users\\kris7\\OneDrive\\ActFlow\\.persistent\"",
       "workingDirectory": "C:\\Users\\kris7\\OneDrive\\ActFlow"
     }
   }

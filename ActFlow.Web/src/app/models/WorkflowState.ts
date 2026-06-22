@@ -1,4 +1,5 @@
 import { Workflow } from "./Workflow";
+import { WorkflowFile } from "./WorkflowFile";
 import { WorkflowStateLog } from "./WorkflowStateLog";
 import { WorkflowStatuses } from "./WorkflowStatuses";
 
@@ -13,4 +14,5 @@ export interface WorkflowState {
     logText : WorkflowStateLog[];
     workflow : Workflow;
     sourceWorkflow : Workflow;
+    files : WorkflowFile[];
 }

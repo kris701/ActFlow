@@ -138,6 +138,14 @@ import { WorkflowStateService } from './services/wor.stateservice';
                                     </p-inputgroup-addon>
                                     <p-tag severity="secondary">{{fullItem.logText.length}}</p-tag>
                                 </p-inputgroup>
+
+                                <p-inputgroup>
+                                    <p-inputgroup-addon class="flex flex-row gap-2">
+                                        <i class="pi pi-book"></i>
+                                        File Actions
+                                    </p-inputgroup-addon>
+                                    <p-tag severity="secondary">{{fullItem.files.length}}</p-tag>
+                                </p-inputgroup>
                             </div>
 
                             <div class="result-details-border">
@@ -188,6 +196,48 @@ import { WorkflowStateService } from './services/wor.stateservice';
                                     </ng-template>
                                 </p-inplace>
                             </div>
+
+                            @if(fullItem.files.length > 0) {
+                                <div class="result-details-border">
+                                    <p-inplace>
+                                        <ng-template #display>
+                                            <span>View File Actions</span>
+                                        </ng-template>
+                                        <ng-template #content>
+                                            <div class="flex flex-col gap-2">
+                                                <span>See what file actions was performed during the execution</span>
+                                                @for(file of fullItem.files; track file){
+                                                    <p-inputgroup>
+                                                        <p-inputgroup-addon class="flex flex-row gap-2">
+                                                            @if(file.directory == 'Temporary'){
+                                                                <p-tag severity="info">Temporary</p-tag>
+                                                            }
+                                                            @else if(file.directory == 'Persistent'){
+                                                                <p-tag severity="info">Persistent</p-tag>
+                                                            }
+                                                        </p-inputgroup-addon>
+                                                        <p-inputgroup-addon class="flex flex-row gap-2">
+                                                            @if(file.action == 'Load'){
+                                                                <p-tag severity="secondary">Load</p-tag>
+                                                            }
+                                                            @else if(file.action == 'Save'){
+                                                                <p-tag severity="secondary">Save</p-tag>
+                                                            }
+                                                        </p-inputgroup-addon>
+                                                        <p-tag class="w-full" severity="secondary">{{file.path}}</p-tag>
+
+                                                        @if(file.directory == 'Persistent'){
+                                                            <p-inputgroup-addon class="flex flex-row gap-2">
+                                                                <p-button class="h-full" label="Open"/>
+                                                            </p-inputgroup-addon>
+                                                        }
+                                                    </p-inputgroup>
+                                                }
+                                            </div>
+                                        </ng-template>
+                                    </p-inplace>
+                                </div>
+                            }
                         }
                         @else {
                             <span style="text-align: center;">Loading...</span>
