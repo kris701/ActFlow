@@ -1,6 +1,6 @@
 ﻿using ActFlow.Models.Workflows;
 
-namespace ActFlow.CLI.Models
+namespace ActFlow.CLI.Models.Status
 {
 	public class StatusModel
 	{

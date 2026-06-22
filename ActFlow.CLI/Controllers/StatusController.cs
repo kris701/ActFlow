@@ -1,6 +1,6 @@
 ﻿using ActFlow.Archiver;
 using ActFlow.Archiver.Models;
-using ActFlow.CLI.Models;
+using ActFlow.CLI.Models.Status;
 using ActFlow.Models.Workflows;
 using Microsoft.AspNetCore.Mvc;
 

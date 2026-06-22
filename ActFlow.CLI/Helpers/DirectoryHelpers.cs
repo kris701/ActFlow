@@ -1,7 +1,4 @@
-﻿using ActFlow.CLI.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ActFlow.CLI.Models.FileSystem;
 
 namespace ActFlow.CLI.Helpers
 {

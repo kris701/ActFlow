@@ -1,7 +1,6 @@
-﻿using ActFlow.CLI.Models;
+﻿using ActFlow.CLI.Models.Config;
 using ActFlow.Models.Activities;
 using ActFlow.Models.Contexts;
-using ActFlow.Models.Workers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActFlow.CLI.Controllers
@@ -90,7 +89,7 @@ namespace ActFlow.CLI.Controllers
 				var item = Activator.CreateInstance(type);
 				if (item is IActivity act)
 				{
-					foreach(var worker in _engine.Workers)
+					foreach (var worker in _engine.Workers)
 					{
 						var wType = worker.GetType();
 						if (wType.BaseType != null && wType.BaseType.GenericTypeArguments.ToList().Contains(act.GetType()))

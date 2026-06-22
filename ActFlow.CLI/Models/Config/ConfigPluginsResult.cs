@@ -1,4 +1,4 @@
-﻿namespace ActFlow.CLI.Models
+﻿namespace ActFlow.CLI.Models.Config
 {
 	public class ConfigPluginsResult
 	{

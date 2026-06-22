@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
-namespace ActFlow.CLI.Models
+namespace ActFlow.CLI.Models.FileSystem
 {
 	public class UploadFileModel
 	{
