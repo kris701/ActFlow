@@ -60,6 +60,10 @@ namespace ActFlow.Models.Workflows
 		/// The original workflow passed to the state
 		/// </summary>
 		public Workflow SourceWorkflow { get; set; }
+		/// <summary>
+		/// List of files that was interacted with in this state
+		/// </summary>
+		public List<WorkflowFile> Files { get; set; }
 
 		[JsonIgnore]
 		internal bool IsProcessingUserInput { get; set; } = false;
@@ -80,6 +84,7 @@ namespace ActFlow.Models.Workflows
 			EndedAt = null;
 			LogText = new List<WorkflowLog>();
 			ContextStore = new Dictionary<string, string>();
+			Files = new List<WorkflowFile>();
 		}
 
 		/// <summary>
@@ -107,6 +112,7 @@ namespace ActFlow.Models.Workflows
 			AddContext("constants.stateid", ID.ToString());
 			AddContexts(workflow.Globals);
 			TokenSource = new CancellationTokenSource();
+			Files = new List<WorkflowFile>();
 		}
 
 		/// <summary>
@@ -129,6 +135,7 @@ namespace ActFlow.Models.Workflows
 			if (other.OnWorkflowCompleted != null)
 				OnWorkflowCompleted += (x) => other.OnWorkflowCompleted.Invoke(x);
 			TokenSource = new CancellationTokenSource();
+			Files = other.Files;
 		}
 
 		/// <summary>

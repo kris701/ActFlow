@@ -11,7 +11,7 @@ namespace ActFlow.Integrations.XML.Workers
 	{
 		public override async Task<WorkerResult> Execute(ExtractValuesFromXMLFileActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
-			var txt = await LoadFile(act.Path, act.Directory, tmpDirectory, token);
+			var txt = await LoadFile(act.Path, act.Directory, tmpDirectory, state, token);
 			var xmlText = XElement.Parse(txt);
 			var results = new Dictionary<string, string>();
 			foreach (var key in act.XPaths.Keys)

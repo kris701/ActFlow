@@ -8,7 +8,7 @@ namespace ActFlow.Integrations.Core.Workers
 	{
 		public override async Task<WorkerResult> Execute(SaveFileActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
-			await SaveFile(act.Path, act.Data, act.Directory, tmpDirectory, token);
+			await SaveFile(act.Path, act.Data, act.Directory, tmpDirectory, state, token);
 			return new WorkerResult();
 		}
 	}

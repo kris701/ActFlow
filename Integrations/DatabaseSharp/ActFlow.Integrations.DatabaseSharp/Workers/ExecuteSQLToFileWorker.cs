@@ -39,7 +39,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 			if (result.Count >= act.ResultTable)
 			{
 				var targetTable = result[act.ResultTable];
-				await SaveFile(act.Path, DataTableToCSV(targetTable.ToDataTable()), act.Directory, tmpDirectory, token);
+				await SaveFile(act.Path, DataTableToCSV(targetTable.ToDataTable()), act.Directory, tmpDirectory, state, token);
 			}
 
 			return new WorkerResult();

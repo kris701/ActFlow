@@ -25,7 +25,7 @@ namespace ActFlow.Models.Workers
 			throw new Exception("Invalid action input to executor!");
 		}
 
-		public async Task<string> LoadFile(string path, FileDirectories type, string tmpDirectory, CancellationToken token)
+		public async Task<string> LoadFile(string path, FileDirectories type, string tmpDirectory, WorkflowState state, CancellationToken token)
 		{
 			switch (type)
 			{
@@ -33,28 +33,54 @@ namespace ActFlow.Models.Workers
 					var pPath = Path.Combine(PersistenDirectory, path);
 					if (!File.Exists(pPath))
 						throw new Exception("File not found!");
-					return await File.ReadAllTextAsync(pPath, token);
+					var pData = await File.ReadAllTextAsync(pPath, token);
+					state.Files.Add(new WorkflowFile()
+					{
+						Path = path,
+						Directory = FileDirectories.Persistent,
+						Action = WorkflowFileActionTypes.Load
+					});
+					return pData;
 				case FileDirectories.Temporary:
 					var tPath = Path.Combine(tmpDirectory, path);
 					if (!File.Exists(tPath))
 						throw new Exception("File not found!");
-					return await File.ReadAllTextAsync(tPath, token);
+					var tData = await File.ReadAllTextAsync(tPath, token);
+					state.Files.Add(new WorkflowFile()
+					{
+						Path = path,
+						Directory = FileDirectories.Temporary,
+						Action = WorkflowFileActionTypes.Load
+					});
+					return tData;
 				default:
 					throw new Exception("Unknown file directory!");
 			}
 		}
 
-		public async Task SaveFile(string path, string content, FileDirectories type, string tmpDirectory, CancellationToken token)
+		public async Task SaveFile(string path, string content, FileDirectories type, string tmpDirectory, WorkflowState state, CancellationToken token)
 		{
 			switch (type)
 			{
 				case FileDirectories.Persistent:
 					var pPath = Path.Combine(PersistenDirectory, path);
 					await File.WriteAllTextAsync(pPath, content, token);
+					state.Files.Add(new WorkflowFile()
+					{
+						Path = path,
+						Directory = FileDirectories.Persistent,
+						Action = WorkflowFileActionTypes.Save
+					});
 					break;
 				case FileDirectories.Temporary:
 					var tPath = Path.Combine(tmpDirectory, path);
 					await File.WriteAllTextAsync(tPath, content, token);
+					state.Files.Add(new WorkflowFile()
+					{
+						Path = path,
+						Directory = FileDirectories.Temporary,
+						Action = WorkflowFileActionTypes.Save
+					});
 					break;
 				default:
 					throw new Exception("Unknown file directory!");

@@ -11,7 +11,7 @@ namespace ActFlow.Integrations.JSON.Workers
 	{
 		public override async Task<WorkerResult> Execute(ExtractValuesFromJSONFileActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
 		{
-			var json = await LoadFile(act.Path, act.Directory, tmpDirectory, token);
+			var json = await LoadFile(act.Path, act.Directory, tmpDirectory, state, token);
 
 			var resultDict = new Dictionary<string, string>();
 			foreach (var key in act.JSONPaths.Keys)
