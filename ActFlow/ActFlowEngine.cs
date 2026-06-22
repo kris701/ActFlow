@@ -236,6 +236,8 @@ namespace ActFlow
 
 				var orgTmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
 				var newTmpDirectory = Path.Combine(path, "tmp");
+				if (!Directory.Exists(newTmpDirectory))
+					Directory.CreateDirectory(newTmpDirectory);
 				if (Directory.Exists(newTmpDirectory))
 					Directory.CreateDirectory(newTmpDirectory);
 				if (Directory.Exists(orgTmpDirectory))
@@ -245,7 +247,7 @@ namespace ActFlow
 			ActiveWorkflows.Remove(state);
 			var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
 			if (Directory.Exists(tmpDirectory))
-				Directory.Delete(tmpDirectory);
+				DirectoryHelper.DeleteDirectory(tmpDirectory);
 		}
 
 		private async Task ExecuteActivityAsync(WorkflowState state, string tmpDirectory)

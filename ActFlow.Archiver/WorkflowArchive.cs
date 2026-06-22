@@ -146,6 +146,7 @@ namespace ActFlow.Archiver
 			var path = Path.Combine(CompletedDirectory, id.ToString());
 			if (Directory.Exists(path))
 				DirectoryHelper.DeleteDirectory(path);
+			LoadArchive();
 		}
 	}
 }
