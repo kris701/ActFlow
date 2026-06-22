@@ -99,6 +99,18 @@ export class AppSidebar {
                         routerLink: '/workflows/run',
                     }
                 ]
+            },
+            {
+                label: 'Files',
+                icon: 'pi pi-fw pi-file',
+                visible: true,
+                expanded: true,
+                items: [
+                    {
+                        label:"Persistent",
+                        routerLink: '/files/persistent',
+                    }
+                ]
             }
         ];
 

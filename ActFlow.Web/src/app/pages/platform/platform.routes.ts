@@ -11,7 +11,8 @@ export default [
         providers: [provideHttpClient(), WorkflowStateService],
         children: [
             { path: '', component: Status },
-            { path: 'workflows', loadChildren: () => import('./pages/wor/wor.routes') }
+            { path: 'workflows', loadChildren: () => import('./pages/wor/wor.routes') },
+            { path: 'files', loadChildren: () => import('./pages/fil/fil.routes') },
         ]
     }
 ] as Routes;

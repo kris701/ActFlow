@@ -47,7 +47,8 @@ namespace ActFlow.CLI.Helpers
 				{
 					Name = fileInfo.Name,
 					Extension = fileInfo.Extension,
-					Path = RemovePrefix(filePath, rootPath)
+					Path = RemovePrefix(filePath, rootPath),
+					SizeB = fileInfo.Length
 				});
 			}
 

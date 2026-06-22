@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace ActFlow.CLI.Models
 {
-	public class FilesModel
+	public class GetFileModel
 	{
+		[Required]
 		public string Path { get; set; }
-		public string Name { get; set; }
-		public string Extension { get; set; }
-		public long SizeB { get; set; }
 	}
 }
