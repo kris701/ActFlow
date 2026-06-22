@@ -226,11 +226,14 @@ import { WorkflowStateService } from './services/wor.stateservice';
                                                         </p-inputgroup-addon>
                                                         <p-tag class="w-full" severity="secondary">{{file.path}}</p-tag>
 
-                                                        @if(file.directory == 'Persistent'){
-                                                            <p-inputgroup-addon class="flex flex-row gap-2">
-                                                                <p-button class="h-full" label="View" (onClick)="viewFile(file.path)"/>
-                                                            </p-inputgroup-addon>
-                                                        }
+                                                        <p-inputgroup-addon class="flex flex-row gap-2">
+                                                            @if(file.directory == 'Persistent'){
+                                                                <p-button class="h-full" label="View" (onClick)="viewPersistentFile(file.path)"/>
+                                                            }
+                                                            @else if(file.directory == 'Temporary'){
+                                                                <p-button class="h-full" label="View" (onClick)="viewTemporaryFile(fullItem.id, file.path)"/>
+                                                            }
+                                                        </p-inputgroup-addon>
                                                     </p-inputgroup>
                                                 }
                                             </div>
@@ -344,7 +347,11 @@ export class Results {
         this.router.navigateByUrl("workflows/run");
     }
 
-    viewFile(path : string){
+    viewPersistentFile(path : string){
         this.router.navigate(["files/persistent"], { queryParams: { path:path } });
+    }
+
+    viewTemporaryFile(id : string, path : string){
+        this.router.navigate(["files/temporary"], { queryParams: { id: id, path:path } });
     }
 }

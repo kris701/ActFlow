@@ -109,6 +109,10 @@ export class AppSidebar {
                     {
                         label:"Persistent",
                         routerLink: '/files/persistent',
+                    },
+                    {
+                        label:"Temporary",
+                        routerLink: '/files/temporary',
                     }
                 ]
             }

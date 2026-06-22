@@ -11,7 +11,7 @@ namespace ActFlow.CLI.Controllers
 	/// </summary>
 	[ApiController]
 	[Route("api/fs/persistent")]
-	public class FileSystemController : ControllerBase
+	public class PersistentFileSystemController : ControllerBase
 	{
 		private readonly IActFlowEngine _engine;
 
@@ -19,7 +19,7 @@ namespace ActFlow.CLI.Controllers
 		/// Main constructor
 		/// </summary>
 		/// <param name="engine"></param>
-		public FileSystemController(IActFlowEngine engine)
+		public PersistentFileSystemController(IActFlowEngine engine)
 		{
 			_engine = engine;
 		}
