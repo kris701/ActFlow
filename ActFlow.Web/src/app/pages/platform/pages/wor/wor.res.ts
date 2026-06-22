@@ -228,7 +228,7 @@ import { WorkflowStateService } from './services/wor.stateservice';
 
                                                         @if(file.directory == 'Persistent'){
                                                             <p-inputgroup-addon class="flex flex-row gap-2">
-                                                                <p-button class="h-full" label="Open"/>
+                                                                <p-button class="h-full" label="View" (onClick)="viewFile(file.path)"/>
                                                             </p-inputgroup-addon>
                                                         }
                                                     </p-inputgroup>
@@ -342,5 +342,9 @@ export class Results {
             sessionStorage.setItem("tmpWorkflowTransfer", this.JSON.stringify((this.itemCache[id]).sourceWorkflow, null, 4));
         sessionStorage.setItem("tmpWorkflowTransfer", this.JSON.stringify((await this.workflowStateService.Get(id)).sourceWorkflow, null, 4));
         this.router.navigateByUrl("workflows/run");
+    }
+
+    viewFile(path : string){
+        this.router.navigate(["files/persistent"], { queryParams: { path:path } });
     }
 }

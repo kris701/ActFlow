@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, TreeNode } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { FileUpload } from "primeng/fileupload";
@@ -50,7 +51,13 @@ import { FilesModel } from './models/FilesModel';
                     <td style="width:50%">
                         <div class="flex items-center gap-2">
                             <p-treetable-toggler [rowNode]="rowNode" />
-                            <span>{{ rowData.name }}</span>
+                            @if (rowData.path == this.highlightTarget){
+                                <p-tag icon="pi pi-arrow-right"></p-tag>
+                                <span style="font-weight: bold;">{{ rowData.name }}</span>
+                            }
+                            @else {
+                                <span>{{ rowData.name }}</span>
+                            }
                         </div>
                     </td>
                     <td>
@@ -152,14 +159,27 @@ import { FilesModel } from './models/FilesModel';
 export class FilesPersistent {
     files: TreeNode[] = [];
     root : DirectoryRoot = { directories: [], files: [] } as DirectoryRoot
+    highlightTarget : string | null = null;
 
-    constructor(private http : HttpClient, public service: MessageService){}
+    private route = inject(ActivatedRoute);
+    constructor(private http : HttpClient, public service: MessageService, public router : Router){}
 
     async ngOnInit(){
         await this.loadTree();
+        this.highlightTarget = this.route.snapshot.queryParamMap.get('path');
+        if (this.highlightTarget){
+            this.highlightTarget = this.highlightTarget.replaceAll('/', '\\');
+            var cpy = [...this.files]
+            this.expandToTarget(cpy, this.highlightTarget);
+            this.files = cpy;
+        }
     }
 
     async loadTree(){
+        if (this.highlightTarget){
+            this.router.navigate(["files/persistent"]);
+            this.highlightTarget = null;
+        }
         this.root = await firstValueFrom(this.http.get<DirectoryRoot>("/api/fs/persistent/root"))
         var files : TreeNode[] = [];
         this.root.directories.forEach(x => files.push(this.buildTreeNodeDir(x)))
@@ -197,6 +217,7 @@ export class FilesPersistent {
         } as TreeNode
     }
 
+    //https://stackoverflow.com/a/14919494
     humanFileSize(bytes : number, si=false, dp=1) {
         const thresh = si ? 1000 : 1024;
 
@@ -251,5 +272,16 @@ export class FilesPersistent {
         await firstValueFrom(this.http.delete("/api/fs/persistent/files", { params: { path: path }}))
         await this.loadTree();
         this.service.add({ severity: 'success', summary: 'File Deleted!', detail: 'The target file have been deleted' });
+    }
+
+    expandToTarget(nodes : TreeNode[], target : string){
+        for(var node of nodes){
+            if (node.data.type != "dir")
+                continue;
+            if (target.startsWith(node.data.path))
+                node.expanded = true;
+            if (node.children)
+                this.expandToTarget(node.children, target);
+        }
     }
 }
