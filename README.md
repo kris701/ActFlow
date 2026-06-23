@@ -179,4 +179,7 @@ Each of the integrations below can be found as NuGet packages by their name.
 * ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.Math-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Math) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.Math)
   * **Evaluate**
     * Evaluate a mathmatical expression
+* ![Static Badge](https://img.shields.io/badge/Integration-ActFlow.Integrations.Sharepoint-green) ![Nuget](https://img.shields.io/nuget/v/ActFlow.Integrations.Sharepoint) ![Nuget](https://img.shields.io/nuget/dt/ActFlow.Integrations.Sharepoint)
+  * **Upload File**
+    * Uploads a file to a sharepoint
 

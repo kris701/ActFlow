@@ -25,7 +25,7 @@ namespace ActFlow.Models.Workers
 			throw new Exception("Invalid action input to executor!");
 		}
 
-		public async Task<string> LoadFile(string path, FileDirectories type, string tmpDirectory, WorkflowState state, CancellationToken token)
+		public async Task<string> LoadFileText(string path, FileDirectories type, string tmpDirectory, WorkflowState state, CancellationToken token)
 		{
 			switch (type)
 			{
@@ -58,7 +58,40 @@ namespace ActFlow.Models.Workers
 			}
 		}
 
-		public async Task SaveFile(string path, string content, FileDirectories type, string tmpDirectory, WorkflowState state, CancellationToken token)
+		public Stream LoadFileStream(string path, FileDirectories type, string tmpDirectory, WorkflowState state, CancellationToken token)
+		{
+			switch (type)
+			{
+				case FileDirectories.Persistent:
+					var pPath = Path.Combine(PersistenDirectory, path);
+					if (!File.Exists(pPath))
+						throw new Exception("File not found!");
+					var pData = File.OpenRead(pPath);
+					state.Files.Add(new WorkflowFile()
+					{
+						Path = path,
+						Directory = FileDirectories.Persistent,
+						Action = WorkflowFileActionTypes.Load
+					});
+					return pData;
+				case FileDirectories.Temporary:
+					var tPath = Path.Combine(tmpDirectory, path);
+					if (!File.Exists(tPath))
+						throw new Exception("File not found!");
+					var tData = File.OpenRead(tPath);
+					state.Files.Add(new WorkflowFile()
+					{
+						Path = path,
+						Directory = FileDirectories.Temporary,
+						Action = WorkflowFileActionTypes.Load
+					});
+					return tData;
+				default:
+					throw new Exception("Unknown file directory!");
+			}
+		}
+
+		public async Task SaveFileText(string path, string content, FileDirectories type, string tmpDirectory, WorkflowState state, CancellationToken token)
 		{
 			switch (type)
 			{
@@ -99,6 +132,23 @@ namespace ActFlow.Models.Workers
 					var tPath = Path.Combine(tmpDirectory, path);
 					var tInfo = new DirectoryInfo(tPath);
 					return tInfo.GetFiles().Select(x => x.Name).ToList();
+				default:
+					throw new Exception("Unknown file directory!");
+			}
+		}
+
+		public string GetFileName(string path, FileDirectories type, string tmpDirectory)
+		{
+			switch (type)
+			{
+				case FileDirectories.Persistent:
+					var pPath = Path.Combine(PersistenDirectory, path);
+					var pInfo = new FileInfo(pPath);
+					return pInfo.Name;
+				case FileDirectories.Temporary:
+					var tPath = Path.Combine(tmpDirectory, path);
+					var tInfo = new FileInfo(tPath);
+					return tInfo.Name;
 				default:
 					throw new Exception("Unknown file directory!");
 			}
