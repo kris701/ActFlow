@@ -28,7 +28,7 @@ namespace ActFlow.CLI.Programs
 			if (workers == null)
 				throw new Exception("Config is malformed!");
 
-			ConsoleHelpers.WriteLineColor("Initializing engines...", ConsoleColor.Blue);
+			ConsoleHelpers.WriteLineColor("Building engines...", ConsoleColor.Blue);
 			IActFlowEngine engine = new ActFlowEngine(workers)
 			{
 				ActivityLimiter = opts.Limiter,
@@ -36,14 +36,13 @@ namespace ActFlow.CLI.Programs
 				RunnerDirectory = opts.RunnerDirectory,
 				CompletedDirectory = opts.CompletedDirectory
 			};
-			await engine.Initialize();
+			
 			IWorkflowArchive archive = new WorkflowArchive()
 			{
 				CompletedDirectory = opts.CompletedDirectory
 			};
-			await archive.Initialize();
 
-			ConsoleHelpers.WriteLineColor("Starting API...", ConsoleColor.Blue);
+			ConsoleHelpers.WriteLineColor("Building API...", ConsoleColor.Blue);
 
 			var builder = WebApplication.CreateBuilder();
 			builder.WebHost.ConfigureKestrel(o =>
@@ -73,8 +72,16 @@ namespace ActFlow.CLI.Programs
 				foreach (var converter in Constants.SerializerOpts.Converters)
 					o.JsonSerializerOptions.Converters.Add(converter);
 			});
+			var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<IActFlowEngine>>();
+			engine.Logger = logger;
 			builder.Services.AddSingleton<IActFlowEngine>(engine);
 			builder.Services.AddSingleton<IWorkflowArchive>(archive);
+
+			ConsoleHelpers.WriteLineColor("Initializing engines...", ConsoleColor.Blue);
+			await engine.Initialize();
+			await archive.Initialize();
+
+			ConsoleHelpers.WriteLineColor("Starting API...", ConsoleColor.Blue);
 
 			var app = builder.Build();
 

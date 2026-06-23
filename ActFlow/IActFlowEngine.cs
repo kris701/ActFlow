@@ -1,6 +1,7 @@
 ﻿using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
+using Microsoft.Extensions.Logging;
 
 namespace ActFlow
 {
@@ -37,6 +38,11 @@ namespace ActFlow
 		/// If this is set to null, the workflows will simply be discarded on completion.
 		/// </summary>
 		public string? CompletedDirectory { get; set; }
+
+		/// <summary>
+		/// Logger to output logs to
+		/// </summary>
+		public ILogger? Logger { get; set; }
 
 		/// <summary>
 		/// Initialize all the needed directories and workers

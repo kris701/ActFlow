@@ -4,6 +4,7 @@ using ActFlow.Models.Activities;
 using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -45,16 +46,25 @@ namespace ActFlow
 		/// </summary>
 		public string? CompletedDirectory { get; set; } = ".completed";
 
+		/// <summary>
+		/// Logger to output logs to
+		/// </summary>
+		public ILogger? Logger { get; set; }
+
 		private readonly Dictionary<ServiceKey, IWorker> _serviceCache = new Dictionary<ServiceKey, IWorker>();
 		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);
+		private bool _isInitialized = false;
+		private bool _isInitializing = false;
 
 		/// <summary>
 		/// Main constructor with a set of workers
 		/// </summary>
 		/// <param name="workers"></param>
-		public ActFlowEngine(List<IWorker> workers)
+		/// <param name="logger"></param>
+		public ActFlowEngine(List<IWorker> workers, ILogger? logger = null)
 		{
 			Workers = workers;
+			Logger = logger;
 
 			if (!Constants.SerializerOpts.Converters.Any(x => x.GetType() == typeof(JsonStringEnumConverter)) &&
 				!Constants.SerializerOpts.Converters.IsReadOnly)
@@ -67,6 +77,14 @@ namespace ActFlow
 		/// <returns></returns>
 		public async Task Initialize()
 		{
+			if (_isInitialized)
+			{
+				Logger?.LogWarning("ActFlow already initialized!");
+				return;
+			}
+			_isInitializing = true;
+			_isInitialized = false;
+			Logger?.LogInformation("Initializing service cache...");
 			foreach (var worker in Workers)
 			{
 				worker.PersistenDirectory = PersistentDirectory;
@@ -79,11 +97,15 @@ namespace ActFlow
 					_serviceCache.Add(key, worker);
 			}
 
-			// Resume all existing runs
+
 			if (Directory.Exists(RunnerDirectory))
 			{
 				var dirs = Directory.GetDirectories(RunnerDirectory);
-				foreach(var dir in dirs)
+				if (dirs.Length == 0)
+					Logger?.LogInformation("No old workflow runs to resume.");
+				else
+					Logger?.LogInformation($"Attempting to resume {dirs.Length} previous workflow runs");
+				foreach (var dir in dirs)
 				{
 					var stateFile = Path.Combine(dir, "state.json");
 					if (!File.Exists(stateFile))
@@ -103,19 +125,42 @@ namespace ActFlow
 						}
 						Execute(state);
 					}
-					catch(Exception)
+					catch (Exception ex)
 					{
+						Logger?.LogError($"Error, a old workflow state in the path '{dir}' has an invalid state file: {ex.Message}");
 						DirectoryHelper.DeleteDirectory(dir);
 					}
 				}
 			}
-			else Directory.CreateDirectory(RunnerDirectory);
+			else 
+			{
+				Logger?.LogInformation("Runner directory not found! Creating it...");
+				Directory.CreateDirectory(RunnerDirectory); 
+			}
 
 			if (!Directory.Exists(PersistentDirectory))
+			{
+				Logger?.LogInformation("Persistent directory not found! Creating it...");
 				Directory.CreateDirectory(PersistentDirectory);
+			}
 
 			if (CompletedDirectory != null && !Directory.Exists(CompletedDirectory))
+			{
 				Directory.CreateDirectory(CompletedDirectory);
+				Logger?.LogInformation("Completed directory not found! Creating it...");
+			}
+
+			_isInitializing = false;
+			_isInitialized = true;
+			Logger?.LogInformation("Initialization completed!");
+		}
+
+		private bool CheckInitialized()
+		{
+			if (_isInitialized || _isInitializing)
+				return true;
+			Logger?.LogError("ActFlow engine is not initialized!");
+			return false;
 		}
 
 		#region Execute
@@ -127,6 +172,9 @@ namespace ActFlow
 		/// <returns>ID of the workflow state</returns>
 		public Guid Execute(Workflow workflow)
 		{
+			if (!CheckInitialized())
+				throw new Exception("ActFlow engine is not initialized!");
+
 			var newState = new WorkflowState(workflow);
 			Task.Run(async () => await ExecuteAsync(newState));
 			return newState.ID;
@@ -138,6 +186,9 @@ namespace ActFlow
 		/// <returns>ID of the workflow state</returns>
 		public Guid Execute(WorkflowState state)
 		{
+			if (!CheckInitialized())
+				throw new Exception("ActFlow engine is not initialized!");
+
 			Task.Run(async () => await ExecuteAsync(state));
 			return state.ID;
 		}
@@ -149,6 +200,9 @@ namespace ActFlow
 		/// <returns></returns>
 		public async Task<WorkflowState> ExecuteAsync(Workflow workflow)
 		{
+			if (!CheckInitialized())
+				throw new Exception("ActFlow engine is not initialized!");
+
 			var newState = new WorkflowState(workflow);
 			return await ExecuteAsync(newState);
 		}
@@ -159,9 +213,12 @@ namespace ActFlow
 		/// <returns></returns>
 		public async Task<WorkflowState> ExecuteAsync(WorkflowState state)
 		{
+			if (!CheckInitialized())
+				throw new Exception("ActFlow engine is not initialized!");
+
 			ActiveWorkflows.Add(state);
 			state.OnWorkflowUpdated += OnStateUpdate;
-			if (state.ActivityIndex == 0)
+			if (state.StartedAt == null)
 				state.AppendToLog("Workflow started!");
 			else
 				state.AppendToLog("Workflow continued...");
@@ -331,6 +388,9 @@ namespace ActFlow
 		/// <param name="id"></param>
 		public void Cancel(Guid id)
 		{
+			if (!CheckInitialized())
+				throw new Exception("ActFlow engine is not initialized!");
+
 			Task.Run(async () => CancelAsync(id));
 		}
 		/// <summary>
@@ -340,6 +400,9 @@ namespace ActFlow
 		/// <returns></returns>
 		public async Task CancelAsync(Guid id)
 		{
+			if (!CheckInitialized())
+				throw new Exception("ActFlow engine is not initialized!");
+
 			var target = ActiveWorkflows.FirstOrDefault(x => x.ID == id);
 			if (target != null)
 			{
@@ -357,6 +420,9 @@ namespace ActFlow
 		/// </summary>
 		public void CancelAll()
 		{
+			if (!CheckInitialized())
+				throw new Exception("ActFlow engine is not initialized!");
+
 			Task.Run(async () => CancelAllAsync());
 		}
 		/// <summary>
@@ -365,6 +431,9 @@ namespace ActFlow
 		/// <returns></returns>
 		public async Task CancelAllAsync()
 		{
+			if (!CheckInitialized())
+				throw new Exception("ActFlow engine is not initialized!");
+
 			foreach (var item in ActiveWorkflows)
 				await CancelAsync(item.ID);
 		}
@@ -381,6 +450,9 @@ namespace ActFlow
 		/// <returns></returns>
 		public void ApplyHumanInput(Guid stateId, IContext input)
 		{
+			if (!CheckInitialized())
+				throw new Exception("ActFlow engine is not initialized!");
+
 			var state = ActiveWorkflows.FirstOrDefault(x => x.ID == stateId);
 			if (state != null)
 			{
