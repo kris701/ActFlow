@@ -6,7 +6,6 @@ using ActFlow.Models.Workflows;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using ToolsSharp;
 
 namespace ActFlow
 {
@@ -100,10 +99,10 @@ namespace ActFlow
 				foreach (var resumable in resumables)
 					Execute(resumable);
 			}
-			else 
+			else
 			{
 				Logger?.LogInformation("Runner directory not found! Creating it...");
-				Directory.CreateDirectory(RunnerDirectory); 
+				Directory.CreateDirectory(RunnerDirectory);
 			}
 
 			if (!Directory.Exists(PersistentDirectory))

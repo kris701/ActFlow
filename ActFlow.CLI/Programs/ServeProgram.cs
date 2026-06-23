@@ -36,7 +36,7 @@ namespace ActFlow.CLI.Programs
 				RunnerDirectory = opts.RunnerDirectory,
 				CompletedDirectory = opts.CompletedDirectory
 			};
-			
+
 			IWorkflowArchive archive = new WorkflowArchive()
 			{
 				CompletedDirectory = opts.CompletedDirectory
