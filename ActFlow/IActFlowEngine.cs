@@ -28,9 +28,9 @@ namespace ActFlow
 		public string PersistentDirectory { get; set; }
 
 		/// <summary>
-		/// The path to the temporary data folder
+		/// The path to the active runner data folder
 		/// </summary>
-		public string TemporaryDirectory { get; set; }
+		public string RunnerDirectory { get; set; }
 
 		/// <summary>
 		/// The path to where to save completed workflow runs.

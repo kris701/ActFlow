@@ -79,7 +79,7 @@ namespace ActFlow.CLI.Controllers
 
 			var totalRuntime = TimeSpan.FromSeconds(0);
 			foreach (var item in items)
-				if (item.StartedAt != null && item.EndedAt != null)
+				if (item.StartedAt != null && item.EndedAt != null && item.EndedAt > item.StartedAt)
 					totalRuntime += (DateTime)item.EndedAt! - (DateTime)item.StartedAt!;
 
 			var oldestRun = items.Where(x => x.EndedAt != null).OrderBy(x => x.EndedAt).FirstOrDefault()?.EndedAt;

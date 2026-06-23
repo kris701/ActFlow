@@ -33,7 +33,7 @@ namespace ActFlow.CLI.Programs
 			{
 				ActivityLimiter = opts.Limiter,
 				PersistentDirectory = opts.PersistentDirectory,
-				TemporaryDirectory = opts.RunnerDirectory,
+				RunnerDirectory = opts.RunnerDirectory,
 				CompletedDirectory = opts.CompletedDirectory,
 			};
 			await engine.Initialize();

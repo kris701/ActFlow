@@ -35,9 +35,9 @@ namespace ActFlow
 		public string PersistentDirectory { get; set; } = ".persistent";
 
 		/// <summary>
-		/// The path to the temporary data folder
+		/// The path to the runner data folder
 		/// </summary>
-		public string TemporaryDirectory { get; set; } = ".runners";
+		public string RunnerDirectory { get; set; } = ".runners";
 
 		/// <summary>
 		/// The path to where to save completed workflow runs
@@ -79,9 +79,37 @@ namespace ActFlow
 					_serviceCache.Add(key, worker);
 			}
 
-			DirectoryHelper.DeleteDirectory(TemporaryDirectory);
-			if (!Directory.Exists(TemporaryDirectory))
-				Directory.CreateDirectory(TemporaryDirectory);
+			// Resume all existing runs
+			if (Directory.Exists(RunnerDirectory))
+			{
+				var dirs = Directory.GetDirectories(RunnerDirectory);
+				foreach(var dir in dirs)
+				{
+					var stateFile = Path.Combine(dir, "state.json");
+					if (!File.Exists(stateFile))
+					{
+						DirectoryHelper.DeleteDirectory(dir);
+						continue;
+					}
+
+					try
+					{
+						var stateText = await File.ReadAllTextAsync(stateFile);
+						var state = JsonSerializer.Deserialize<WorkflowState>(stateText, Constants.SerializerOpts);
+						if (state == null)
+						{
+							DirectoryHelper.DeleteDirectory(dir);
+							continue;
+						}
+						Execute(state);
+					}
+					catch(Exception)
+					{
+						DirectoryHelper.DeleteDirectory(dir);
+					}
+				}
+			}
+			else Directory.CreateDirectory(RunnerDirectory);
 
 			if (!Directory.Exists(PersistentDirectory))
 				Directory.CreateDirectory(PersistentDirectory);
@@ -132,17 +160,18 @@ namespace ActFlow
 		public async Task<WorkflowState> ExecuteAsync(WorkflowState state)
 		{
 			ActiveWorkflows.Add(state);
+			state.OnWorkflowUpdated += OnStateUpdate;
 			if (state.ActivityIndex == 0)
 				state.AppendToLog("Workflow started!");
 			else
 				state.AppendToLog("Workflow continued...");
 
-			var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
-			if (Directory.Exists(tmpDirectory))
-				Directory.Delete(tmpDirectory);
-			Directory.CreateDirectory(tmpDirectory);
-
-			state.AppendToLog("Temporary folder created");
+			var tmpDirectory = Path.Combine(RunnerDirectory, state.ID.ToString(), "tmp");
+			if (!Directory.Exists(tmpDirectory))
+			{
+				Directory.CreateDirectory(tmpDirectory);
+				state.AppendToLog("Temporary folder created");
+			}
 
 			if (state.ActivityIndex < 0)
 				state.ActivityIndex = 0;
@@ -217,6 +246,12 @@ namespace ActFlow
 			return state;
 		}
 
+		private async Task OnStateUpdate(WorkflowState state)
+		{
+			var stateTarget = Path.Combine(RunnerDirectory, state.ID.ToString(), "state.json");
+			await File.WriteAllTextAsync(stateTarget, JsonSerializer.Serialize(state, Constants.SerializerOpts));
+		}
+
 		private async Task ProcessCompleted(WorkflowState state)
 		{
 			if (!state.IsProcessingUserInput)
@@ -234,7 +269,7 @@ namespace ActFlow
 				var workflowFile = Path.Combine(path, "state.json");
 				await File.WriteAllTextAsync(workflowFile, JsonSerializer.Serialize(state, Constants.SerializerOpts));
 
-				var orgTmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
+				var orgTmpDirectory = Path.Combine(RunnerDirectory, state.ID.ToString(), "tmp");
 				var newTmpDirectory = Path.Combine(path, "tmp");
 				if (!Directory.Exists(newTmpDirectory))
 					Directory.CreateDirectory(newTmpDirectory);
@@ -245,7 +280,7 @@ namespace ActFlow
 			}
 
 			ActiveWorkflows.Remove(state);
-			var tmpDirectory = Path.Combine(TemporaryDirectory, state.ID.ToString());
+			var tmpDirectory = Path.Combine(RunnerDirectory, state.ID.ToString());
 			if (Directory.Exists(tmpDirectory))
 				DirectoryHelper.DeleteDirectory(tmpDirectory);
 		}

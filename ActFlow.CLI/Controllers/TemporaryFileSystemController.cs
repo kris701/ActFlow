@@ -36,7 +36,7 @@ namespace ActFlow.CLI.Controllers
 		{
 			var active = _engine.ActiveWorkflows.FirstOrDefault(x => x.ID == input.ID);
 			if (active != null)
-				return Ok(DirectoryHelpers.GetFullDirectory(Path.Combine(_engine.TemporaryDirectory, active.ID.ToString())));
+				return Ok(DirectoryHelpers.GetFullDirectory(Path.Combine(_engine.RunnerDirectory, active.ID.ToString())));
 			if (_engine.CompletedDirectory == null)
 				throw new Exception("Archive not active!");
 			var completed = _archive.GetCompletedWorkflow(input.ID);
@@ -55,7 +55,7 @@ namespace ActFlow.CLI.Controllers
 			var target = "";
 			var active = _engine.ActiveWorkflows.FirstOrDefault(x => x.ID == input.ID);
 			if (active != null)
-				target = Path.Combine(_engine.TemporaryDirectory, active.ID.ToString(), input.Path);
+				target = Path.Combine(_engine.RunnerDirectory, active.ID.ToString(), input.Path);
 			if (target == "")
 			{
 				if (_engine.CompletedDirectory == null)
