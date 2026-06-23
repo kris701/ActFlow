@@ -1,13 +1,11 @@
 ﻿using ActFlow.Helpers;
 using ActFlow.Models;
-using ActFlow.Models.Activities;
 using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using ToolsSharp;
 
 namespace ActFlow
@@ -20,39 +18,38 @@ namespace ActFlow
 		/// <summary>
 		/// List of workers that the engine has to work with
 		/// </summary>
-		public List<IWorker> Workers { get; } = new List<IWorker>();
+		public List<IWorker> Workers { get; }
 		/// <summary>
 		/// List of currently active workflows
 		/// </summary>
-		public List<WorkflowState> ActiveWorkflows { get; } = new List<WorkflowState>();
+		public List<WorkflowState> ActiveWorkflows { get; }
 		/// <summary>
 		/// A limiter to how many activities a workflow can execute (to prevent infinite workflows)
 		/// </summary>
-		public int ActivityLimiter { get; set; } = 100;
+		public int ActivityLimiter { get; set; }
 
 		/// <summary>
 		/// The path to the persistent data folder
 		/// </summary>
-		public string PersistentDirectory { get; set; } = ".persistent";
+		public string PersistentDirectory { get; set; }
 
 		/// <summary>
 		/// The path to the runner data folder
 		/// </summary>
-		public string RunnerDirectory { get; set; } = ".runners";
+		public string RunnerDirectory { get; set; }
 
 		/// <summary>
 		/// The path to where to save completed workflow runs
 		/// If this is set to null, the workflows will simply be discarded on completion.
 		/// </summary>
-		public string? CompletedDirectory { get; set; } = ".completed";
+		public string? CompletedDirectory { get; set; }
 
 		/// <summary>
 		/// Logger to output logs to
 		/// </summary>
 		public ILogger? Logger { get; set; }
 
-		private readonly Dictionary<ServiceKey, IWorker> _serviceCache = new Dictionary<ServiceKey, IWorker>();
-		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);
+		private Dictionary<ServiceKey, IWorker> _serviceCache = new Dictionary<ServiceKey, IWorker>();
 		private bool _isInitialized = false;
 		private bool _isInitializing = false;
 
@@ -65,6 +62,11 @@ namespace ActFlow
 		{
 			Workers = workers;
 			Logger = logger;
+			ActiveWorkflows = new List<WorkflowState>();
+			ActivityLimiter = 100;
+
+			PersistentDirectory = ".persistent";
+			RunnerDirectory = ".runners";
 
 			if (!Constants.SerializerOpts.Converters.Any(x => x.GetType() == typeof(JsonStringEnumConverter)) &&
 				!Constants.SerializerOpts.Converters.IsReadOnly)
@@ -85,18 +87,7 @@ namespace ActFlow
 			_isInitializing = true;
 			_isInitialized = false;
 			Logger?.LogInformation("Initializing service cache...");
-			foreach (var worker in Workers)
-			{
-				worker.PersistenDirectory = PersistentDirectory;
-
-				var tpy = worker.GetType();
-				var baseType = tpy.BaseType;
-				var typeArg = baseType?.GenericTypeArguments[0].Name;
-				var key = new ServiceKey(worker.ID, typeArg);
-				if (!_serviceCache.ContainsKey(key))
-					_serviceCache.Add(key, worker);
-			}
-
+			_serviceCache = ServiceCacheHelpers.GenerateServiceCache(Workers, PersistentDirectory);
 
 			if (Directory.Exists(RunnerDirectory))
 			{
@@ -105,32 +96,9 @@ namespace ActFlow
 					Logger?.LogInformation("No old workflow runs to resume.");
 				else
 					Logger?.LogInformation($"Attempting to resume {dirs.Length} previous workflow runs");
-				foreach (var dir in dirs)
-				{
-					var stateFile = Path.Combine(dir, "state.json");
-					if (!File.Exists(stateFile))
-					{
-						DirectoryHelper.DeleteDirectory(dir);
-						continue;
-					}
-
-					try
-					{
-						var stateText = await File.ReadAllTextAsync(stateFile);
-						var state = JsonSerializer.Deserialize<WorkflowState>(stateText, Constants.SerializerOpts);
-						if (state == null)
-						{
-							DirectoryHelper.DeleteDirectory(dir);
-							continue;
-						}
-						Execute(state);
-					}
-					catch (Exception ex)
-					{
-						Logger?.LogError($"Error, a old workflow state in the path '{dir}' has an invalid state file: {ex.Message}");
-						DirectoryHelper.DeleteDirectory(dir);
-					}
-				}
+				var resumables = await ResumeHelpers.GetResumableStates(dirs, Logger);
+				foreach (var resumable in resumables)
+					Execute(resumable);
 			}
 			else 
 			{
@@ -248,7 +216,7 @@ namespace ActFlow
 
 				try
 				{
-					await ExecuteActivityAsync(state, tmpDirectory);
+					await ActivityHelpers.ExecuteActivityAsync(state, tmpDirectory, _serviceCache);
 				}
 				catch (Exception ex)
 				{
@@ -314,68 +282,9 @@ namespace ActFlow
 			if (!state.IsProcessingUserInput)
 				await state.Complete();
 
-			if (CompletedDirectory != null)
-			{
-				state.AppendToLog($"Moving workflow state to completed folder...");
-				await state.Update();
-				var path = Path.Combine(CompletedDirectory, state.ID.ToString());
-				if (Directory.Exists(path))
-					DirectoryHelper.DeleteDirectory(path);
-				Directory.CreateDirectory(path);
-
-				var workflowFile = Path.Combine(path, "state.json");
-				await File.WriteAllTextAsync(workflowFile, JsonSerializer.Serialize(state, Constants.SerializerOpts));
-
-				var orgTmpDirectory = Path.Combine(RunnerDirectory, state.ID.ToString(), "tmp");
-				var newTmpDirectory = Path.Combine(path, "tmp");
-				if (!Directory.Exists(newTmpDirectory))
-					Directory.CreateDirectory(newTmpDirectory);
-				if (Directory.Exists(newTmpDirectory))
-					Directory.CreateDirectory(newTmpDirectory);
-				if (Directory.Exists(orgTmpDirectory))
-					DirectoryHelper.CopyFilesRecursively(orgTmpDirectory, newTmpDirectory);
-			}
+			await CompletionHelpers.MoveCompletedWorkflow(state, CompletedDirectory, RunnerDirectory);
 
 			ActiveWorkflows.Remove(state);
-			var tmpDirectory = Path.Combine(RunnerDirectory, state.ID.ToString());
-			if (Directory.Exists(tmpDirectory))
-				DirectoryHelper.DeleteDirectory(tmpDirectory);
-		}
-
-		private async Task ExecuteActivityAsync(WorkflowState state, string tmpDirectory)
-		{
-			var activity = state.Workflow.Activities[state.ActivityIndex];
-			state.AppendToLog($"Initializing activity {activity.Name}");
-
-			activity = ActivityHelpers.ApplyContexts(state, activity);
-
-			state.AppendToLog($"Executing activity");
-			await state.Update();
-			var executionResult = await ExecuteActivityAsync(activity, state, state.TokenSource.Token, tmpDirectory);
-			if (state.Status != WorkflowStatuses.Canceled)
-				state.Status = WorkflowStatuses.Running;
-			if (state.TokenSource.IsCancellationRequested)
-				return;
-			state.AppendToLog($"Resulting activity context is a {executionResult.Context.GetType()}");
-			var contextString = executionResult.Context.ToString();
-			if (contextString != null)
-				contextString = contextString.Length > 100 ? contextString.Substring(0, 100) : contextString;
-			state.AppendToLog($"Resulting activity context content is {contextString}");
-
-			WorkflowStateHelpers.InsertResultIntoContextStore(state, activity.Name, executionResult);
-
-			state.ActivityIndex = WorkflowStateHelpers.FindNextActivityIndex(state, executionResult);
-		}
-
-		private async Task<WorkerResult> ExecuteActivityAsync(IActivity act, WorkflowState state, CancellationToken token, string tmpDirectory)
-		{
-			var targetKey = new ServiceKey(act.WorkerID, act.GetType().Name);
-			if (_serviceCache.ContainsKey(targetKey))
-			{
-				var executor = _serviceCache[targetKey];
-				return await ActivityHelpers.ExecuteActivityAsync((dynamic)executor, (dynamic)act, state, token, tmpDirectory);
-			}
-			throw new Exception($"Unknown target activity executor '{targetKey}'! This probably means that the backend have not been set up to accept this type of action!");
 		}
 
 		#endregion
@@ -403,16 +312,7 @@ namespace ActFlow
 			if (!CheckInitialized())
 				throw new Exception("ActFlow engine is not initialized!");
 
-			var target = ActiveWorkflows.FirstOrDefault(x => x.ID == id);
-			if (target != null)
-			{
-				target.AppendToLog(WorkflowLogTypes.Warn, "Cancellation requested");
-				target.TokenSource.Cancel();
-				while (ActiveWorkflows.Contains(target))
-					await Task.Delay(500);
-				target.Status = WorkflowStatuses.Canceled;
-				await target.Update();
-			}
+			await CancellationHelpers.RequestCancelIfExists(id, ActiveWorkflows);
 		}
 
 		/// <summary>
@@ -453,20 +353,7 @@ namespace ActFlow
 			if (!CheckInitialized())
 				throw new Exception("ActFlow engine is not initialized!");
 
-			var state = ActiveWorkflows.FirstOrDefault(x => x.ID == stateId);
-			if (state != null)
-			{
-				var currentAct = state.Workflow.Activities[state.ActivityIndex];
-				if (currentAct is not IHumanInput humanAct)
-					throw new Exception($"Can only update the workflow on activities that implements '{nameof(IHumanInput)}'");
-				if (state.Status != WorkflowStatuses.AwaitingHumanInput)
-					throw new Exception("Current state is not awaiting any updates!");
-
-				state.AppendToLog(WorkflowLogTypes.Warn, "Applying human input");
-				humanAct.Apply(input);
-			}
-			else
-				throw new Exception($"No workflow log item with the id '{stateId}' found!");
+			HumanInputHelpers.ApplyInput(stateId, input, ActiveWorkflows);
 		}
 	}
 }

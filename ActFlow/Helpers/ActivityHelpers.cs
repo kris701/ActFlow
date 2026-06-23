@@ -1,14 +1,15 @@
-﻿using ActFlow.Models.Activities;
+﻿using ActFlow.Models;
+using ActFlow.Models.Activities;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using System.Text.RegularExpressions;
 
 namespace ActFlow.Helpers
 {
-	public static class ActivityHelpers
+	internal static class ActivityHelpers
 	{
 		private static readonly Regex _variableRegex = new Regex("\\${{(.*?)}}", RegexOptions.Compiled);
-		public static IActivity ApplyContexts(WorkflowState state, IActivity activity)
+		internal static IActivity ApplyContexts(WorkflowState state, IActivity activity)
 		{
 			var props = activity.GetType().GetProperties();
 			foreach (var prop in props)
@@ -38,7 +39,43 @@ namespace ActFlow.Helpers
 			return activity;
 		}
 
-		public static async Task<WorkerResult> ExecuteActivityAsync<T>(BaseWorker<T> worker, T act, WorkflowState state, CancellationToken token, string tmpDirectory) where T : IActivity
+		internal static async Task ExecuteActivityAsync(WorkflowState state, string tmpDirectory, Dictionary<ServiceKey, IWorker> serviceCache)
+		{
+			var activity = state.Workflow.Activities[state.ActivityIndex];
+			state.AppendToLog($"Initializing activity {activity.Name}");
+
+			activity = ApplyContexts(state, activity);
+
+			state.AppendToLog($"Executing activity");
+			await state.Update();
+			var executionResult = await ExecuteActivityAsync(activity, state, state.TokenSource.Token, tmpDirectory, serviceCache);
+			if (state.Status != WorkflowStatuses.Canceled)
+				state.Status = WorkflowStatuses.Running;
+			if (state.TokenSource.IsCancellationRequested)
+				return;
+			state.AppendToLog($"Resulting activity context is a {executionResult.Context.GetType()}");
+			var contextString = executionResult.Context.ToString();
+			if (contextString != null)
+				contextString = contextString.Length > 100 ? contextString.Substring(0, 100) : contextString;
+			state.AppendToLog($"Resulting activity context content is {contextString}");
+
+			WorkflowStateHelpers.InsertResultIntoContextStore(state, activity.Name, executionResult);
+
+			state.ActivityIndex = WorkflowStateHelpers.FindNextActivityIndex(state, executionResult);
+		}
+
+		private static async Task<WorkerResult> ExecuteActivityAsync(IActivity act, WorkflowState state, CancellationToken token, string tmpDirectory, Dictionary<ServiceKey, IWorker> serviceCache)
+		{
+			var targetKey = new ServiceKey(act.WorkerID, act.GetType().Name);
+			if (serviceCache.ContainsKey(targetKey))
+			{
+				var executor = serviceCache[targetKey];
+				return await ExecuteActivityAsync((dynamic)executor, (dynamic)act, state, token, tmpDirectory);
+			}
+			throw new Exception($"Unknown target activity executor '{targetKey}'! This probably means that the backend have not been set up to accept this type of action!");
+		}
+
+		private static async Task<WorkerResult> ExecuteActivityAsync<T>(BaseWorker<T> worker, T act, WorkflowState state, CancellationToken token, string tmpDirectory) where T : IActivity
 		{
 			return await worker.Execute(act, state, token, tmpDirectory);
 		}
