@@ -1,97 +1,104 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import 'chartjs-adapter-date-fns';
 import { ButtonModule } from 'primeng/button';
 import { ChartModule } from 'primeng/chart';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-sta',
     imports: [
-    CommonModule, ChartModule, ButtonModule
+    CommonModule, ChartModule, ButtonModule, ProgressSpinnerModule
 ],
     template: `
     <p-button icon="pi pi-refresh" (onClick)="loadStatus()" text class="status-reloadbutton"/>
 
-    <div class="flex flex-col gap-2">
-        <div class="flex flex-row gap-2 w-full">
-            <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
-                <span class="status-xlargenumber">{{status.activeWorkflows}}</span>
-                <span style="opacity:0.5">Active Workflows</span>
+    @if(isLoading()){
+        <p-progress-spinner ariaLabel="loading" />
+    }
+    @else {
+        @let stat = status();
+        <div class="flex flex-col gap-2">
+            <div class="flex flex-row gap-2 w-full">
+                <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
+                    <span class="status-xlargenumber">{{stat.activeWorkflows}}</span>
+                    <span style="opacity:0.5">Active Workflows</span>
+                </div>
+                <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
+                    <span class="status-xlargenumber">{{stat.archivedWorkflows}}</span>
+                    <span style="opacity:0.5">Archived Workflows</span>
+                </div>
             </div>
-            <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
-                <span class="status-xlargenumber">{{status.archivedWorkflows}}</span>
-                <span style="opacity:0.5">Archived Workflows</span>
-            </div>
-        </div>
 
-        <div class="flex flex-row gap-2 w-full">
-            <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
-                <span class="status-largenumber">{{status.totalRuntime}}</span>
-                <span style="opacity:0.5">Total Runtime</span>
+            <div class="flex flex-row gap-2 w-full">
+                <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
+                    <span class="status-largenumber">{{stat.totalRuntime}}</span>
+                    <span style="opacity:0.5">Total Runtime</span>
+                </div>
+                <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
+                    <span class="status-largenumber">{{stat.oldestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
+                    <span style="opacity:0.5">Oldest Run</span>
+                </div>
+                <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
+                    <span class="status-largenumber">{{stat.latestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
+                    <span style="opacity:0.5">Newest Run</span>
+                </div>
             </div>
-            <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
-                <span class="status-largenumber">{{status.oldestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
-                <span style="opacity:0.5">Oldest Run</span>
-            </div>
-            <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
-                <span class="status-largenumber">{{status.latestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
-                <span style="opacity:0.5">Newest Run</span>
-            </div>
-        </div>
 
-        <div class="flex flex-row gap-2 w-full">
-            <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
-                @if(status.activeWorkflows == 0){
-                    <span>No active workflows...</span>
-                }
-                @else {
-                    <p-chart [type]="stateChartOptions.type" [options]="stateChartOptions" [data]="activeStateData"  class="w-full" />
-                }
-                <span style="opacity:0.5">Active Workflow Statuses</span>
+            <div class="flex flex-row gap-2 w-full">
+                <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
+                    @if(stat.activeWorkflows == 0){
+                        <span>No active workflows...</span>
+                    }
+                    @else {
+                        <p-chart [type]="stateChartOptions.type" [options]="stateChartOptions" [data]="activeStateData()"  class="w-full" />
+                    }
+                    <span style="opacity:0.5">Active Workflow Statuses</span>
+                </div>
+                <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
+                    @if(stat.archivedWorkflows == 0){
+                        <span>No archived workflows...</span>
+                    }
+                    @else {
+                        <p-chart [type]="stateChartOptions.type" [options]="stateChartOptions" [data]="archivedStateData()"  class="w-full" />
+                    }
+                    <span style="opacity:0.5">Archived Workflows Statuses</span>
+                </div>
             </div>
-            <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
-                @if(status.archivedWorkflows == 0){
-                    <span>No archived workflows...</span>
-                }
-                @else {
-                    <p-chart [type]="stateChartOptions.type" [options]="stateChartOptions" [data]="archivedStateData"  class="w-full" />
-                }
-                <span style="opacity:0.5">Archived Workflows Statuses</span>
-            </div>
-        </div>
 
-        <div class="flex flex-row gap-2 w-full">
-            <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
-                @if(status.mostExpensiveRun){
-                    <span class="status-largenumber">{{status.mostExpensiveRun.name}}</span>
-                    <span style="font-style: italic;">{{status.mostExpensiveRun.runtime}}</span>
-                }
-                @else {
-                    <span>No workflow runs have been made yet...</span>
-                }
-                <span style="opacity:0.5">Most expensive workflow run</span>
+            <div class="flex flex-row gap-2 w-full">
+                <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
+                    @if(stat.mostExpensiveRun){
+                        <span class="status-largenumber">{{stat.mostExpensiveRun.name}}</span>
+                        <span style="font-style: italic;">{{stat.mostExpensiveRun.runtime}}</span>
+                    }
+                    @else {
+                        <span>No workflow runs have been made yet...</span>
+                    }
+                    <span style="opacity:0.5">Most expensive workflow run</span>
+                </div>
+                <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
+                    @if(stat.leastExpensiveRun){
+                        <span class="status-largenumber">{{stat.leastExpensiveRun.name}}</span>
+                        <span style="font-style: italic;">{{stat.leastExpensiveRun.runtime}}</span>
+                    }
+                    @else {
+                        <span>No workflow runs have been made yet...</span>
+                    }
+                    <span style="opacity:0.5">Least expensive workflow run</span>
+                </div>
             </div>
-            <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
-                @if(status.leastExpensiveRun){
-                    <span class="status-largenumber">{{status.leastExpensiveRun.name}}</span>
-                    <span style="font-style: italic;">{{status.leastExpensiveRun.runtime}}</span>
-                }
-                @else {
-                    <span>No workflow runs have been made yet...</span>
-                }
-                <span style="opacity:0.5">Least expensive workflow run</span>
-            </div>
-        </div>
 
-        <div class="flex flex-row gap-2 w-full">
-            <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
-                <p-chart [type]="timelineChartOptions.type" [options]="timelineChartOptions" [data]="runsPrDayData"  class="w-full" />
-                <span style="opacity:0.5">Runs the last 7 days</span>
+            <div class="flex flex-row gap-2 w-full">
+                <div class="card flex flex-col gap-2 h-full w-full" style="align-items: center;justify-content: center;">
+                    <p-chart [type]="timelineChartOptions.type" [options]="timelineChartOptions" [data]="runsPrDayData()"  class="w-full" />
+                    <span style="opacity:0.5">Runs the last 7 days</span>
+                </div>
             </div>
         </div>
-    </div>
+    }
     `,
     host:{
         class: 'flex flex-col flex-grow'
@@ -115,11 +122,12 @@ import { firstValueFrom } from 'rxjs';
     `
 })
 export class Status {
-    status : StatusModel = {} as StatusModel;
+    status = signal<StatusModel>({} as StatusModel);
+    isLoading = signal<boolean>(false);
 
     stateChartOptions : any = { type:'pie' };
-    activeStateData = {}
-    archivedStateData = {}
+    activeStateData = signal({})
+    archivedStateData = signal({})
 
     timelineChartOptions : any = {
         type:'line',
@@ -140,7 +148,7 @@ export class Status {
             }
         }
     };
-    runsPrDayData = {}
+    runsPrDayData = signal({})
 
     constructor(private http : HttpClient){}
 
@@ -149,37 +157,40 @@ export class Status {
     }
 
     async loadStatus(){
-        this.status = await firstValueFrom(this.http.get<StatusModel>("/api/status"))
-        if (this.status.totalRuntime)
-            this.status.totalRuntime = this.status.totalRuntime.split('.')[0]
-        if (this.status.totalRuntime && this.status.totalRuntime == "00:00:00")
-            this.status.totalRuntime = "Less than a second"
+        this.isLoading.set(true);
+        var status = await firstValueFrom(this.http.get<StatusModel>("/api/status"))
+        if (status.totalRuntime)
+            status.totalRuntime = status.totalRuntime.split('.')[0]
+        if (status.totalRuntime && status.totalRuntime == "00:00:00")
+            status.totalRuntime = "Less than a second"
 
-        this.activeStateData = this.buildChart(this.status.activeStateMap);
-        this.archivedStateData = this.buildChart(this.status.archivedStateMap);
+        this.activeStateData.set(this.buildChart(status.activeStateMap));
+        this.archivedStateData.set(this.buildChart(status.archivedStateMap));
 
-        if (this.status.mostExpensiveRun)
-            this.status.mostExpensiveRun.runtime = this.status.mostExpensiveRun.runtime.split('.')[0]
-        if (this.status.mostExpensiveRun && this.status.mostExpensiveRun.runtime == "00:00:00")
-            this.status.mostExpensiveRun.runtime = "Less than a second"
+        if (status.mostExpensiveRun)
+            status.mostExpensiveRun.runtime = status.mostExpensiveRun.runtime.split('.')[0]
+        if (status.mostExpensiveRun && status.mostExpensiveRun.runtime == "00:00:00")
+            status.mostExpensiveRun.runtime = "Less than a second"
 
-        if (this.status.leastExpensiveRun)
-            this.status.leastExpensiveRun.runtime = this.status.leastExpensiveRun.runtime.split('.')[0]
-        if (this.status.leastExpensiveRun && this.status.leastExpensiveRun.runtime == "00:00:00")
-            this.status.leastExpensiveRun.runtime = "Less than a second"
+        if (status.leastExpensiveRun)
+            status.leastExpensiveRun.runtime = status.leastExpensiveRun.runtime.split('.')[0]
+        if (status.leastExpensiveRun && status.leastExpensiveRun.runtime == "00:00:00")
+            status.leastExpensiveRun.runtime = "Less than a second"
 
-        this.runsPrDayData = {
+        this.runsPrDayData.set({
             datasets: [
                 {
                     fill:true,
-                    data: Object.keys(this.status.runsPrDay).map(l => { return {
+                    data: Object.keys(status.runsPrDay).map(l => { return {
                         x: new Date(l),
-                        y: this.status.runsPrDay[l]
+                        y: status.runsPrDay[l]
                     }; }),
                     tension: 0.5
                 }
             ]
-        };
+        });
+        this.status.set(status);
+        this.isLoading.set(false);
     }
 
     buildChart(data : { [name:string]:number }){

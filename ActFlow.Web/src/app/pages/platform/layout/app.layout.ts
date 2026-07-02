@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { ConfirmDialog } from "primeng/confirmdialog";
@@ -30,9 +30,9 @@ import { AppTopbar } from './app.topbar';
             </div>
         </div>
         <p-confirmdialog />
-        @if(!cachesLoaded){
+        @if(!cachesLoaded()){
             <p-card header="Loading Caches..." [style]="{'position':'fixed', 'bottom':'0', 'right':'0', 'margin':'10px', 'border':'1px solid #415B61'}">
-                <p-progressbar [value]="cacheLoadStage" />
+                <p-progressbar [value]="cacheLoadStage()" />
             </p-card>
         }
     </div>
@@ -66,8 +66,8 @@ import { AppTopbar } from './app.topbar';
     `
 })
 export class AppLayout {
-    cachesLoaded : boolean = false;
-    cacheLoadStage : number = 0;
+    cachesLoaded = signal<boolean>(false);
+    cacheLoadStage = signal<number>(0);
 
     constructor(
         public workflowStateService : WorkflowStateService
@@ -75,13 +75,14 @@ export class AppLayout {
     }
 
     async ngOnInit(){
-        this.cachesLoaded = false;
+        this.cachesLoaded.set(false);
         var loadMax = 1;
+        var loaded = 1;
 
         await this.workflowStateService.Load();
-        this.cacheLoadStage = (1 / loadMax) * 100;
+        this.cacheLoadStage.set(Math.round((loaded++ / loadMax) * 100));
 
-        this.cacheLoadStage = 100;
-        this.cachesLoaded = true;
+        this.cacheLoadStage.set(100);
+        this.cachesLoaded.set(true);
     }
 }

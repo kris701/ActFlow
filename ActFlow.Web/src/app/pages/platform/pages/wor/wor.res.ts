@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EditorComponent } from "ngx-monaco-editor-v2";
@@ -39,7 +39,7 @@ import { WorkflowStateService } from './services/wor.stateservice';
     WorkflowEditor
 ],
     template: `
-        <app-floattable [values]="workflowStateService.items" [isLoading]="isLoading" (onLoadItems)="workflowStateService.Load()" [rowSelectable]="false" [showAdd]="false">
+        <app-floattable [values]="workflowStateService.items" [isLoading]="isLoading()" (onLoadItems)="workflowStateService.Load()" [rowSelectable]="false" [showAdd]="false">
             <ng-template #tableHeader>
                 <th style="width:2rem"></th>
                 <th textfiltercolumn pSortableColumn="name" displayName="Name"></th>
@@ -71,8 +71,9 @@ import { WorkflowStateService } from './services/wor.stateservice';
             <ng-template #tableExpandedrow let-item>
                 <td colspan="6">
                     <div class="gap-2 result-details-container result-details-border">
-                        @if(itemCache[item.id] && !isLoading){
-                            @let fullItem = itemCache[item.id];
+                        @let items = itemCache();
+                        @if(items[item.id] && !isLoading()){
+                            @let fullItem = items[item.id];
                             <span style="text-align: center;">Workflow Run Details</span>
                             <div class="sub-container">
                                 <p-inputgroup>
@@ -279,9 +280,9 @@ import { WorkflowStateService } from './services/wor.stateservice';
     `
 })
 export class Results {
-    isLoading : boolean = false;
+    isLoading = signal<boolean>(false);
 
-    itemCache : { [id:string]:WorkflowState } = {}
+    itemCache = signal<{ [id:string]:WorkflowState }>({})
 
     editorOptions = {theme: 'vs-dark', language: 'json', automaticLayout: true};
 
@@ -316,33 +317,36 @@ export class Results {
     constructor(private http : HttpClient, public service: MessageService, public workflowStateService : WorkflowStateService, public router : Router){}
 
     async checkCache(id : string){
-        if (this.itemCache[id])
+        var items = this.itemCache();
+        if (items[id])
             return;
-        this.isLoading = true;
+        this.isLoading.set(true);
         var item = await this.workflowStateService.Get(id);
-        this.itemCache[id] = item;
-        this.isLoading = false;
+        items[id] = item;
+        this.itemCache.set(items);
+        this.isLoading.set(false);
     }
 
     async deleteWorkflowRun(id : string){
-        this.isLoading = true;
+        this.isLoading.set(true);
         await firstValueFrom(this.http.delete("/api/results?id=" + id))
         this.service.add({ severity: 'success', summary: 'Workflow Deleted!', detail: 'The archived workflow has been deleted' });
-        this.isLoading = false;
+        this.isLoading.set(false);
         await this.workflowStateService.Load();
     }
 
     async cancelWorkflowRun(id : string){
-        this.isLoading = true;
+        this.isLoading.set(true);
         await firstValueFrom(this.http.delete("/api/execute/cancel?id=" + id))
         this.service.add({ severity: 'success', summary: 'Workflow Cancel Requested!', detail: 'A request to cancel the workflow have been send!' });
-        this.isLoading = false;
+        this.isLoading.set(false);
         await this.workflowStateService.Load();
     }
 
     async rerunWorkflow(id : string){
-        if (this.itemCache[id])
-            sessionStorage.setItem("tmpWorkflowTransfer", this.JSON.stringify((this.itemCache[id]).sourceWorkflow, null, 4));
+        var items = this.itemCache();
+        if (items[id])
+            sessionStorage.setItem("tmpWorkflowTransfer", this.JSON.stringify((items[id]).sourceWorkflow, null, 4));
         sessionStorage.setItem("tmpWorkflowTransfer", this.JSON.stringify((await this.workflowStateService.Get(id)).sourceWorkflow, null, 4));
         this.router.navigateByUrl("workflows/run");
     }

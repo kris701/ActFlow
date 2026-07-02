@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { PopoverModule } from 'primeng/popover';
@@ -66,7 +66,6 @@ import { LayoutService } from '../../../services/layoutService';
 })
 export class AppTopbar {
     constructor(
-        private router: Router,
         public layoutService: LayoutService,
     ) {
     }

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Button } from "primeng/button";
@@ -29,12 +29,12 @@ import { WorkflowStateService } from './services/wor.stateservice';
     }
 })
 export class WorkflowRun {
-    workflow : Workflow = { name: 'name', retryBehaviour: "None", globals: {}, activities: [] } as Workflow;
+    workflow = signal<Workflow>({ name: 'name', retryBehaviour: "None", globals: {}, activities: [] } as Workflow);
 
     constructor(private http : HttpClient, public service: MessageService, public workflowStateService : WorkflowStateService){}
 
     async queueWorkflow(){
-        await firstValueFrom(this.http.post("api/execute/queue", this.workflow));
+        await firstValueFrom(this.http.post("api/execute/queue", this.workflow()));
         this.service.add({ severity: 'success', summary: 'Workflow Started!', detail: 'The workflow have been started!' });
         await this.workflowStateService.Load();
     }

@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output, signal, SimpleChanges } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { EditorComponent } from "ngx-monaco-editor-v2";
 import { MenuItem, MessageService } from "primeng/api";
@@ -36,7 +36,7 @@ import { WorkflowState } from "../../../../../models/WorkflowState";
         @if(!disabled){
             <p-blockui [target]="menubar" [blocked]="!isWorkflowValid" />
             <p-panel #menubar class="menubarpanel">
-                <p-menubar class="menubar" [model]="items" [autoZIndex]="false" [baseZIndex]="1000" />
+                <p-menubar class="menubar" [model]="items()" [autoZIndex]="false" [baseZIndex]="1000" />
             </p-panel>
 
             <div class="flex flex-col h-full flex-grow">
@@ -44,20 +44,20 @@ import { WorkflowState } from "../../../../../models/WorkflowState";
             </div>
 
             <p-inputgroup class="w-full bottombar">
-                @if(isSaveVisible){
+                @if(isSaveVisible()){
                     <p-inputgroup-addon class="w-full">
                         <p-button class="w-full h-full" [style]="{'width':'100%'}" fluid icon="pi pi-save" (onClick)="saveWorkflow()" />
                     </p-inputgroup-addon>
                 }
 
                 <p-inputgroup-addon class="w-full">
-                    @if(isWorkflowValid){
+                    @if(isWorkflowValid()){
                         <p-tag severity="success">Parsed</p-tag>
                     }
                     @else {
                         <p-button class="w-full h-full" [style]="{'width':'100%'}" fluid severity="danger" (onClick)="errorPopover.show($event)">Invalid!</p-button>
                         <p-popover #errorPopover>
-                            <p-message severity="error">{{invalidReason}}</p-message>
+                            <p-message severity="error">{{invalidReason()}}</p-message>
                         </p-popover>
                     }
                 </p-inputgroup-addon>
@@ -81,7 +81,7 @@ import { WorkflowState } from "../../../../../models/WorkflowState";
         }
         @else {
             <div class="flex flex-col h-full flex-grow">
-                <ngx-monaco-editor class="readonlyeditor" style="flex-grow:1" [options]="editorOptions" [ngModel]="workflowText" [disabled]="true"> </ngx-monaco-editor>
+                <ngx-monaco-editor class="readonlyeditor" style="flex-grow:1" [options]="editorOptions" [ngModel]="workflowText()" [disabled]="true"> </ngx-monaco-editor>
             </div>
         }
     `,
@@ -153,16 +153,16 @@ export class WorkflowEditor implements OnChanges {
     Object = Object;
 
     editorOptions = { theme: 'vs-dark', language: 'json', automaticLayout: true, readOnly: false };
-    workflowText: string = '';
-    isSaveVisible: boolean = false;
-    isWorkflowValid: boolean = true;
-    invalidReason: string = "";
+    workflowText = signal<string>('');
+    isSaveVisible = signal<boolean>(false);
+    isWorkflowValid = signal<boolean>(true);
+    invalidReason = signal<string>("");
 
-    items: MenuItem[] = [];
+    items = signal<MenuItem[]>([]);
 
-    workers : ConfigWorkersResult[] = []
-    contexts : BaseContext[] = []
-    activities : BaseActivity[] = []
+    workers = signal<ConfigWorkersResult[]>([])
+    contexts = signal<BaseContext[]>([])
+    activities = signal<BaseActivity[]>([])
 
     constructor(
         private service: MessageService,
@@ -174,27 +174,27 @@ export class WorkflowEditor implements OnChanges {
         var tmpTransfer = sessionStorage.getItem("tmpWorkflowTransfer");
         if (tmpTransfer)
         {
-            this.workflowText = tmpTransfer;
+            this.workflowText.set(tmpTransfer);
             sessionStorage.removeItem("tmpWorkflowTransfer");
         }
         else
-            this.workflowText = JSON.stringify(this.workflow, null, 4)
+            this.workflowText.set(JSON.stringify(this.workflow, null, 4))
 
-        this.workers = await firstValueFrom(this.http.get<ConfigWorkersResult[]>("api/config/workers"));
-        this.contexts = await firstValueFrom(this.http.get<BaseContext[]>("api/config/contexts"));
-        this.activities = await firstValueFrom(this.http.get<BaseActivity[]>("api/config/activities"));
+        var workers = await firstValueFrom(this.http.get<ConfigWorkersResult[]>("api/config/workers"));
+        var contexts = await firstValueFrom(this.http.get<BaseContext[]>("api/config/contexts"));
+        var activities = await firstValueFrom(this.http.get<BaseActivity[]>("api/config/activities"));
 
         var newItems : MenuItem[] = []
         newItems.push({
             label: 'Add Activity',
-            items: this.activities.map(x => { return {
+            items: activities.map(x => { return {
                 label: x.$type + " (" + x.workerID + ")",
                 command: () => this.addActivity(x)
             } as MenuItem })
         });
         newItems.push({
             label: 'Add Context',
-            items: this.contexts.map(x => { return {
+            items: contexts.map(x => { return {
                 label: x.$type,
                 command: () => this.copyContextToClipboard(x, undefined)
             } as MenuItem })
@@ -228,7 +228,11 @@ export class WorkflowEditor implements OnChanges {
                 },
             ]
         })
-        this.items = newItems;
+        this.items.set(newItems);
+
+        this.workers.set(workers);
+        this.contexts.set(contexts);
+        this.activities.set(activities);
 
         this.loadGuidAliases();
     }
@@ -236,7 +240,7 @@ export class WorkflowEditor implements OnChanges {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['script'] && changes['script'].currentValue != changes['script'].previousValue) {
             this.loadGuidAliases();
-            this.workflowText = JSON.stringify(this.workflow, null, 2);
+            this.workflowText.set(JSON.stringify(this.workflow, null, 2));
         }
         if (changes['scriptState'] && changes['scriptState'].currentValue != changes['scriptState'].previousValue) {
             this.loadGuidAliases();
@@ -329,7 +333,7 @@ export class WorkflowEditor implements OnChanges {
         var offset = 1;
         while (this.workflow.globals[name]) name = 'key' + offset++;
         this.workflow.globals[name] = 'value';
-        this.workflowText = JSON.stringify(this.workflow, null, 4);
+        this.workflowText.set(JSON.stringify(this.workflow, null, 4));
         this.service.add({ severity: 'info', summary: 'Info Message', detail: 'Global Added!' });
     }
 
@@ -345,7 +349,7 @@ export class WorkflowEditor implements OnChanges {
         if (toInsert.workerID == 'default')
             delete toInsert.workerID;
         this.workflow.activities.push(toInsert);
-        this.workflowText = JSON.stringify(this.workflow, null, 4);
+        this.workflowText.set(JSON.stringify(this.workflow, null, 4));
         this.service.add({ severity: 'info', summary: 'Info Message', detail: 'Activity Added!' });
     }
 
@@ -362,24 +366,24 @@ export class WorkflowEditor implements OnChanges {
     }
 
     onInput(event : any){
-        this.isSaveVisible = true;
+        this.isSaveVisible.set(true);
     }
 
     public saveWorkflow() : boolean {
         try{
-            this.workflow = JSON.parse(this.workflowText);
+            this.workflow = JSON.parse(this.workflowText());
             this.workflowChange.emit(this.workflow);
             this.service.add({ severity: 'success', summary: 'Success Message', detail: 'Workflow Saved!' });
 
             this.loadGuidAliases();
-            this.isSaveVisible = false;
-            this.isWorkflowValid = true;
-            this.invalidReason = "";
+            this.isSaveVisible.set(false);
+            this.isWorkflowValid.set(true);
+            this.invalidReason.set("");
             return true;
         }
         catch({ name, message } : any){
-            this.isWorkflowValid = false;
-            this.invalidReason = name + ": " + message
+            this.isWorkflowValid.set(false);
+            this.invalidReason.set(name + ": " + message)
         }
         return false;
     }

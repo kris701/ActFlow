@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { PanelMenuModule } from 'primeng/panelmenu';
@@ -10,7 +10,7 @@ import { LayoutService } from '../../../services/layoutService';
     imports: [PanelMenuModule],
     template: `
     <div class="layout-sidebar" [hidden]="!layoutService.state.isMenuExpanded">
-        <p-panelmenu [model]="model" class="layout-menu" [multiple]="true">
+        <p-panelmenu [model]="model()" class="layout-menu" [multiple]="true">
             <ng-template #headericon let-item>
             </ng-template>
         </p-panelmenu>
@@ -57,8 +57,8 @@ import { LayoutService } from '../../../services/layoutService';
     `
 })
 export class AppSidebar {
-    model: MenuItem[] = [];
-    haveMoved: boolean = false;
+    model = signal<MenuItem[]>([]);
+    haveMoved = signal<boolean>(false);
 
     constructor(
         public layoutService: LayoutService,
@@ -76,7 +76,7 @@ export class AppSidebar {
     }
 
     async ngOnInit() {
-        this.model = [
+        this.model.set([
             {
                 label: 'Status',
                 icon: 'pi pi-fw pi-objects-column',
@@ -116,13 +116,13 @@ export class AppSidebar {
                     }
                 ]
             }
-        ];
+        ]);
 
-        this.hideEmptySections(this.model);
+        this.hideEmptySections(this.model());
 
-        if (!this.haveMoved && this.router.routerState.snapshot.url == '/platform') this.gotoFirstPage(this.model);
+        if (!this.haveMoved && this.router.routerState.snapshot.url == '/platform') this.gotoFirstPage(this.model());
 
-        this.setActiveRoute(this.model);
+        this.setActiveRoute(this.model());
     }
 
     hideEmptySections(menu: MenuItem[]) {
@@ -154,7 +154,7 @@ export class AppSidebar {
             if (first.items) {
                 this.gotoFirstPage(first.items);
             } else {
-                this.haveMoved = true;
+                this.haveMoved.set(true);
                 this.router.navigate([first.routerLink]);
             }
         }

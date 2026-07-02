@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService, TreeNode } from 'primeng/api';
@@ -12,9 +12,8 @@ import { Tooltip } from "primeng/tooltip";
 import { TreeTableModule } from 'primeng/treetable';
 import { firstValueFrom } from 'rxjs';
 import { FloatTextInput } from "../../../../common/components/floattextinput";
-import { DirectoryModel } from './models/DirectoryModel';
+import { FileHelpers } from './helpers/fil.helpers';
 import { DirectoryRoot } from './models/DirectoryRoot';
-import { FilesModel } from './models/FilesModel';
 
 @Component({
     selector: 'app-fil-persistent',
@@ -30,7 +29,7 @@ import { FilesModel } from './models/FilesModel';
     Tooltip
 ],
     template: `
-        <p-treetable [value]="files" [scrollable]="true">
+        <p-treetable [value]="files()" [scrollable]="true" [loading]="isLoading()">
             <ng-template #caption>
                 <div class="flex items-center justify-between">
                     <p-button icon="pi pi-refresh" (onClick)="loadTree()"  pTooltip="Reload the file tree"/>
@@ -70,7 +69,7 @@ import { FilesModel } from './models/FilesModel';
                     </td>
                     <td>
                         @if(rowData.size){
-                            {{ humanFileSize(rowData.size) }}
+                            {{ FileHelpers.HumanFileSize(rowData.size) }}
                         }
                     </td>
                     <td>
@@ -157,102 +156,64 @@ import { FilesModel } from './models/FilesModel';
     }
 })
 export class FilesPersistent {
-    files: TreeNode[] = [];
-    root : DirectoryRoot = { directories: [], files: [] } as DirectoryRoot
-    highlightTarget : string | null = null;
+    isLoading = signal<boolean>(false);
+    files = signal<TreeNode[]>([]);
+    root = signal<DirectoryRoot>({ directories: [], files: [] } as DirectoryRoot)
+    highlightTarget = signal<string | null>(null);
+
+    FileHelpers = FileHelpers;
 
     private route = inject(ActivatedRoute);
     constructor(private http : HttpClient, public service: MessageService, public router : Router){}
 
     async ngOnInit(){
+        this.isLoading.set(true);
         await this.loadTree();
-        this.highlightTarget = this.route.snapshot.queryParamMap.get('path');
-        if (this.highlightTarget){
-            this.highlightTarget = this.highlightTarget.replaceAll('/', '\\');
-            var cpy = [...this.files]
-            this.expandToTarget(cpy, this.highlightTarget);
-            this.files = cpy;
+        var highlight = this.route.snapshot.queryParamMap.get('path');
+        if (highlight){
+            highlight = highlight.replaceAll('/', '\\');
+            var cpy = [...this.files()]
+            FileHelpers.ExpandToTarget(cpy, highlight);
+            this.files.set(cpy);
         }
+        this.highlightTarget.set(highlight);
+        this.isLoading.set(false);
     }
 
     async loadTree(){
-        if (this.highlightTarget){
+        this.isLoading.set(true);
+        var highlight = this.highlightTarget();
+        if (highlight){
             this.router.navigate(["files/persistent"]);
-            this.highlightTarget = null;
+            this.highlightTarget.set(null);
         }
-        this.root = await firstValueFrom(this.http.get<DirectoryRoot>("/api/fs/persistent/root"))
+        var root = await firstValueFrom(this.http.get<DirectoryRoot>("/api/fs/persistent/root"))
         var files : TreeNode[] = [];
-        this.root.directories.forEach(x => files.push(this.buildTreeNodeDir(x)))
-        this.root.files.forEach(x => files.push(this.buildTreeNodeFile(x)))
-        this.files = files;
-    }
-
-    buildTreeNodeDir(dir : DirectoryModel) : TreeNode {
-        var children : TreeNode[] = [];
-
-        dir.directories.forEach(x => children.push(this.buildTreeNodeDir(x)))
-        dir.files.forEach(x => children.push(this.buildTreeNodeFile(x)))
-
-        return {
-            label: dir.name,
-            children: children,
-            data: {
-                type: "dir",
-                name: dir.name,
-                path: dir.path,
-            }
-        } as TreeNode
-    }
-
-    buildTreeNodeFile(file : FilesModel) : TreeNode {
-        return {
-            label: file.name,
-            data: {
-                type: "file",
-                name: file.name,
-                extension: file.extension,
-                path: file.path,
-                size: file.sizeB
-            }
-        } as TreeNode
-    }
-
-    //https://stackoverflow.com/a/14919494
-    humanFileSize(bytes : number, si=false, dp=1) {
-        const thresh = si ? 1000 : 1024;
-
-        if (Math.abs(bytes) < thresh) {
-            return bytes + ' B';
-        }
-
-        const units = si
-            ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-            : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-        let u = -1;
-        const r = 10**dp;
-
-        do {
-            bytes /= thresh;
-            ++u;
-        } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
-
-
-        return bytes.toFixed(dp) + ' ' + units[u];
+        root.directories.forEach(x => files.push(FileHelpers.BuildTreeNodeDir(x)))
+        root.files.forEach(x => files.push(FileHelpers.BuildTreeNodeFile(x)))
+        this.root.set(root)
+        this.files.set(files);
+        this.isLoading.set(false);
     }
 
     async createDirectory(path : string, name : string){
+        this.isLoading.set(true);
         await firstValueFrom(this.http.post("/api/fs/persistent/directory", { path: path, name: name }))
         await this.loadTree();
         this.service.add({ severity: 'success', summary: 'Directory Created!', detail: 'The target directory have been created' });
+        this.isLoading.set(false);
     }
 
     async deleteDirectory(path : string){
+        this.isLoading.set(true);
         await firstValueFrom(this.http.delete("/api/fs/persistent/directory", { params: { path: path }}))
         await this.loadTree();
         this.service.add({ severity: 'success', summary: 'Directory Deleted!', detail: 'The target directory have been deleted' });
+        this.isLoading.set(false);
     }
 
     async uploadFiles(fu : FileUpload, path : string){
+        this.isLoading.set(true);
         var files = fu.files;
         var file : File | null = null;
         if (files.length > 0)
@@ -266,22 +227,14 @@ export class FilesPersistent {
         await firstValueFrom(this.http.post("/api/fs/persistent/files", formData));
         await this.loadTree();
         this.service.add({ severity: 'success', summary: 'File Uploaded!', detail: 'The target file have been uploaded' });
+        this.isLoading.set(false);
     }
 
     async deleteFile(path : string){
+        this.isLoading.set(true);
         await firstValueFrom(this.http.delete("/api/fs/persistent/files", { params: { path: path }}))
         await this.loadTree();
         this.service.add({ severity: 'success', summary: 'File Deleted!', detail: 'The target file have been deleted' });
-    }
-
-    expandToTarget(nodes : TreeNode[], target : string){
-        for(var node of nodes){
-            if (node.data.type != "dir")
-                continue;
-            if (target.startsWith(node.data.path))
-                node.expanded = true;
-            if (node.children)
-                this.expandToTarget(node.children, target);
-        }
+        this.isLoading.set(false);
     }
 }

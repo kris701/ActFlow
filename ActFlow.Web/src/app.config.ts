@@ -1,5 +1,4 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter, withEnabledBlockingInitialNavigation, withInMemoryScrolling, withViewTransitions } from '@angular/router';
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
@@ -79,7 +78,6 @@ const ThemePreset = definePreset(Aura, Theme);
 export const appConfig: ApplicationConfig = {
     providers: [
         provideRouter(appRoutes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }), withEnabledBlockingInitialNavigation(), withViewTransitions()),
-        provideAnimationsAsync(),
         MessageService,
         ConfirmationService,
         providePrimeNG({
@@ -92,7 +90,7 @@ export const appConfig: ApplicationConfig = {
             }
         }),
         provideMonacoEditor(monacoConfig),
-        provideZoneChangeDetection(),
+        provideZonelessChangeDetection(),
         LayoutService
     ]
 };

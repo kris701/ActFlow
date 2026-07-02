@@ -8,7 +8,7 @@ import { ToastModule } from 'primeng/toast';
     imports: [RouterModule, ToastModule],
     template: `
         <p-toast position="bottom-left" />
-        <router-outlet [@routeAnimations]="getRouteAnimationData()"></router-outlet>
+        <router-outlet></router-outlet>
     `
 })
 export class AppComponent {
