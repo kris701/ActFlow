@@ -10,6 +10,8 @@ export const appRoutes: Routes = [
         ],
 		children: [
 			{ path: '', component: Status },
+			{ path: 'workflows', loadChildren: () => import('./pages/wor/wor.routes') },
+			{ path: 'files', loadChildren: () => import('./pages/fil/fil.routes') },
 		]
     }
 ];

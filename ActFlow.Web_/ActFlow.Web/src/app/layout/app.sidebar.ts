@@ -22,6 +22,8 @@ import { LayoutService } from './services/layoutService';
 						tuiAsideItem
 						tuiChevron
 						type="button"
+						[routerLinkActiveOptions]="{ exact:true }"
+						[routerLink]="item.routerLink"
 					>
 						{{item.label}}
 						<ng-template>
@@ -30,6 +32,8 @@ import { LayoutService } from './services/layoutService';
 									tuiAsideItem
 									[iconStart]="subitem.icon"
 									type="button"
+									[routerLinkActiveOptions]="{ exact:true }"
+									[routerLink]="subitem.routerLink"
 								>
 									{{subitem.label}}
 								</button>
@@ -38,6 +42,20 @@ import { LayoutService } from './services/layoutService';
 					</button>
 				</tui-aside-group>
 			}
+
+			<hr />
+
+			<footer>
+				<a href="https://github.com/kris701/ActFlow" pButton target="_blank" rel="noopener noreferrer">
+					<button
+						iconStart="github"
+						tuiAsideItem
+						type="button"
+					>
+						Repo
+					</button>
+				</a>
+			</footer>
 	    </aside>
     `
 })
@@ -45,7 +63,8 @@ export class AppSideBar {
 	menuItems = signal<MenuItem[]>([
 		{
 			label: 'Status',
-			icon: 'info'
+			icon: 'info',
+			routerLink: '/'
 		} as MenuItem,
 		{
 			label: 'Workflows',
@@ -53,11 +72,13 @@ export class AppSideBar {
 			items: [
 				{
 					label:'Execute',
-					icon:'circle-play'
+					icon:'circle-play',
+					routerLink: 'workflows/run'
 				},
 				{
 					label:'Results',
-					icon:'table'
+					icon:'table',
+					routerLink: 'workflows/results'
 				}
 			]
 		} as MenuItem,
@@ -66,10 +87,12 @@ export class AppSideBar {
 			icon:'file',
 			items: [
 				{
-					label:'Persistent'
+					label:'Persistent',
+					routerLink: 'files/persistent'
 				},
 				{
-					label:'Temporary'
+					label:'Temporary',
+					routerLink: 'files/temporary'
 				}
 			]
 		} as MenuItem

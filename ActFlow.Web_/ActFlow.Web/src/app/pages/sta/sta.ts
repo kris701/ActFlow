@@ -44,7 +44,7 @@ import { firstValueFrom } from 'rxjs';
 				<span style="opacity:0.5">Newest Run</span>
 			</div>
 
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center status-grid-wide">
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center status-grid-wide" style="max-height:300px">
 				@if(stat.activeWorkflows == 0){
 					<span>No active workflows...</span>
 				}
@@ -53,7 +53,7 @@ import { firstValueFrom } from 'rxjs';
 				}
 				<span style="opacity:0.5">Active Workflow Statuses</span>
 			</div>
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center status-grid-wide">
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center status-grid-wide" style="max-height:300px">
 				@if(stat.archivedWorkflows == 0){
 					<span>No archived workflows...</span>
 				}
