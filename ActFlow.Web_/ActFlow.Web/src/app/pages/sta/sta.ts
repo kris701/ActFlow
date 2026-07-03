@@ -21,88 +21,86 @@ import { firstValueFrom } from 'rxjs';
     }
     @else {
         @let stat = status();
-        <div class="flex flex-col gap-2 w-full h-full">
-			<div class="status-grid-2 w-full">
-				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-					<span class="status-xlargenumber">{{stat.activeWorkflows}}</span>
-					<span style="opacity:0.5">Active Workflows</span>
-				</div>
-				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-					<span class="status-xlargenumber">{{stat.archivedWorkflows}}</span>
-					<span style="opacity:0.5">Archived Workflows</span>
-				</div>
+		<div class="status-grid-2 w-full">
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+				<span class="status-xlargenumber">{{stat.activeWorkflows}}</span>
+				<span style="opacity:0.5">Active Workflows</span>
 			</div>
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+				<span class="status-xlargenumber">{{stat.archivedWorkflows}}</span>
+				<span style="opacity:0.5">Archived Workflows</span>
+			</div>
+		</div>
 
-			<div class="status-grid-3 w-full">
-				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-					<span class="status-largenumber">{{stat.totalRuntime}}</span>
-					<span style="opacity:0.5">Total Runtime</span>
-				</div>
-				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-					<span class="status-largenumber">{{stat.oldestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
-					<span style="opacity:0.5">Oldest Run</span>
-				</div>
-				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-					<span class="status-largenumber">{{stat.latestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
-					<span style="opacity:0.5">Newest Run</span>
-				</div>
+		<div class="status-grid-3 w-full">
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+				<span class="status-largenumber">{{stat.totalRuntime}}</span>
+				<span style="opacity:0.5">Total Runtime</span>
 			</div>
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+				<span class="status-largenumber">{{stat.oldestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
+				<span style="opacity:0.5">Oldest Run</span>
+			</div>
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+				<span class="status-largenumber">{{stat.latestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
+				<span style="opacity:0.5">Newest Run</span>
+			</div>
+		</div>
 
-			<div class="status-grid-2 w-full">
-				<div tuiCardMedium class="flex flex-col w-full h-full items-center" style="max-height:300px">
-					@if(stat.activeWorkflows == 0){
-						<span>No active workflows...</span>
-					}
-					@else {
-						<canvas class="p-4" baseChart [data]="activeStateData()" [options]="stateChartOptions" [type]="'pie'"> </canvas>
-					}
-					<span style="opacity:0.5">Active Workflow Statuses</span>
-				</div>
-				<div tuiCardMedium class="flex flex-col w-full h-full items-center" style="max-height:300px">
-					@if(stat.archivedWorkflows == 0){
-						<span>No archived workflows...</span>
-					}
-					@else {
-						<canvas class="p-4" baseChart [data]="archivedStateData()" [options]="stateChartOptions" [type]="'pie'"> </canvas>
-					}
-					<span style="opacity:0.5">Archived Workflows Statuses</span>
-				</div>
+		<div class="status-grid-2 w-full">
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center" style="max-height:300px">
+				@if(stat.activeWorkflows == 0){
+					<span>No active workflows...</span>
+				}
+				@else {
+					<canvas class="p-4" baseChart [data]="activeStateData()" [options]="stateChartOptions" [type]="'pie'"> </canvas>
+				}
+				<span style="opacity:0.5">Active Workflow Statuses</span>
 			</div>
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center" style="max-height:300px">
+				@if(stat.archivedWorkflows == 0){
+					<span>No archived workflows...</span>
+				}
+				@else {
+					<canvas class="p-4" baseChart [data]="archivedStateData()" [options]="stateChartOptions" [type]="'pie'"> </canvas>
+				}
+				<span style="opacity:0.5">Archived Workflows Statuses</span>
+			</div>
+		</div>
 
-			<div class="status-grid-2 w-full">
-				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-					@if(stat.mostExpensiveRun){
-						<span class="status-largenumber">{{stat.mostExpensiveRun.name}}</span>
-						<span style="font-style: italic;">{{stat.mostExpensiveRun.runtime}}</span>
-					}
-					@else {
-						<span>No workflow runs have been made yet...</span>
-					}
-					<span style="opacity:0.5">Most expensive workflow run</span>
-				</div>
-				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-					@if(stat.leastExpensiveRun){
-						<span class="status-largenumber">{{stat.leastExpensiveRun.name}}</span>
-						<span style="font-style: italic;">{{stat.leastExpensiveRun.runtime}}</span>
-					}
-					@else {
-						<span>No workflow runs have been made yet...</span>
-					}
-					<span style="opacity:0.5">Least expensive workflow run</span>
-				</div>
+		<div class="status-grid-2 w-full">
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+				@if(stat.mostExpensiveRun){
+					<span class="status-largenumber">{{stat.mostExpensiveRun.name}}</span>
+					<span style="font-style: italic;">{{stat.mostExpensiveRun.runtime}}</span>
+				}
+				@else {
+					<span>No workflow runs have been made yet...</span>
+				}
+				<span style="opacity:0.5">Most expensive workflow run</span>
 			</div>
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+				@if(stat.leastExpensiveRun){
+					<span class="status-largenumber">{{stat.leastExpensiveRun.name}}</span>
+					<span style="font-style: italic;">{{stat.leastExpensiveRun.runtime}}</span>
+				}
+				@else {
+					<span>No workflow runs have been made yet...</span>
+				}
+				<span style="opacity:0.5">Least expensive workflow run</span>
+			</div>
+		</div>
 
-			<div class="status-grid-1 w-full">
-				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-					<canvas baseChart [data]="runsPrDayData()" [options]="timelineChartOptions" [type]="timelineChartOptions.type"> </canvas>
-					<span style="opacity:0.5">Runs the last 7 days</span>
-				</div>
+		<div class="status-grid-1 w-full">
+			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+				<canvas baseChart [data]="runsPrDayData()" [options]="timelineChartOptions" [type]="timelineChartOptions.type"> </canvas>
+				<span style="opacity:0.5">Runs the last 7 days</span>
 			</div>
-        </div>
+		</div>
     }
     `,
     host:{
-        class: 'base-view'
+        class: 'base-view gap-2'
     },
     styles: `
 		.status-grid-1 {

@@ -14,14 +14,14 @@ export const appHttpInterceptor: HttpInterceptorFn = (req, next) => {
                 if (error.error.details && error.error.details.length < 256)
 					messageService.open(error.error.details, {
 						label: error.error.message,
-						appearance: 'error',
+						appearance: 'negative',
 						icon:'circle-x',
 						autoClose: 10000
 					}).subscribe();
                 else
 					messageService.open(error.error.message, {
 						label: "Error",
-						appearance: 'error',
+						appearance: 'negative',
 						icon:'circle-x',
 						autoClose: 10000
 					}).subscribe();
@@ -29,7 +29,7 @@ export const appHttpInterceptor: HttpInterceptorFn = (req, next) => {
             else if (error.statusText){
 				messageService.open(error.statusText, {
 					label: "Error",
-					appearance: 'error',
+					appearance: 'negative',
 					icon:'circle-x',
 					autoClose: 10000
 				}).subscribe();

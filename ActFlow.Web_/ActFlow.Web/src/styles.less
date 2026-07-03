@@ -25,6 +25,10 @@
   flex-wrap: wrap;
 }
 
+.flex-grow {
+  flex-grow: 1;
+}
+
 .h-full {
   height:100% !important;
 }
@@ -47,9 +51,13 @@
 }
 
 .base-view {
-	margin:1rem;
 	display:flex;
 	flex-direction: column;
+	width:100%;
+
+	> :last-child {
+		padding-bottom: 1rem !important;
+	}
 }
 
 .m-2 {

@@ -7,8 +7,15 @@ import { TuiRoot } from "@taiga-ui/core";
     standalone: true,
     imports: [RouterModule, TuiRoot],
     template: `
-		<tui-root style="height:100vh"><router-outlet></router-outlet></tui-root>
-    `
+		<tui-root class="rootContainer"><router-outlet></router-outlet></tui-root>
+    `,
+	styles: `
+		::ng-deep .rootContainer .t-root-content {
+			display:flex;
+			height:100vh;
+			width:100vw;
+		}
+	`
 })
 export class AppComponent {
 }
