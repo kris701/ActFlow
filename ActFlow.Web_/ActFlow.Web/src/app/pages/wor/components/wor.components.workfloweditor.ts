@@ -43,6 +43,7 @@ import { WorkflowState } from "../../../models/WorkflowState";
 								size="m"
 								[iconStart]="item.icon"
 								[tuiDropdown]="content"
+								#parent
 							>
 								{{item.label}}
 								<tui-icon/>

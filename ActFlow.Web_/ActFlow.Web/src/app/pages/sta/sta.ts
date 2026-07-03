@@ -14,12 +14,11 @@ import { firstValueFrom } from 'rxjs';
     CommonModule, TuiButton, TuiProgress, TuiCardMedium, BaseChartDirective
 ],
     template: `
-    <button tuiButton appearance="flat" size="s" iconStart="rotate-cw" (click)="loadStatus()" class="status-reloadbutton"></button>
-
     @if(isLoading()){
         <progress tuiProgressBar></progress>
     }
     @else {
+		<button tuiButton appearance="flat" size="s" iconStart="rotate-cw" (click)="loadStatus()" class="status-reloadbutton"></button>
         @let stat = status();
 		<div class="status-grid-2 w-full">
 			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
