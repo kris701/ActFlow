@@ -21,72 +21,82 @@ import { firstValueFrom } from 'rxjs';
     }
     @else {
         @let stat = status();
-        <div class="status-grid w-full h-full">
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-				<span class="status-xlargenumber">{{stat.activeWorkflows}}</span>
-				<span style="opacity:0.5">Active Workflows</span>
-			</div>
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-				<span class="status-xlargenumber">{{stat.archivedWorkflows}}</span>
-				<span style="opacity:0.5">Archived Workflows</span>
-			</div>
-
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-				<span class="status-largenumber">{{stat.totalRuntime}}</span>
-				<span style="opacity:0.5">Total Runtime</span>
-			</div>
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-				<span class="status-largenumber">{{stat.oldestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
-				<span style="opacity:0.5">Oldest Run</span>
-			</div>
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-				<span class="status-largenumber">{{stat.latestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
-				<span style="opacity:0.5">Newest Run</span>
+        <div class="flex flex-col gap-2 w-full h-full">
+			<div class="status-grid-2 w-full">
+				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+					<span class="status-xlargenumber">{{stat.activeWorkflows}}</span>
+					<span style="opacity:0.5">Active Workflows</span>
+				</div>
+				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+					<span class="status-xlargenumber">{{stat.archivedWorkflows}}</span>
+					<span style="opacity:0.5">Archived Workflows</span>
+				</div>
 			</div>
 
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center status-grid-wide" style="max-height:300px">
-				@if(stat.activeWorkflows == 0){
-					<span>No active workflows...</span>
-				}
-				@else {
-					<canvas baseChart [data]="activeStateData()" [options]="stateChartOptions" [type]="'pie'"> </canvas>
-				}
-				<span style="opacity:0.5">Active Workflow Statuses</span>
-			</div>
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center status-grid-wide" style="max-height:300px">
-				@if(stat.archivedWorkflows == 0){
-					<span>No archived workflows...</span>
-				}
-				@else {
-					<canvas baseChart [data]="archivedStateData()" [options]="stateChartOptions" [type]="'pie'"> </canvas>
-				}
-				<span style="opacity:0.5">Archived Workflows Statuses</span>
+			<div class="status-grid-3 w-full">
+				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+					<span class="status-largenumber">{{stat.totalRuntime}}</span>
+					<span style="opacity:0.5">Total Runtime</span>
+				</div>
+				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+					<span class="status-largenumber">{{stat.oldestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
+					<span style="opacity:0.5">Oldest Run</span>
+				</div>
+				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+					<span class="status-largenumber">{{stat.latestRun | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
+					<span style="opacity:0.5">Newest Run</span>
+				</div>
 			</div>
 
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-				@if(stat.mostExpensiveRun){
-					<span class="status-largenumber">{{stat.mostExpensiveRun.name}}</span>
-					<span style="font-style: italic;">{{stat.mostExpensiveRun.runtime}}</span>
-				}
-				@else {
-					<span>No workflow runs have been made yet...</span>
-				}
-				<span style="opacity:0.5">Most expensive workflow run</span>
-			</div>
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center">
-				@if(stat.leastExpensiveRun){
-					<span class="status-largenumber">{{stat.leastExpensiveRun.name}}</span>
-					<span style="font-style: italic;">{{stat.leastExpensiveRun.runtime}}</span>
-				}
-				@else {
-					<span>No workflow runs have been made yet...</span>
-				}
-				<span style="opacity:0.5">Least expensive workflow run</span>
+			<div class="status-grid-2 w-full">
+				<div tuiCardMedium class="flex flex-col w-full h-full items-center" style="max-height:300px">
+					@if(stat.activeWorkflows == 0){
+						<span>No active workflows...</span>
+					}
+					@else {
+						<canvas class="p-4" baseChart [data]="activeStateData()" [options]="stateChartOptions" [type]="'pie'"> </canvas>
+					}
+					<span style="opacity:0.5">Active Workflow Statuses</span>
+				</div>
+				<div tuiCardMedium class="flex flex-col w-full h-full items-center" style="max-height:300px">
+					@if(stat.archivedWorkflows == 0){
+						<span>No archived workflows...</span>
+					}
+					@else {
+						<canvas class="p-4" baseChart [data]="archivedStateData()" [options]="stateChartOptions" [type]="'pie'"> </canvas>
+					}
+					<span style="opacity:0.5">Archived Workflows Statuses</span>
+				</div>
 			</div>
 
-			<div tuiCardMedium class="flex flex-col w-full h-full items-center status-grid-wide-xl">
-				<canvas baseChart [data]="runsPrDayData()" [options]="timelineChartOptions" [type]="timelineChartOptions.type"> </canvas>
-				<span style="opacity:0.5">Runs the last 7 days</span>
+			<div class="status-grid-2 w-full">
+				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+					@if(stat.mostExpensiveRun){
+						<span class="status-largenumber">{{stat.mostExpensiveRun.name}}</span>
+						<span style="font-style: italic;">{{stat.mostExpensiveRun.runtime}}</span>
+					}
+					@else {
+						<span>No workflow runs have been made yet...</span>
+					}
+					<span style="opacity:0.5">Most expensive workflow run</span>
+				</div>
+				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+					@if(stat.leastExpensiveRun){
+						<span class="status-largenumber">{{stat.leastExpensiveRun.name}}</span>
+						<span style="font-style: italic;">{{stat.leastExpensiveRun.runtime}}</span>
+					}
+					@else {
+						<span>No workflow runs have been made yet...</span>
+					}
+					<span style="opacity:0.5">Least expensive workflow run</span>
+				</div>
+			</div>
+
+			<div class="status-grid-1 w-full">
+				<div tuiCardMedium class="flex flex-col w-full h-full items-center">
+					<canvas baseChart [data]="runsPrDayData()" [options]="timelineChartOptions" [type]="timelineChartOptions.type"> </canvas>
+					<span style="opacity:0.5">Runs the last 7 days</span>
+				</div>
 			</div>
         </div>
     }
@@ -95,21 +105,23 @@ import { firstValueFrom } from 'rxjs';
         class: 'base-view'
     },
     styles: `
-		.status-grid {
+		.status-grid-1 {
+			display:grid;
+			grid-auto-flow: dense;
+  			grid-gap: 1rem;
+    		grid-template-columns: repeat(1, 1fr);
+		}
+		.status-grid-2 {
+			display:grid;
+			grid-auto-flow: dense;
+  			grid-gap: 1rem;
+    		grid-template-columns: repeat(2, 1fr);
+		}
+		.status-grid-3 {
 			display:grid;
 			grid-auto-flow: dense;
   			grid-gap: 1rem;
     		grid-template-columns: repeat(3, 1fr);
-		}
-
-		.status-grid-wide {
-			grid-column: span 2;
-			grid-row: span 2;
-		}
-
-		.status-grid-wide-xl {
-			grid-column: span 3;
-			grid-row: span 2;
 		}
 
         .status-xlargenumber {
@@ -132,14 +144,23 @@ export class Status {
     status = signal<StatusModel>({} as StatusModel);
     isLoading = signal<boolean>(false);
 
-    stateChartOptions : any = { type:'pie' };
+    stateChartOptions : any = {
+		type:'pie',
+		plugins: {
+            legend: {
+				display: false
+			}
+        }
+	};
     activeStateData = signal<any>({})
     archivedStateData = signal<any>({})
 
     timelineChartOptions : any = {
         type:'line',
         plugins: {
-            legend: false
+            legend: {
+				display: false
+			}
         },
         scales: {
             x: {
