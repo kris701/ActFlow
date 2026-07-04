@@ -16,7 +16,7 @@ import { AppTopBar } from "./app.topbar";
     <div class="layout-wrapper">
 		<div class="flex flex-col w-full h-full">
 			<app-topbar></app-topbar>
-			<div class="flex flex-row w-full h-full" style="overflow:hidden">
+			<div class="flex flex-row w-full h-full" style="overflow:hidden;max-width:100vw">
 				<app-sidebar></app-sidebar>
 				<div class="layout-main-container">
 					<tui-scrollbar class="layout-main">
@@ -62,7 +62,7 @@ import { AppTopBar } from "./app.topbar";
 			display: flex;
 		}
 
-		::ng-deep .layout-main .t-content {
+		::ng-deep .layout-main > .t-content {
 			padding:1rem;
 			display:flex;
 			block-size:auto !important;
