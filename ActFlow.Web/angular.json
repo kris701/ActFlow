@@ -20,6 +20,9 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+			"loader":{
+				".ttf":"binary"
+			},
             "browser": "src/main.ts",
 			"outputPath": "out/web",
             "tsConfig": "tsconfig.app.json",
