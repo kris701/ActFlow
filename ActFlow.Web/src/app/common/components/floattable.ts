@@ -1,226 +1,202 @@
-import { CommonModule, NgTemplateOutlet } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, OnChanges, Output, signal, SimpleChanges, TemplateRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import saveAs from 'file-saver';
-import { MenuItem } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { ContextMenuModule } from 'primeng/contextmenu';
-import { Table, TableModule, TableService } from 'primeng/table';
-import { firstValueFrom } from 'rxjs';
-import { BaseCRUDInterface } from '../interfaces/baseCRUDInterface';
-import { TableEmptyMessage } from './tables/emptymessage';
+import { TuiTable, TuiTablePagination } from '@taiga-ui/addon-table';
+import { TuiButton, TuiDropdown, TuiIcon, TuiLoader, TuiScrollbar } from "@taiga-ui/core";
+import { TuiChevron, TuiDataListWrapper } from '@taiga-ui/kit';
+import { TuiBlockStatus } from '@taiga-ui/layout';
 
 @Component({
     selector: 'app-floattable',
-    providers: [
-        // some tomfuckery was required to make the templates work: https://github.com/primefaces/primeng/issues/7985
-        TableService,
-        {
-            provide: Table,
-            useFactory: (wrapper: FloatTable) => wrapper.table,
-            deps: [FloatTable]
-        }
-    ],
-    imports: [FormsModule, CommonModule, TableModule, ButtonModule, TableEmptyMessage, ContextMenuModule, NgTemplateOutlet],
+    imports: [FormsModule, CommonModule, TuiTable, TuiScrollbar, TuiButton, TuiChevron, TuiDropdown, TuiDataListWrapper, TuiTablePagination, TuiLoader, TuiBlockStatus, TuiIcon],
     template: `
-        <p-contextmenu #cm [model]="contextMenuItems" (onHide)="contextMenuSelection = null" [hidden]="!showContextMenu"/>
-        <p-table
-            #dt1
-            class="h-full flex-grow"
-            [scrollable]="true"
-            [scrollHeight]="scrollHeight"
-            [value]="values"
-            stateStorage="local"
-            [stateKey]="stateKey"
-            [dataKey]="dataKey"
-            sortMode="multiple"
-            [loading]="isLoading"
-            [paginator]="values.length > defaultPageSize"
-            [rows]="defaultPageSize"
-            [rowsPerPageOptions]="[defaultPageSize, defaultPageSize * 2, defaultPageSize * 4]"
-            [showCurrentPageReport]="true"
-            paginatorDropdownAppendTo="body"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
-            [(contextMenuSelection)]="contextMenuSelection"
-            [contextMenu]="cm"
-            [expandedRowKeys]="expandedRows"
-        >
-            @if (showClear || showAdd || showRefresh || additionalheader) {
-                <ng-template #caption>
-                    <div class="flex items-center justify-between">
-                        @if (showClear) {
-                            <p-button label="Clear" text icon="pi pi-filter-slash" (click)="dt1.clear(); dt1.stateKey ? localStorage.removeItem(dt1.stateKey) : null" />
-                        }
-                        @if (showAdd) {
-                            <p-button icon="pi pi-plus" label="Add" (click)="onAddItem.emit()" />
-                        }
-                        @if (showImport) {
-                            <input type="file" (change)="importFile($event)" accept=".json" #fileUpload [style]="{ display: 'none' }" />
-                            <p-button label="Import" icon="pi pi-file-import" (onClick)="fileUpload.click()"/>
-                        }
-                        <ng-container [ngTemplateOutlet]="additionalheader"></ng-container>
-                        @if (showRefresh) {
-                            <p-button icon="pi pi-refresh" (click)="expandedRows = {};onLoadItems.emit()" />
-                        }
-                    </div>
-                </ng-template>
-            }
-            <ng-template pTemplate="header">
-                @if (values.length > 0 && tableHeader) {
-                    <tr>
-                        <ng-container [ngTemplateOutlet]="tableHeader"></ng-container>
-                    </tr>
-                }
-            </ng-template>
-            <ng-template pTemplate="expandedrow" let-item>
-                <tr>
-                    <ng-container [ngTemplateOutlet]="tableExpandedrow" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-item let-expanded="expanded">
-                @if (tableRows) {
-                    @if (rowSelectable) {
-                        <tr (click)="onShowItem.emit(item.id)" class="rowclickable" [pContextMenuRow]="item">
-                            <ng-container [ngTemplateOutlet]="tableRows" [ngTemplateOutletContext]="{ $implicit: item, expanded: expanded  }"></ng-container>
-                        </tr>
-                    } @else {
-                        <tr [pContextMenuRow]="item">
-                            <ng-container [ngTemplateOutlet]="tableRows" [ngTemplateOutletContext]="{ $implicit: item, expanded: expanded  }"></ng-container>
-                        </tr>
-                    }
-                }
-            </ng-template>
-            <ng-template #emptymessage>
-                <td emptymessage>{{ noItemsMessage }}</td>
-            </ng-template>
-        </p-table>
+		<div class="app-floattable">
+			<tui-loader [inheritColor]="true" [overlay]="true" size="xxl" [loading]="isLoading()">
+				@if(values.length == 0){
+					<tui-block-status>
+						<tui-icon tuiSlot="top" icon="grid-2x2-x" />
+
+						<h3>No Data</h3>
+
+						No data to display.
+					</tui-block-status>
+				}
+				@else {
+					@if(showAdd || showRefresh){
+						<div class="flex flex-row gap-2 p-2" style="padding-bottom:0px">
+							@if(showRefresh){
+								<button tuiButton iconStart="rotate-cw" size="s" appearance="info" (click)="onLoadItems.emit()"></button>
+							}
+							@if(showAdd){
+								<button tuiButton iconStart="plus" size="s" appearance="info" (click)="onAddItem.emit()"></button>
+							}
+						</div>
+					}
+					<tui-scrollbar class="w-full h-full">
+						<table tuiTable class="w-full h-full">
+							<thead>
+								<tr>
+									@if(expandable){
+										<th tuiTh></th>
+									}
+									<ng-container [ngTemplateOutlet]="tableHeader"></ng-container>
+								</tr>
+							</thead>
+							@for (item of displayValues(); track page() * pageSize() + i; let i = $index){
+								@let fullIndex = page() * pageSize() + i;
+								<tbody tuiTbody>
+									<tr>
+										@if(expandable){
+											<td tuiTd class="app-floattable-expander">
+												<button
+													appearance="flat-grayscale"
+													size="xs"
+													tuiIconButton
+													type="button"
+													[tuiChevron]="state[fullIndex] ?? false"
+													(click)="state[fullIndex] = !state[fullIndex];onRowExpanded.emit(item)"
+												>
+													Toggle
+												</button>
+											</td>
+										}
+										<ng-container [ngTemplateOutlet]="tableRows" [ngTemplateOutletContext]="{ $implicit: item  }"></ng-container>
+									</tr>
+								</tbody>
+
+								<tbody tuiTableExpand [expanded]="state[fullIndex] ?? false">
+									<tr>
+										<ng-container [ngTemplateOutlet]="tableExpandedrow" [ngTemplateOutletContext]="{ $implicit: item  }"></ng-container>
+									</tr>
+								</tbody>
+							}
+						</table>
+					</tui-scrollbar>
+					<div class="app-floattable-footer">
+						<tui-table-pagination
+								[(size)]="pageSize"
+								[(page)]="page"
+								[total]="values.length"
+								[items]="pageSizes"
+								(pageChange)="processPage()"
+								(sizeChange)="processPage()"
+							/>
+					</div>
+				}
+			</tui-loader>
+		</div>
     `,
     host: {
-        class: 'flex flex-col gap-2 p-2',
-        style: 'flex-grow:1;overflow:hidden;',
-        '[style.height]': "flexheight ? '100%' : '0px'"
+		class:'w-full h-full'
     },
     styles: `
-        ::ng-deep.p-datatable {
-            margin-top: 0px !important;
-            border-radius: var(--p-button-border-radius) !important;
-        }
+		.app-floattable {
+			border: 2px solid var(--tui-border-normal);
+			border-radius: var(--tui-radius-l);
+			display:flex;
+			height:100%;
+			width:100%;
+			overflow:hidden;
 
-        ::ng-deep.p-datatable-header {
-            border-width: 0px !important;
-        }
+			::ng-deep tui-loader {
+				display:flex;
+				height:100%;
+				width:100%;
+				flex-direction: column;
+				> .t-content {
+					display:flex;
+					height:100%;
+					width:100%;
+					flex-direction: column;
+					gap:0.5rem;
+				}
 
-        ::ng-deep:root {
-            --p-datatable-header-cell-background: var(--p-content-border-color) !important;
-            --p-treetable-header-cell-background: var(--p-content-border-color) !important;
-        }
+				> .t-loader {
+					position:absolute;
+					width:100%;
+					height:100%;
+				}
+			}
 
-        ::ng-deep:root[class*='dark'] {
-            --p-datatable-header-cell-background: var(--p-content-border-color) !important;
-            --p-treetable-header-cell-background: var(--p-content-border-color) !important;
-        }
+			::ng-deep tui-scrollbar {
+				> .t-content {
+					width:0px;
+				}
+			}
 
-        .rowclickable {
-            cursor: pointer;
-        }
-        .rowclickable:hover {
-            background: var(--p-datatable-row-hover-background) !important;
-        }
+			.app-floattable-footer {
+				display:flex;
+				margin-bottom:0.5rem;
+				padding-left:2rem;
+				padding-right:2rem;
 
-        ::ng-deep.p-datatable-table-container {
-            border-width: 1px 1px 1px 1px;
-            border-color: var(--p-datatable-body-cell-border-color);
-            border-style: solid;
-            border-radius: var(--p-button-border-radius) !important;
-        }
+				tui-table-pagination {
+					flex: 1
+				}
+			}
+
+			::ng-deep table {
+				border-radius: var(--tui-radius-l);
+			}
+
+			::ng-deep th {
+				background-color: var(--tui-background-base-alt) !important;
+			}
+
+			::ng-deep .app-floattable-expander {
+				padding:0px;
+
+				button {
+					width:100%;
+					height:100%;
+					border-radius: 0px;
+				}
+			}
+		}
     `
 })
-export class FloatTable {
-    @ViewChild('dt1', { static: true }) table!: Table;
+export class FloatTable implements OnChanges {
     @ContentChild('tableHeader', { static: false }) tableHeader: TemplateRef<any> | undefined;
     @ContentChild('tableRows', { static: false }) tableRows: TemplateRef<any> | undefined;
     @ContentChild('tableExpandedrow', { static: false }) tableExpandedrow: TemplateRef<any> | undefined;
     @ContentChild('additionalheader', { static: false }) additionalheader: TemplateRef<any> | undefined;
 
-    @Input() flexheight: boolean = false;
-
     @Input() disabled: boolean = false;
-    @Input() isLoading: boolean = false;
+    @Input() isLoading = signal<boolean>(false);
 
-    @Input() showClear: boolean = true;
-    @Input() showAdd: boolean = true;
-    @Input() showRefresh: boolean = true;
-    @Input() showImport: boolean = false;
+    @Input() showAdd: boolean = false;
+    @Input() showRefresh: boolean = false;
 
-    @Input() rowSelectable: boolean = true;
-
-    @Input() dataKey: string = 'id';
-    @Input() stateKey: string | undefined = undefined;
-
-    @Input() noItemsMessage: string = 'No items to see...';
+	@Input() expandable: boolean = false;
 
     @Input() values: any[] = [];
-
-    localStorage = localStorage;
-
-    expandedRows: any = {};
+    displayValues = signal<any[]>([]);
 
     constructor(private http : HttpClient){
     }
 
-    @Input() showContextMenu: boolean = false;
-    public contextMenuItems: MenuItem[] = [
-        { label: 'Clone', icon: 'pi pi-copy', command: async () => {
-                if (this.contextMenuSelection && this.interface){
-                    var newCloned = await firstValueFrom(this.http.get<any>(this.interface.getEndpoint + '?ID=' + this.contextMenuSelection.id));
-                    newCloned.id = '';
-                    this.interface.currentItem = newCloned
-                    this.interface.showDialog = true;
-                }
-            }
-        },
-        { label: 'Export', icon: 'pi pi-file-export', command: async () => {
-                if (this.contextMenuSelection && this.interface){
-                    var itemToExport = await firstValueFrom(this.http.get<any>(this.interface.getEndpoint + '?ID=' + this.contextMenuSelection.id));
-                    var itemToExportBlob = new Blob([JSON.stringify(itemToExport)], {
-                        type: 'text/plain'
-                    });
-                    saveAs(itemToExportBlob, itemToExport.name + ".json");
-                }
-            }
-        },
-        { label: 'Delete', icon: 'pi pi-times', command: async () => {
-                if (this.contextMenuSelection && this.interface){
-                    this.interface.currentItem = { id: this.contextMenuSelection.id }
-                    await this.interface.deleteItem();
-                }
-            }
-        },
-    ]
-    contextMenuSelection: any;
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes['values'] && changes['values'].previousValue != changes['values'].currentValue){
+			this.page.set(0);
+			this.pages.set(Math.floor(this.values.length / this.pageSize()) + 1)
+			this.processPage();
+		}
+	}
 
     @Output() onAddItem: EventEmitter<any> = new EventEmitter();
     @Output() onLoadItems: EventEmitter<any> = new EventEmitter();
-    @Output() onShowItem: EventEmitter<string> = new EventEmitter();
+    @Output() onRowExpanded: EventEmitter<any> = new EventEmitter();
 
-    @Input() defaultPageSize: number = 25;
-    @Input() scrollHeight: string = 'flex';
+    @Input() pageSize = signal<number>(25);
+	page = signal<number>(0);
+	pages = signal<number>(0);
+	readonly pageSizes = [10, 25, 50, 100, 1000];
+	processPage(){
+		var fromIndex = this.pageSize() * this.page();
+		var toIndex = fromIndex + this.pageSize();
+		this.displayValues.set(this.values.slice(fromIndex, toIndex));
+	}
 
-    @Input() interface : BaseCRUDInterface | null = null;
-
-    async importFile(event : any){
-        if (this.interface){
-            var files: File[] = Array.from(event.target.files);
-            if (files && files.length > 0) {
-                var target = files[0];
-                var text = await target.text()
-                var json = JSON.parse(text);
-                json.id = '';
-                this.interface.currentItem = json
-                this.interface.showDialog = true;
-                event.target.value = '';
-            }
-        }
-    }
+	readonly state: Record<number, boolean> = {};
 }
