@@ -147,7 +147,7 @@ import { WorkflowStateService } from './services/wor.stateservice';
 
 						@if(fullItem.files.length > 0){
 							<tui-accordion>
-								<button tuiAccordion>View Filw Actions</button>
+								<button tuiAccordion>View File Actions</button>
 								<tui-expand>
 										<div class="flex flex-col gap-2">
 											<span>See what file actions was performed during the execution</span>
