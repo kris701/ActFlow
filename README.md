@@ -17,7 +17,7 @@ The intention for this is to enable you to run complex business logic by means o
 This makes it significantly easier to make workflows such as one for waiting and answering emails, keep a database updated with data an LLM found from an email, integrity check data in a database, etc.
 The ActFlow engine in of itself is very independent and does not require any complex scheduling system to run.
 
-<img alt="ezgif-38bb13d50e11c73e" src="https://github.com/user-attachments/assets/ab0b15c4-cb63-4206-88c4-fcab62f7cb6d" />
+<img alt="ezgif-16ed66e1220f4e52" src="https://github.com/user-attachments/assets/1145945c-c98e-4431-8e1c-8de0e0ba498e" />
 
 By its core, it consists of a set of workers and activities.
 Workers execute activities, while activities define some input data for the workers.
