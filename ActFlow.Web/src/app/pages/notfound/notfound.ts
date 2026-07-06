@@ -1,33 +1,44 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { LayoutService } from '../../services/layoutService';
+import { TuiButton, TuiTitle } from '@taiga-ui/core';
+import { TuiAvatar } from '@taiga-ui/kit';
+import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 
 @Component({
     selector: 'app-notfound',
     standalone: true,
-    imports: [RouterModule, ButtonModule],
+    imports: [RouterModule, TuiCardLarge, TuiHeader, TuiTitle, TuiButton, TuiAvatar],
     template: `
-        <div class="flex items-center justify-center min-h-screen overflow-hidden">
-            <div class="flex flex-col items-center justify-center">
-                @if (layoutService.state.isDarkMode) {
-                    <img class="mb-8 w-32 shrink-0 mx-auto" src="src/assets/images/logo.png" />
-                } @else {
-                    <img class="mb-8 w-32 shrink-0 mx-auto" src="src/assets/images/logo_inv.png" />
-                }
-                <div style="border-radius: 15px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 2%, rgba(33, 150, 243, 0) 110%)">
-                    <div class="w-full card py-20 px-8 sm:px-20" style="border-radius: 15px">
-                        <span class="text-primary font-bold text-3xl">404</span>
-                        <h1 class="font-bold text-3xl lg:text-5xl mb-2">Not Found</h1>
-                        <div class="mb-8">Requested resource is not available.</div>
-                        <p-button label="Go to Home Page" routerLink="/" />
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="flex h-full items-center">
+			<div tuiCardLarge appearance="floating">
+				<header tuiHeader>
+					<h1 tuiTitle>
+						Unknown route!
+						<span tuiSubtitle>Requested resource is not available</span>
+					</h1>
+
+					<aside tuiAccessories>
+						<div
+							appearance="primary"
+							tuiAvatar="shield-question-mark"
+						></div>
+					</aside>
+				</header>
+
+				<footer>
+					<button
+						appearance="secondary"
+						size="m"
+						tuiButton
+						type="button"
+						routerLink="/"
+					>
+						Home
+					</button>
+				</footer>
+			</div>
+		</div>
     `
 })
 export class Notfound {
-    constructor(public layoutService: LayoutService) {
-    }
 }
