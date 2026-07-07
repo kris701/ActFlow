@@ -66,9 +66,11 @@ import { TuiBlockStatus } from '@taiga-ui/layout';
 								</tbody>
 
 								<tbody tuiTableExpand [expanded]="state[fullIndex] ?? false">
-									<tr>
-										<ng-container [ngTemplateOutlet]="tableExpandedrow" [ngTemplateOutletContext]="{ $implicit: item  }"></ng-container>
-									</tr>
+									@if(state[fullIndex] ?? false){
+										<tr>
+											<ng-container [ngTemplateOutlet]="tableExpandedrow" [ngTemplateOutletContext]="{ $implicit: item  }"></ng-container>
+										</tr>
+									}
 								</tbody>
 							}
 						</table>
@@ -171,6 +173,7 @@ export class FloatTable implements OnChanges {
 	@Input() expandable: boolean = false;
 
     @Input() values: any[] = [];
+	internalValues: any[] = [];
     displayValues = signal<any[]>([]);
 
     constructor(private http : HttpClient){
@@ -178,8 +181,9 @@ export class FloatTable implements OnChanges {
 
 	ngOnChanges(changes: SimpleChanges): void {
 		if (changes['values'] && changes['values'].previousValue != changes['values'].currentValue){
+			this.internalValues = changes['values'].currentValue;
 			this.page.set(0);
-			this.pages.set(Math.floor(this.values.length / this.pageSize()) + 1)
+			this.pages.set(Math.floor(this.internalValues.length / this.pageSize()) + 1)
 			this.processPage();
 		}
 	}
@@ -195,8 +199,56 @@ export class FloatTable implements OnChanges {
 	processPage(){
 		var fromIndex = this.pageSize() * this.page();
 		var toIndex = fromIndex + this.pageSize();
-		this.displayValues.set(this.values.slice(fromIndex, toIndex));
+		this.displayValues.set(this.internalValues.slice(fromIndex, toIndex));
 	}
 
-	readonly state: Record<number, boolean> = {};
+	state: Record<number, boolean> = {};
+}
+
+@Component({
+    selector: 'div[tuiThSortable]',
+    imports: [CommonModule, TuiButton],
+    template: `
+		<ng-content></ng-content>
+		@if(tuiThSortable){
+			<button tuiButton [iconStart]="icon()" size="s" appearance="flat-grayscale" (click)="sort()"></button>
+		}
+    `,
+	host:{
+		class: 'flex flex-row gap-2',
+		style: 'align-items:center'
+	}
+})
+export class TableSortableColumn {
+    @Input() tuiThSortable: string | undefined = '';
+
+	table : FloatTable;
+	icon = signal<string | null | undefined>("arrow-down-wide-narrow");
+
+	constructor(table : FloatTable){
+		this.table = table;
+	}
+
+	sort(){
+		if(this.tuiThSortable){
+			var asc = this.icon() == 'arrow-down-wide-narrow';
+
+			var values = [...this.table.internalValues];
+			var sorted = values.sort((a : any,b : any) => {
+				if (a[this.tuiThSortable as string] < b[this.tuiThSortable as string])
+					return asc ? 1 : -1;
+				if (a[this.tuiThSortable as string] > b[this.tuiThSortable as string])
+					return asc ? -1 : 1;
+				return 0;
+			});
+			this.table.internalValues = sorted;
+			this.table.state = [];
+			this.table.processPage();
+
+			if (asc)
+				this.icon.set('arrow-up-wide-narrow');
+			else
+				this.icon.set('arrow-down-wide-narrow');
+		}
+	}
 }

@@ -8,7 +8,7 @@ import { TuiButton, TuiExpand, TuiGroup, TuiNotificationService } from '@taiga-u
 import { TuiAccordion, TuiChip, TuiProgressBar } from '@taiga-ui/kit';
 import { EditorComponent } from "ngx-monaco-editor-v2";
 import { firstValueFrom } from 'rxjs';
-import { FloatTable } from "../../common/components/floattable";
+import { FloatTable, TableSortableColumn } from "../../common/components/floattable";
 import { WorkflowState } from '../../models/WorkflowState';
 import { WorkflowEditor } from "./components/wor.components.workfloweditor";
 import { WorkflowStateService } from './services/wor.stateservice';
@@ -28,15 +28,16 @@ import { WorkflowStateService } from './services/wor.stateservice';
     EditorComponent,
     TuiAccordion,
     TuiExpand,
-    WorkflowEditor
+    WorkflowEditor,
+    TableSortableColumn
 ],
     template: `
 	<app-floattable [values]="workflowStateService.items()" [expandable]="true" [isLoading]="isLoading" (onRowExpanded)="checkCache($event.id)" (onLoadItems)="loadItems()" [showRefresh]="true">
 		<ng-template #tableHeader>
-			<th tuiTh>Name</th>
-			<th tuiTh>Status</th>
-			<th tuiTh>Started At</th>
-			<th tuiTh>Ended At</th>
+			<th tuiTh><div tuiThSortable="name">Name</div></th>
+			<th tuiTh><div tuiThSortable="status">Status</div></th>
+			<th tuiTh><div tuiThSortable="startedAt">Started At</div></th>
+			<th tuiTh><div tuiThSortable="endedAt">Ended At</div></th>
 			<th tuiTh style="width:2rem"></th>
 		</ng-template>
 		<ng-template #tableRows let-item>
