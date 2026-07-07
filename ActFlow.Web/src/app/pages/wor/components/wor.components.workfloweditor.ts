@@ -46,7 +46,6 @@ import { WorkflowState } from "../../../models/WorkflowState";
 								#parent
 							>
 								{{item.label}}
-								<tui-icon/>
 								<ng-template #content>
 									<tui-data-list>
 										@for(subitem of item.items; track subitem){

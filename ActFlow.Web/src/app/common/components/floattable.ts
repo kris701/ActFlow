@@ -79,7 +79,7 @@ import { TuiBlockStatus } from '@taiga-ui/layout';
 						<tui-table-pagination
 								[(size)]="pageSize"
 								[(page)]="page"
-								[total]="values.length"
+								[total]="internalValues.length"
 								[items]="pageSizes"
 								(pageChange)="processPage()"
 								(sizeChange)="processPage()"
@@ -155,6 +155,10 @@ import { TuiBlockStatus } from '@taiga-ui/layout';
 					border-radius: 0px;
 				}
 			}
+
+			th[tuiTh] {
+				align-items:center;
+			}
 		}
     `
 })
@@ -192,6 +196,9 @@ export class FloatTable implements OnChanges {
     @Output() onLoadItems: EventEmitter<any> = new EventEmitter();
     @Output() onRowExpanded: EventEmitter<any> = new EventEmitter();
 
+	@Output() onSortApplied: EventEmitter<string> = new EventEmitter<string>();
+	@Output() onFilterApplied: EventEmitter<any> = new EventEmitter();
+
     @Input() pageSize = signal<number>(25);
 	page = signal<number>(0);
 	pages = signal<number>(0);
@@ -202,53 +209,20 @@ export class FloatTable implements OnChanges {
 		this.displayValues.set(this.internalValues.slice(fromIndex, toIndex));
 	}
 
+	applySort(newValues : any[], column : string){
+		this.internalValues = newValues;
+		this.state = [];
+		this.processPage();
+		this.onSortApplied.emit(column);
+	}
+
+	applyFilter(newValues : any[]){
+		this.internalValues = newValues;
+		this.state = [];
+		this.processPage();
+		this.onFilterApplied.emit();
+	}
+
 	state: Record<number, boolean> = {};
 }
 
-@Component({
-    selector: 'div[tuiThSortable]',
-    imports: [CommonModule, TuiButton],
-    template: `
-		<ng-content></ng-content>
-		@if(tuiThSortable){
-			<button tuiButton [iconStart]="icon()" size="s" appearance="flat-grayscale" (click)="sort()"></button>
-		}
-    `,
-	host:{
-		class: 'flex flex-row gap-2',
-		style: 'align-items:center'
-	}
-})
-export class TableSortableColumn {
-    @Input() tuiThSortable: string | undefined = '';
-
-	table : FloatTable;
-	icon = signal<string | null | undefined>("arrow-down-wide-narrow");
-
-	constructor(table : FloatTable){
-		this.table = table;
-	}
-
-	sort(){
-		if(this.tuiThSortable){
-			var asc = this.icon() == 'arrow-down-wide-narrow';
-
-			var values = [...this.table.internalValues];
-			var sorted = values.sort((a : any,b : any) => {
-				if (a[this.tuiThSortable as string] < b[this.tuiThSortable as string])
-					return asc ? 1 : -1;
-				if (a[this.tuiThSortable as string] > b[this.tuiThSortable as string])
-					return asc ? -1 : 1;
-				return 0;
-			});
-			this.table.internalValues = sorted;
-			this.table.state = [];
-			this.table.processPage();
-
-			if (asc)
-				this.icon.set('arrow-up-wide-narrow');
-			else
-				this.icon.set('arrow-down-wide-narrow');
-		}
-	}
-}

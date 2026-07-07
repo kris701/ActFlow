@@ -8,7 +8,11 @@ import { TuiButton, TuiExpand, TuiGroup, TuiNotificationService } from '@taiga-u
 import { TuiAccordion, TuiChip, TuiProgressBar } from '@taiga-ui/kit';
 import { EditorComponent } from "ngx-monaco-editor-v2";
 import { firstValueFrom } from 'rxjs';
-import { FloatTable, TableSortableColumn } from "../../common/components/floattable";
+import { FloatTable } from "../../common/components/floattable";
+import { TableDateFilter } from "../../common/components/floattable/tuiThDateFilter";
+import { TableSelectFilter } from "../../common/components/floattable/tuiThSelectFilter";
+import { TableSortableColumn } from '../../common/components/floattable/tuiThSortable';
+import { TableTextFilter } from '../../common/components/floattable/tuiThTextFilter';
 import { WorkflowState } from '../../models/WorkflowState';
 import { WorkflowEditor } from "./components/wor.components.workfloweditor";
 import { WorkflowStateService } from './services/wor.stateservice';
@@ -29,15 +33,34 @@ import { WorkflowStateService } from './services/wor.stateservice';
     TuiAccordion,
     TuiExpand,
     WorkflowEditor,
-    TableSortableColumn
+    TableSortableColumn,
+    TableTextFilter,
+    TableSelectFilter,
+    TableDateFilter
 ],
     template: `
 	<app-floattable [values]="workflowStateService.items()" [expandable]="true" [isLoading]="isLoading" (onRowExpanded)="checkCache($event.id)" (onLoadItems)="loadItems()" [showRefresh]="true">
 		<ng-template #tableHeader>
-			<th tuiTh><div tuiThSortable="name">Name</div></th>
-			<th tuiTh><div tuiThSortable="status">Status</div></th>
-			<th tuiTh><div tuiThSortable="startedAt">Started At</div></th>
-			<th tuiTh><div tuiThSortable="endedAt">Ended At</div></th>
+			<th tuiTh>
+				Name
+				<tuiThSortable tuiThSortable="name"></tuiThSortable>
+				<tuiThTextFilter tuiThTextFilter="name"></tuiThTextFilter>
+			</th>
+			<th tuiTh>
+				Status
+				<tuiThSortable tuiThSortable="status"></tuiThSortable>
+				<tuiThSelectFilter tuiThSelectFilter="status" [options]="Object.keys(statusNameMap)"></tuiThSelectFilter>
+			</th>
+			<th tuiTh>
+				Started At
+				<tuiThSortable tuiThSortable="startedAt"></tuiThSortable>
+				<tuiThDateFilter tuiThDateFilter="startedAt"></tuiThDateFilter>
+			</th>
+			<th tuiTh>
+				Ended At
+				<tuiThSortable tuiThSortable="endedAt"></tuiThSortable>
+				<tuiThDateFilter tuiThDateFilter="endedAt"></tuiThDateFilter>
+			</th>
 			<th tuiTh style="width:2rem"></th>
 		</ng-template>
 		<ng-template #tableRows let-item>
