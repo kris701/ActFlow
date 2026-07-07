@@ -31,7 +31,7 @@ import { FloatTable } from "../floattable";
 			</tui-badged-content>
 
 			<ng-template #filterPop>
-				<div class="flex flex-col gap-2 p-4" style="min-width:10rem">
+				<div class="flex flex-col gap-2 p-4" style="min-width:20rem">
 					<button
 						appearance="outline-grayscale"
 						size="s"
