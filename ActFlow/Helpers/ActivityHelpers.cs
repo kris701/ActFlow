@@ -1,5 +1,6 @@
 ﻿using ActFlow.Models;
 using ActFlow.Models.Activities;
+using ActFlow.Models.Contexts;
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using System.Text.RegularExpressions;
@@ -53,11 +54,14 @@ namespace ActFlow.Helpers
 				state.Status = WorkflowStatuses.Running;
 			if (state.TokenSource.IsCancellationRequested)
 				return;
-			state.AppendToLog($"Resulting activity context is a {executionResult.Context.GetType()}");
-			var contextString = executionResult.Context.ToString();
-			if (contextString != null)
-				contextString = contextString.Length > 100 ? contextString.Substring(0, 100) : contextString;
-			state.AppendToLog($"Resulting activity context content is {contextString}");
+			if (executionResult.Context is not EmptyContext)
+			{
+				state.AppendToLog($"Resulting activity context is a {executionResult.Context.GetType()}");
+				var contextString = executionResult.Context.ToString();
+				if (contextString != null)
+					contextString = contextString.Length > 100 ? contextString.Substring(0, 100) : contextString;
+				state.AppendToLog($"Resulting activity context content is {contextString}");
+			}
 
 			WorkflowStateHelpers.InsertResultIntoContextStore(state, activity.Name, executionResult);
 

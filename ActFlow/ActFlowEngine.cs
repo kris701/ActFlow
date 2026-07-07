@@ -293,7 +293,8 @@ namespace ActFlow
 			switch (state.Workflow.CompletionBehaviour)
 			{
 				case WorkflowCompletionBehaviour.ReQueue:
-					Execute(state.SourceWorkflow);
+					if (state.Status != WorkflowStatuses.Canceled)
+						Execute(state.SourceWorkflow);
 					break;
 			}
 		}

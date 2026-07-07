@@ -28,7 +28,7 @@ import { WorkflowStateService } from './services/wor.stateservice';
     }
 })
 export class WORRun {
-    workflow = signal<Workflow>({ name: 'name', retryBehaviour: "None", globals: {}, activities: [] } as Workflow);
+    workflow = signal<Workflow>({ name: 'name', retryBehaviour: "None", completionBehaviour: 'None', globals: {}, activities: [] } as Workflow);
 
     constructor(private http : HttpClient, public service: TuiNotificationService, public workflowStateService : WorkflowStateService){}
 

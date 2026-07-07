@@ -254,6 +254,9 @@ export class WorkflowEditor implements OnChanges {
                             retryBehaviour: {
                                 enum: ['None', 'Workflow', 'Activity']
                             },
+							completionBehaviour: {
+                                enum: ['None', 'ReQueue']
+                            },
                             globals: {
                                 type: 'object',
                                 additionalProperties: {

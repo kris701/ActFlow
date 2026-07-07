@@ -66,6 +66,9 @@ import { WorkflowStateService } from './services/wor.stateservice';
 					@let items = itemCache();
 					@let fullItem = items[item.id];
 					@if(fullItem){
+						<div>
+							<button tuiButton iconStart="rotate-cw" size="s" appearance="info" (click)="checkCache(fullItem.id, true)"></button>
+						</div>
 						<span style="text-align: center;">Workflow Run Details</span>
 						<div class="sub-container">
 							<div tuiGroup [collapsed]="true" [rounded]="true">
@@ -125,9 +128,13 @@ import { WorkflowStateService } from './services/wor.stateservice';
 									<div class="flex flex-col gap-2">
 										<span>Log Items</span>
 										@for(logItem of fullItem.logText; track logItem){
-											<span size="s" class="w-full h-full" [appearance]="logSeverityMap[logItem.logType]" tuiChip>
-												<span style="overflow:hidden;text-wrap:auto">{{logItem.text}}</span>
-											</span>
+											<div tuiGroup [collapsed]="true" [rounded]="true" orientation="horizontal">
+												<span style="flex: 0 0 auto;" size="s" tuiChip>{{logItem.timestamp | date: 'dd/MM/yyyy HH:mm:ss'}}</span>
+												<span style="height:auto" size="s" [appearance]="logSeverityMap[logItem.logType]" tuiChip>
+													<span style="overflow:hidden;text-wrap:auto">{{logItem.text}}</span>
+												</span>
+											</div>
+
 										}
 									</div>
 								</ng-container>
@@ -252,9 +259,9 @@ export class WORResults {
 		this.isLoading.set(false);
 	}
 
-    async checkCache(id : string){
+    async checkCache(id : string, force : boolean = false){
         var items = this.itemCache();
-        if (items[id])
+        if (items[id] && force === false)
             return;
         this.isLoading.set(true);
         var item = await this.workflowStateService.Get(id);
