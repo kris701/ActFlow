@@ -284,6 +284,18 @@ namespace ActFlow
 			await CompletionHelpers.MoveCompletedWorkflow(state, CompletedDirectory, RunnerDirectory);
 
 			ActiveWorkflows.Remove(state);
+
+			ProcessCompletionBehaviour(state);
+		}
+
+		private void ProcessCompletionBehaviour(WorkflowState state)
+		{
+			switch (state.Workflow.CompletionBehaviour)
+			{
+				case WorkflowCompletionBehaviour.ReQueue:
+					Execute(state.SourceWorkflow);
+					break;
+			}
 		}
 
 		#endregion

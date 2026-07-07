@@ -16,6 +16,10 @@ namespace ActFlow.Models.Workflows
 		/// </summary>
 		public WorkflowRetryBehaviour RetryBehaviour { get; set; } = WorkflowRetryBehaviour.None;
 		/// <summary>
+		/// What the engine should do when a workflow is completed
+		/// </summary>
+		public WorkflowCompletionBehaviour CompletionBehaviour { get; set; } = WorkflowCompletionBehaviour.None;
+		/// <summary>
 		/// A dictionary of global values to use across the workflow
 		/// </summary>
 		public Dictionary<string, string> Globals { get; set; } = new Dictionary<string, string>();
