@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 import { TuiDay, TuiTime } from "@taiga-ui/cdk/date-time";
 import { TuiButton, TuiDropdown, TuiInput } from "@taiga-ui/core";
 import { TuiBadgeNotification, TuiBadgedContent, TuiButtonSelect, TuiDataListWrapper, TuiInputDateTime, TuiStringifyContentPipe } from "@taiga-ui/kit";
-import { FloatTable } from "../floattable";
+import { FloatTable, FloatTableFilter } from "../floattable";
 
 @Component({
     selector: 'tuiThDateFilter',
@@ -52,7 +52,7 @@ import { FloatTable } from "../floattable";
 						<label tuiLabel>Choose a date</label>
 						<input
 							tuiInputDateTime
-							[(ngModel)]="filterType.value"
+							[(ngModel)]="value"
 						/>
 						<tui-calendar *tuiDropdown />
 					</tui-textfield>
@@ -60,7 +60,7 @@ import { FloatTable } from "../floattable";
 						tuiButton size="s"
 						iconStart="funnel"
 						tuiButton
-						(click)="filterType.action(filterType.value)"
+						(click)="filterType.action(value)"
 					>
 						Apply
 					</button>
@@ -88,6 +88,7 @@ export class TableDateFilter {
 
 	table : FloatTable;
 
+	value : [TuiDay, TuiTime] = [TuiDay.currentLocal(), TuiTime.currentLocal()];
 	filterType : any;
 	filterTypes : any[];
 
@@ -95,15 +96,11 @@ export class TableDateFilter {
 
 	constructor(table : FloatTable){
 		this.table = table;
-		this.table.onFilterApplied.subscribe(x => {
-			this.filterApplied.set(false);
-		});
 
 		this.filterTypes = [
 			{
 				label: 'After',
-				value : [TuiDay.currentLocal(), TuiTime.currentLocal()],
-				action: (date : [TuiDay, TuiTime]) => this.dateFilter((i) => {
+				action: (date : [TuiDay, TuiTime]) => this.applyFilter((i) => {
 					var normal = date[0].toLocalNativeDate()
 					normal.setMilliseconds(date[1].toAbsoluteMilliseconds());
 					return i.getTime() > normal.getTime()
@@ -111,8 +108,7 @@ export class TableDateFilter {
 			},
 			{
 				label: 'Before',
-				value : [TuiDay.currentLocal(), TuiTime.currentLocal()],
-				action: (date : [TuiDay, TuiTime]) => this.dateFilter((i) => {
+				action: (date : [TuiDay, TuiTime]) => this.applyFilter((i) => {
 					var normal = date[0].toLocalNativeDate()
 					normal.setMilliseconds(date[1].toAbsoluteMilliseconds());
 					return i.getTime() < normal.getTime()
@@ -122,27 +118,27 @@ export class TableDateFilter {
 		this.filterType = this.filterTypes[0];
 	}
 
-	dateFilter(fn : (i : Date) => boolean){
-		var values = [...this.table.values];
-		var filtered = []
-		for(let value of values)
-		{
-			var asDate : Date = new Date(value[this.tuiThDateFilter as string]);
-			if (fn(asDate))
-				filtered.push(value);
-		}
-
-		this.applyFilter(filtered);
-	}
-
-	applyFilter(newValues : any[]){
-		this.table.applyFilter(newValues);
+	applyFilter(fn : (i : Date) => boolean){
+		this.table.setFilter({
+			column: this.tuiThDateFilter,
+			type: 'date',
+			value: this.value,
+			applied: true,
+			filter: fn
+		} as FloatTableFilter);
+		this.table.applyFilter();
 		this.filterVisible.set(false);
 		this.filterApplied.set(true);
 	}
 
 	clearFilter(){
-		this.table.applyFilter(this.table.values);
+		this.table.setFilter({
+			column: this.tuiThDateFilter,
+			type: 'date',
+			value: '',
+			applied: false
+		} as FloatTableFilter);
+		this.table.applyFilter();
 		this.filterVisible.set(false);
 		this.filterApplied.set(false);
 	}

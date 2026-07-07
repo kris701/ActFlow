@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, ContentChild, EventEmitter, Input, OnChanges, Output, signal, SimpleChanges, TemplateRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TuiTable, TuiTablePagination } from '@taiga-ui/addon-table';
@@ -180,24 +179,20 @@ export class FloatTable implements OnChanges {
 	internalValues: any[] = [];
     displayValues = signal<any[]>([]);
 
-    constructor(private http : HttpClient){
-    }
+	sorts = signal<FloatTableSort[]>([]);
+	filters = signal<FloatTableFilter[]>([]);
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes['values'] && changes['values'].previousValue != changes['values'].currentValue){
-			this.internalValues = changes['values'].currentValue;
-			this.page.set(0);
-			this.pages.set(Math.floor(this.internalValues.length / this.pageSize()) + 1)
-			this.processPage();
+	async ngOnChanges(changes: SimpleChanges) {
+		if (changes['values'] && changes['values'].previousValue != changes['values'].currentValue) {
+			this.values = changes['values'].currentValue;
+			this.applyFilter();
 		}
 	}
 
     @Output() onAddItem: EventEmitter<any> = new EventEmitter();
     @Output() onLoadItems: EventEmitter<any> = new EventEmitter();
     @Output() onRowExpanded: EventEmitter<any> = new EventEmitter();
-
-	@Output() onSortApplied: EventEmitter<string> = new EventEmitter<string>();
-	@Output() onFilterApplied: EventEmitter<any> = new EventEmitter();
+	@Output() onLoadFilter: EventEmitter<FloatTableFilter> = new EventEmitter<FloatTableFilter>();
 
     @Input() pageSize = signal<number>(25);
 	page = signal<number>(0);
@@ -209,20 +204,116 @@ export class FloatTable implements OnChanges {
 		this.displayValues.set(this.internalValues.slice(fromIndex, toIndex));
 	}
 
-	applySort(newValues : any[], column : string){
-		this.internalValues = newValues;
-		this.state = [];
-		this.processPage();
-		this.onSortApplied.emit(column);
+	applySorts(){
+		var sorted = [...this.internalValues]
+		for(var sort of this.sorts())
+			sorted = this.sort(sorted, sort);
+		this.internalValues = sorted;
 	}
 
-	applyFilter(newValues : any[]){
-		this.internalValues = newValues;
+	applyFilter(){
+		var filtered = [...this.values]
+		for(var filter of this.filters())
+		{
+			if (filter.applied)
+				filtered = this.filter(filtered, filter);
+		}
+		this.internalValues = filtered;
+		this.applySorts();
 		this.state = [];
+		this.page.set(0);
+		this.pages.set(Math.floor(this.internalValues.length / this.pageSize()) + 1)
 		this.processPage();
-		this.onFilterApplied.emit();
 	}
 
 	state: Record<number, boolean> = {};
+
+	setSort(sort : FloatTableSort){
+		var sorts = this.sorts();
+		var target = sorts.findIndex(x => x.column == sort.column);
+		if (target != -1)
+			sorts[target] = sort;
+		else
+			sorts.push(sort);
+		this.sorts.set(sorts);
+	}
+
+	setFilter(filter : FloatTableFilter){
+		var filters = this.filters();
+		var target = filters.findIndex(x => x.column == filter.column);
+		if (target != -1){
+			filters[target] = filter;
+		}
+		else
+			filters.push(filter);
+		this.filters.set(filters);
+	}
+
+	sort(values : any[], sort : FloatTableSort) : any[]{
+		switch(sort.state){
+			case 'asc':
+				return values.sort((a : any,b : any) => {
+					if (a[sort.column] < b[sort.column])
+						return 1;
+					if (a[sort.column] > b[sort.column])
+						return -1;
+					return 0;
+				});
+			case 'desc':
+				return values.sort((a : any,b : any) => {
+					if (a[sort.column] < b[sort.column])
+						return -1;
+					if (a[sort.column] > b[sort.column])
+						return 1;
+					return 0;
+				});
+		}
+		return values;
+	}
+
+	filter(values : any[], filter : FloatTableFilter) : any[]{
+		switch(filter.type){
+			case 'text':
+			case 'select':
+				return this.textFilter(values, filter.filter, filter.column);
+			case 'date':
+				return this.dateFilter(values, filter.filter, filter.column);
+		}
+	}
+
+	textFilter(values: any[], fn : (i : string) => boolean, column : string) : any[]{
+		var filtered = []
+		for(let value of values)
+		{
+			var asStr : string = value[column];
+			if (fn(asStr))
+				filtered.push(value);
+		}
+		return filtered;
+	}
+
+	dateFilter(values: any[], fn : (i : Date) => boolean, column : string) : any[]{
+		var filtered = []
+		for(let value of values)
+		{
+			var asDate : Date = new Date(value[column]);
+			if (fn(asDate))
+				filtered.push(value);
+		}
+		return filtered;
+	}
 }
 
+export interface FloatTableSort {
+	column : string;
+	state : 'asc' | 'desc' | 'none';
+}
+
+export interface FloatTableFilter {
+	column : string;
+	type : 'text' | 'select' | 'date';
+	value : any;
+	applied : boolean;
+	filterIndex : number;
+	filter(v : any) : boolean;
+}

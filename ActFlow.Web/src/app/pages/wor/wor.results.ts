@@ -39,7 +39,7 @@ import { WorkflowStateService } from './services/wor.stateservice';
     TableDateFilter
 ],
     template: `
-	<app-floattable [values]="workflowStateService.items()" [expandable]="true" [isLoading]="isLoading" (onRowExpanded)="checkCache($event.id)" (onLoadItems)="loadItems()" [showRefresh]="true">
+	<app-floattable [values]="workflowStateService.items()" [expandable]="true" [isLoading]="isLoading" (onRowExpanded)="checkCache($event.id)" (onLoadItems)="loadItems()" [showRefresh]="true" storageKey="wor-results">
 		<ng-template #tableHeader>
 			<th tuiTh>
 				Name

@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, signal } from "@angular/core";
 import { TuiButton } from "@taiga-ui/core";
-import { FloatTable } from "../floattable";
+import { FloatTable, FloatTableSort } from "../floattable";
 
 @Component({
     selector: 'tuiThSortable',
@@ -21,48 +21,27 @@ export class TableSortableColumn {
 
 	constructor(table : FloatTable){
 		this.table = table;
-
-		this.table.onSortApplied.subscribe(c => {
-			if (c != this.tuiThSortable){
-				this.icon.set('text-align-justify');
-				this.state = 'none'
-			}
-		});
 	}
 
 	sort(){
 		if(this.tuiThSortable){
-			var values = [...this.table.internalValues];
-			var sorted = []
 			switch(this.state){
 				case 'none':
 					this.state = 'asc';
-					sorted = values.sort((a : any,b : any) => {
-						if (a[this.tuiThSortable as string] < b[this.tuiThSortable as string])
-							return 1;
-						if (a[this.tuiThSortable as string] > b[this.tuiThSortable as string])
-							return -1;
-						return 0;
-					});
-					this.table.applySort(sorted, this.tuiThSortable)
+					this.table.setSort({ column: this.tuiThSortable, state: this.state } as FloatTableSort)
+					this.table.applyFilter();
 					this.icon.set('arrow-up-wide-narrow');
 					break;
 				case 'asc':
 					this.state = 'desc';
-					sorted = values.sort((a : any,b : any) => {
-						if (a[this.tuiThSortable as string] < b[this.tuiThSortable as string])
-							return -1;
-						if (a[this.tuiThSortable as string] > b[this.tuiThSortable as string])
-							return 1;
-						return 0;
-					});
-					this.table.applySort(sorted, this.tuiThSortable)
+					this.table.setSort({ column: this.tuiThSortable, state: this.state } as FloatTableSort)
+					this.table.applyFilter();
 					this.icon.set('arrow-down-wide-narrow');
 					break;
 				case 'desc':
 					this.state = 'none';
-					sorted = values;
-					this.table.applySort(sorted, this.tuiThSortable)
+					this.table.setSort({ column: this.tuiThSortable, state: this.state } as FloatTableSort)
+					this.table.applyFilter();
 					this.icon.set('text-align-justify');
 					break;
 			}

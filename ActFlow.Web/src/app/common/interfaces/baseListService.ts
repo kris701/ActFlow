@@ -21,7 +21,8 @@ export class BaseListService<T,TList extends IIdentifiable> {
         if (!this.isLoading){
             this.isLoaded = false;
             this.isLoading = true;
-            this.items.set(await firstValueFrom(this.http.get<TList[]>(this.getAllEndpoint)));
+			var value = await firstValueFrom(this.http.get<TList[]>(this.getAllEndpoint));
+            this.items.set(value);
             this.isLoading = false;
             this.isLoaded = true;
         }

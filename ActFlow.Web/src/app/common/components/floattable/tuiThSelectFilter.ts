@@ -3,7 +3,7 @@ import { Component, Input, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TuiButton, TuiDataList, TuiDropdown, TuiInput } from "@taiga-ui/core";
 import { TuiBadgeNotification, TuiBadgedContent, TuiButtonSelect, TuiDataListWrapper, TuiMultiSelect, TuiStringifyContentPipe } from "@taiga-ui/kit";
-import { FloatTable } from "../floattable";
+import { FloatTable, FloatTableFilter } from "../floattable";
 
 @Component({
     selector: 'tuiThSelectFilter',
@@ -52,9 +52,9 @@ import { FloatTable } from "../floattable";
 						size="s"
 						tuiButton
 						tuiButtonSelect
-						[(ngModel)]="filterType.selected"
+						[(ngModel)]="selected"
 					>
-						{{filterType.selected.length === 1 ? filterType.selected[0] : 'Selected ' + filterType.selected.length}}
+						{{selected.length === 1 ? selected[0] : 'Selected ' + selected.length}}
 
 						<tui-data-list *tuiDropdown>
 							<tui-opt-group
@@ -78,7 +78,7 @@ import { FloatTable } from "../floattable";
 						tuiButton size="s"
 						iconStart="funnel"
 						tuiButton
-						(click)="filterType.action(filterType.selected)"
+						(click)="filterType.action(selected)"
 					>
 						Apply
 					</button>
@@ -107,7 +107,7 @@ export class TableSelectFilter {
 	table : FloatTable;
 
 	@Input() options : string[] = [];
-
+	selected : string[] = [];
 	filterType : any;
 	filterTypes : any[];
 
@@ -115,47 +115,42 @@ export class TableSelectFilter {
 
 	constructor(table : FloatTable){
 		this.table = table;
-		this.table.onFilterApplied.subscribe(x => {
-			this.filterApplied.set(false);
-		});
 
 		this.filterTypes = [
 			{
 				label: 'Contains',
-				selected : [],
-				action: (selected : string[]) => this.listFilter((i) => selected.includes(i))
+				action: (selected : string[]) => this.applyFilter((i) => selected.includes(i))
 			},
 			{
 				label: 'Not Contains',
-				selected : [],
-				action: (selected : string[]) => this.listFilter((i) => !selected.includes(i))
+				action: (selected : string[]) => this.applyFilter((i) => !selected.includes(i))
 			}
 		];
 		this.filterType = this.filterTypes[0];
 	}
 
-	listFilter(fn : (i : string) => boolean){
-		var values = [...this.table.values];
-		var filtered = []
-		for(let value of values)
-		{
-			var asStr : string = value[this.tuiThSelectFilter as string];
-			if (fn(asStr))
-				filtered.push(value);
-		}
-
-		this.applyFilter(filtered);
-	}
-
-	applyFilter(newValues : any[]){
-		this.table.applyFilter(newValues);
-		this.filterVisible.set(false);
+	applyFilter(fn : (i : string) => boolean){
 		this.filterApplied.set(true);
+		this.table.setFilter({
+			column: this.tuiThSelectFilter,
+			type: 'select',
+			value: this.selected,
+			applied: this.filterApplied(),
+			filter: fn
+		} as FloatTableFilter);
+		this.table.applyFilter();
+		this.filterVisible.set(false);
 	}
 
 	clearFilter(){
-		this.table.applyFilter(this.table.values);
-		this.filterVisible.set(false);
 		this.filterApplied.set(false);
+		this.table.setFilter({
+			column: this.tuiThSelectFilter,
+			type: 'select',
+			value: '',
+			applied: this.filterApplied()
+		} as FloatTableFilter);
+		this.table.applyFilter();
+		this.filterVisible.set(false);
 	}
 }

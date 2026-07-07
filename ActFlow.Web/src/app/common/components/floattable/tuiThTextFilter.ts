@@ -3,7 +3,7 @@ import { Component, Input, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { TuiButton, TuiDropdown, TuiInput } from "@taiga-ui/core";
 import { TuiBadgeNotification, TuiBadgedContent, TuiButtonSelect, TuiDataListWrapper, TuiStringifyContentPipe } from "@taiga-ui/kit";
-import { FloatTable } from "../floattable";
+import { FloatTable, FloatTableFilter } from "../floattable";
 
 @Component({
     selector: 'tuiThTextFilter',
@@ -48,13 +48,13 @@ import { FloatTable } from "../floattable";
 					</button>
 
 					<tui-textfield tuiTextfieldSize="s">
-						<input tuiInput [(ngModel)]="filterType.value"/>
+						<input tuiInput [(ngModel)]="value"/>
 					</tui-textfield>
 					<button
 						tuiButton size="s"
 						iconStart="funnel"
 						tuiButton
-						(click)="filterType.action(filterType.value)"
+						(click)="filterType.action(value)"
 					>
 						Apply
 					</button>
@@ -75,13 +75,14 @@ import { FloatTable } from "../floattable";
     `
 })
 export class TableTextFilter {
-    @Input() tuiThTextFilter: string | undefined = undefined;
+    @Input() tuiThTextFilter!: string;
 
 	filterApplied = signal<boolean>(false);
 	filterVisible = signal<boolean>(false);
 
 	table : FloatTable;
 
+	value : string = '';
 	filterType : any;
 	filterTypes : any[];
 
@@ -89,56 +90,51 @@ export class TableTextFilter {
 
 	constructor(table : FloatTable){
 		this.table = table;
-		this.table.onFilterApplied.subscribe(x => {
-			this.filterApplied.set(false);
-		});
 
 		this.filterTypes = [
 			{
 				label: 'Contains',
-				value : '',
-				action: (str : string) => this.stringFilter((i) => i.includes(str))
+				action: (str : string) => this.applyFilter((i) => i.includes(str))
 			},
 			{
 				label: 'Not Contains',
-				value : '',
-				action: (str : string) => this.stringFilter((i) => !i.includes(str))
+				action: (str : string) => this.applyFilter((i) => !i.includes(str))
 			},
 			{
 				label: 'Starts With',
-				value : '',
-				action: (str : string) => this.stringFilter((i) => i.startsWith(str))
+				action: (str : string) => this.applyFilter((i) => i.startsWith(str))
 			},
 			{
 				label: 'Ends With',
-				value : '',
-				action: (str : string) => this.stringFilter((i) => i.endsWith(str))
+				action: (str : string) => this.applyFilter((i) => i.endsWith(str))
 			}
 		];
 		this.filterType = this.filterTypes[0];
 	}
 
-	stringFilter(fn : (i : string) => boolean){
-		var values = [...this.table.values];
-		var filtered = []
-		for(let value of values)
-		{
-			var asStr : string = value[this.tuiThTextFilter as string];
-			if (fn(asStr))
-				filtered.push(value);
-		}
-
-		this.applyFilter(filtered);
-	}
-
-	applyFilter(newValues : any[]){
-		this.table.applyFilter(newValues);
+	applyFilter(fn : (i : string) => boolean){
+		this.table.setFilter({
+			column: this.tuiThTextFilter,
+			type: 'text',
+			value: this.value,
+			applied: true,
+			filter: fn,
+			filterIndex: this.filterTypes.indexOf(this.filterType)
+		} as FloatTableFilter);
+		this.table.applyFilter();
 		this.filterVisible.set(false);
 		this.filterApplied.set(true);
 	}
 
 	clearFilter(){
-		this.table.applyFilter(this.table.values);
+		this.table.setFilter({
+			column: this.tuiThTextFilter,
+			type: 'text',
+			value: '',
+			applied: false,
+			filterIndex: this.filterTypes.indexOf(this.filterType)
+		} as FloatTableFilter);
+		this.table.applyFilter();
 		this.filterVisible.set(false);
 		this.filterApplied.set(false);
 	}
