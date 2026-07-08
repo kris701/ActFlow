@@ -5,6 +5,7 @@ import { TuiTable, TuiTablePagination } from '@taiga-ui/addon-table';
 import { TuiButton, TuiDropdown, TuiGroup, TuiIcon, TuiInput, TuiLoader, TuiScrollbar } from "@taiga-ui/core";
 import { TuiBadge, TuiChevron, TuiDataListWrapper, TuiStatus } from '@taiga-ui/kit';
 import { TuiBlockStatus } from '@taiga-ui/layout';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
     selector: 'app-floattable',
@@ -465,7 +466,7 @@ export class FloatTable implements OnChanges {
 		this.saveCurrentPreset();
 
 		var preset = {
-			id: crypto.randomUUID(),
+			id: uuidv4(),
 			name: 'New Preset',
 			sorts : [...this.sorts()],
 			filters: [...this.filters()]
