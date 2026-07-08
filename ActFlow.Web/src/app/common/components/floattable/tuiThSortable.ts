@@ -13,7 +13,7 @@ import { FloatTable, FloatTableSort } from "../floattable";
     `
 })
 export class TableSortableColumn {
-    @Input() tuiThSortable: string | undefined = undefined;
+    @Input() tuiThSortable!: string;
 
 	table : FloatTable;
 	state : 'asc' | 'desc' | 'none' = 'none';
@@ -21,30 +21,54 @@ export class TableSortableColumn {
 
 	constructor(table : FloatTable){
 		this.table = table;
+
+		this.table.onPresetChange.subscribe(x => {
+			if (!x)
+			{
+				this.state = 'none'
+				this.icon.set('text-align-justify');
+				return;
+			}
+			var sort = x.sorts.find(x => x.column == this.tuiThSortable);
+			if (!sort)
+			{
+				this.state = 'none'
+				this.icon.set('text-align-justify');
+				return;
+			}
+			this.state = sort.state;
+
+			switch(sort.state){
+				case 'none':
+					this.icon.set('text-align-justify');
+					break;
+				case 'asc':
+					this.icon.set('arrow-up-wide-narrow');
+					break;
+				case 'desc':
+					this.icon.set('arrow-down-wide-narrow');
+					break;
+			}
+		})
 	}
 
 	sort(){
-		if(this.tuiThSortable){
-			switch(this.state){
-				case 'none':
-					this.state = 'asc';
-					this.table.setSort({ column: this.tuiThSortable, state: this.state } as FloatTableSort)
-					this.table.applyFilter();
-					this.icon.set('arrow-up-wide-narrow');
-					break;
-				case 'asc':
-					this.state = 'desc';
-					this.table.setSort({ column: this.tuiThSortable, state: this.state } as FloatTableSort)
-					this.table.applyFilter();
-					this.icon.set('arrow-down-wide-narrow');
-					break;
-				case 'desc':
-					this.state = 'none';
-					this.table.setSort({ column: this.tuiThSortable, state: this.state } as FloatTableSort)
-					this.table.applyFilter();
-					this.icon.set('text-align-justify');
-					break;
-			}
+		switch(this.state){
+			case 'none':
+				this.state = 'asc';
+				this.table.setSort({ column: this.tuiThSortable, state: this.state } as FloatTableSort)
+				this.icon.set('arrow-up-wide-narrow');
+				break;
+			case 'asc':
+				this.state = 'desc';
+				this.table.setSort({ column: this.tuiThSortable, state: this.state } as FloatTableSort)
+				this.icon.set('arrow-down-wide-narrow');
+				break;
+			case 'desc':
+				this.state = 'none';
+				this.table.setSort({ column: this.tuiThSortable, state: this.state } as FloatTableSort)
+				this.icon.set('text-align-justify');
+				break;
 		}
 	}
 }

@@ -47,14 +47,14 @@ import { FloatTable, FloatTableFilter } from "../floattable";
 						/>
 					</button>
 
-					<tui-textfield tuiTextfieldSize="s">
+					<tui-textfield tuiTextfieldSize="s" (keydown.enter)="applyFilter(filterType.expression)">
 						<input tuiInput [(ngModel)]="value"/>
 					</tui-textfield>
 					<button
 						tuiButton size="s"
 						iconStart="funnel"
 						tuiButton
-						(click)="filterType.action(value)"
+						(click)="applyFilter(filterType.expression)"
 					>
 						Apply
 					</button>
@@ -94,47 +94,66 @@ export class TableTextFilter {
 		this.filterTypes = [
 			{
 				label: 'Contains',
-				action: (str : string) => this.applyFilter((i) => i.includes(str))
+				expression: 'str;con'
 			},
 			{
 				label: 'Not Contains',
-				action: (str : string) => this.applyFilter((i) => !i.includes(str))
+				expression: 'str;ncon'
 			},
 			{
 				label: 'Starts With',
-				action: (str : string) => this.applyFilter((i) => i.startsWith(str))
+				expression: 'str;sta'
 			},
 			{
 				label: 'Ends With',
-				action: (str : string) => this.applyFilter((i) => i.endsWith(str))
+				expression: 'str;end'
 			}
 		];
 		this.filterType = this.filterTypes[0];
+
+		this.table.onPresetChange.subscribe(x => {
+			if (!x)
+			{
+				this.filterType = this.filterTypes[0];
+				this.value = "";
+				this.filterApplied.set(false);
+				return;
+			}
+			var filter = x.filters.find(x => x.column == this.tuiThTextFilter);
+			if (!filter)
+			{
+				this.filterType = this.filterTypes[0];
+				this.value = "";
+				this.filterApplied.set(false);
+				return;
+			}
+			var type = this.filterTypes.find(x => x.expression == filter!.expression);
+			if (!type)
+			{
+				this.filterType = this.filterTypes[0];
+				this.value = "";
+				this.filterApplied.set(false);
+				return;
+			}
+
+			this.filterType = type;
+			this.value = filter.value;
+			this.filterApplied.set(true);
+		})
 	}
 
-	applyFilter(fn : (i : string) => boolean){
+	applyFilter(expression : string){
 		this.table.setFilter({
 			column: this.tuiThTextFilter,
-			type: 'text',
 			value: this.value,
-			applied: true,
-			filter: fn,
-			filterIndex: this.filterTypes.indexOf(this.filterType)
+			expression: expression,
 		} as FloatTableFilter);
-		this.table.applyFilter();
 		this.filterVisible.set(false);
 		this.filterApplied.set(true);
 	}
 
 	clearFilter(){
-		this.table.setFilter({
-			column: this.tuiThTextFilter,
-			type: 'text',
-			value: '',
-			applied: false,
-			filterIndex: this.filterTypes.indexOf(this.filterType)
-		} as FloatTableFilter);
-		this.table.applyFilter();
+		this.table.clearFilter(this.tuiThTextFilter);
 		this.filterVisible.set(false);
 		this.filterApplied.set(false);
 	}

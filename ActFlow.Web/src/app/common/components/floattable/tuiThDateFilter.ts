@@ -48,7 +48,7 @@ import { FloatTable, FloatTableFilter } from "../floattable";
 						/>
 					</button>
 
-					<tui-textfield>
+					<tui-textfield (keydown.enter)="applyFilter(filterType.expression)">
 						<label tuiLabel>Choose a date</label>
 						<input
 							tuiInputDateTime
@@ -60,7 +60,7 @@ import { FloatTable, FloatTableFilter } from "../floattable";
 						tuiButton size="s"
 						iconStart="funnel"
 						tuiButton
-						(click)="filterType.action(value)"
+						(click)="applyFilter(filterType.expression)"
 					>
 						Apply
 					</button>
@@ -81,7 +81,7 @@ import { FloatTable, FloatTableFilter } from "../floattable";
     `
 })
 export class TableDateFilter {
-    @Input() tuiThDateFilter: string | undefined = undefined;
+    @Input() tuiThDateFilter!: string;
 
 	filterApplied = signal<boolean>(false);
 	filterVisible = signal<boolean>(false);
@@ -100,45 +100,58 @@ export class TableDateFilter {
 		this.filterTypes = [
 			{
 				label: 'After',
-				action: (date : [TuiDay, TuiTime]) => this.applyFilter((i) => {
-					var normal = date[0].toLocalNativeDate()
-					normal.setMilliseconds(date[1].toAbsoluteMilliseconds());
-					return i.getTime() > normal.getTime()
-				})
+				expression: 'dat;aft'
 			},
 			{
 				label: 'Before',
-				action: (date : [TuiDay, TuiTime]) => this.applyFilter((i) => {
-					var normal = date[0].toLocalNativeDate()
-					normal.setMilliseconds(date[1].toAbsoluteMilliseconds());
-					return i.getTime() < normal.getTime()
-				})
+				expression: 'dat;bef'
 			}
 		];
 		this.filterType = this.filterTypes[0];
+
+		this.table.onPresetChange.subscribe(x => {
+			if (!x)
+			{
+				this.filterType = this.filterTypes[0];
+				this.value = [TuiDay.currentLocal(), TuiTime.currentLocal()];
+				this.filterApplied.set(false);
+				return;
+			}
+			var filter = x.filters.find(x => x.column == this.tuiThDateFilter);
+			if (!filter)
+			{
+				this.filterType = this.filterTypes[0];
+				this.value = [TuiDay.currentLocal(), TuiTime.currentLocal()];
+				this.filterApplied.set(false);
+				return;
+			}
+			var type = this.filterTypes.find(x => x.expression == filter!.expression);
+			if (!type)
+			{
+				this.filterType = this.filterTypes[0];
+				this.value = [TuiDay.currentLocal(), TuiTime.currentLocal()];
+				this.filterApplied.set(false);
+				return;
+			}
+
+			this.filterType = type;
+			this.value = filter.value;
+			this.filterApplied.set(true);
+		})
 	}
 
-	applyFilter(fn : (i : Date) => boolean){
+	applyFilter(expression : string){
 		this.table.setFilter({
 			column: this.tuiThDateFilter,
-			type: 'date',
 			value: this.value,
-			applied: true,
-			filter: fn
+			expression: expression,
 		} as FloatTableFilter);
-		this.table.applyFilter();
 		this.filterVisible.set(false);
 		this.filterApplied.set(true);
 	}
 
 	clearFilter(){
-		this.table.setFilter({
-			column: this.tuiThDateFilter,
-			type: 'date',
-			value: '',
-			applied: false
-		} as FloatTableFilter);
-		this.table.applyFilter();
+		this.table.clearFilter(this.tuiThDateFilter);
 		this.filterVisible.set(false);
 		this.filterApplied.set(false);
 	}

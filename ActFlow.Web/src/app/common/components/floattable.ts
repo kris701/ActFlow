@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, ContentChild, EventEmitter, Input, OnChanges, Output, signal, SimpleChanges, TemplateRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TuiTable, TuiTablePagination } from '@taiga-ui/addon-table';
-import { TuiButton, TuiDropdown, TuiIcon, TuiLoader, TuiScrollbar } from "@taiga-ui/core";
-import { TuiChevron, TuiDataListWrapper } from '@taiga-ui/kit';
+import { TuiButton, TuiDropdown, TuiGroup, TuiIcon, TuiInput, TuiLoader, TuiScrollbar } from "@taiga-ui/core";
+import { TuiBadge, TuiChevron, TuiDataListWrapper, TuiStatus } from '@taiga-ui/kit';
 import { TuiBlockStatus } from '@taiga-ui/layout';
 
 @Component({
     selector: 'app-floattable',
-    imports: [FormsModule, CommonModule, TuiTable, TuiScrollbar, TuiButton, TuiChevron, TuiDropdown, TuiDataListWrapper, TuiTablePagination, TuiLoader, TuiBlockStatus, TuiIcon],
+    imports: [FormsModule, CommonModule, TuiTable, TuiScrollbar, TuiButton, TuiChevron, TuiDropdown, TuiDataListWrapper, TuiTablePagination, TuiLoader, TuiBlockStatus, TuiIcon, TuiGroup, TuiBadge, TuiStatus, TuiInput],
     template: `
 		<div class="app-floattable">
 			<tui-loader [inheritColor]="true" [overlay]="true" size="xxl" [loading]="isLoading()">
@@ -22,7 +22,7 @@ import { TuiBlockStatus } from '@taiga-ui/layout';
 					</tui-block-status>
 				}
 				@else {
-					@if(showAdd || showRefresh){
+					@if(showAdd || showRefresh || showClearFilters){
 						<div class="flex flex-row gap-2 p-2" style="padding-bottom:0px">
 							@if(showRefresh){
 								<button tuiButton iconStart="rotate-cw" size="s" appearance="info" (click)="onLoadItems.emit()"></button>
@@ -30,6 +30,41 @@ import { TuiBlockStatus } from '@taiga-ui/layout';
 							@if(showAdd){
 								<button tuiButton iconStart="plus" size="s" appearance="info" (click)="onAddItem.emit()"></button>
 							}
+							@if(showClearFilters){
+								<button tuiButton iconStart="funnel-x" size="s" appearance="info" (click)="clearFilters()"></button>
+							}
+						</div>
+					}
+					@if(allowPresets){
+						<div class="flex flex-row gap-2 p-2" style="padding-bottom:0px;padding-top:0px">
+							<button tuiButton iconStart="plus" size="s" appearance="secondary" (click)="createPreset()"></button>
+
+							<tui-scrollbar class="w-full">
+								@let current = currentPreset();
+								@for(preset of presets(); track preset.id){
+									<div tuiGroup [collapsed]="true" [rounded]="true">
+										@let isActive = current?.id == preset.id;
+										@if(isActive){
+											@if(preset.edit){
+												<tui-textfield style="width:10rem" tuiTextfieldSize="s" (keydown.enter)="preset.edit = false;saveCurrentPreset()">
+													<input tuiInput [(ngModel)]="preset.name"/>
+												</tui-textfield>
+												<button style="flex: 0 0 auto;" tuiButton iconStart="save" size="s" appearance="info" (click)="preset.edit = false;saveCurrentPreset()"></button>
+											}
+											@else {
+												<div class="h-full" appearance="positive" tuiBadge tuiStatus>
+													{{preset.name}}
+												</div>
+												<button style="flex: 0 0 auto;" tuiButton iconStart="square-pen" size="s" appearance="info" (click)="preset.edit = true"></button>
+											}
+										<button style="flex: 0 0 auto;" tuiButton iconStart="x" size="s" appearance="negative" (click)="removePreset(preset.id)"></button>
+										}
+										@else {
+											<button style="flex: 0 0 auto;" tuiButton appearance="secondary" size="s"  (click)="selectPreset(preset.id)">{{preset.name}}</button>
+										}
+									</div>
+								}
+							</tui-scrollbar>
 						</div>
 					}
 					<tui-scrollbar class="w-full h-full">
@@ -105,12 +140,14 @@ import { TuiBlockStatus } from '@taiga-ui/layout';
 				height:100%;
 				width:100%;
 				flex-direction: column;
+
 				> .t-content {
 					display:flex;
 					height:100%;
 					width:100%;
 					flex-direction: column;
 					gap:0.5rem;
+					overflow-x:auto;
 				}
 
 				> .t-loader {
@@ -122,6 +159,8 @@ import { TuiBlockStatus } from '@taiga-ui/layout';
 
 			::ng-deep tui-scrollbar {
 				> .t-content {
+					display:flex;
+					gap:10px;
 					width:0px;
 				}
 			}
@@ -172,6 +211,7 @@ export class FloatTable implements OnChanges {
 
     @Input() showAdd: boolean = false;
     @Input() showRefresh: boolean = false;
+    @Input() showClearFilters: boolean = false;
 
 	@Input() expandable: boolean = false;
 
@@ -182,17 +222,50 @@ export class FloatTable implements OnChanges {
 	sorts = signal<FloatTableSort[]>([]);
 	filters = signal<FloatTableFilter[]>([]);
 
+	@Input() storageKey: string | null = null;
+	@Input() allowPresets: boolean = false;
+	currentPreset = signal<FloatTableSortFilterPreset | null>(null);
+	presets = signal<FloatTableSortFilterPreset[]>([])
+
 	async ngOnChanges(changes: SimpleChanges) {
+		if (changes['storageKey'] && changes['storageKey'].previousValue != changes['storageKey'].currentValue) {
+			this.storageKey = changes['storageKey'].currentValue;
+			if (this.storageKey){
+				var item = localStorage.getItem(this.storageKey)
+				if (item){
+					var parsed : FloatTableSortFilterPresetSave = JSON.parse(item)
+					if (parsed){
+						this.presets.set(parsed.presets);
+						if (parsed.current){
+							var target = (parsed.presets).find(x => x.id == parsed.current);
+							if (target)
+								this.selectPreset(target.id)
+						}
+					}
+				}
+			}
+		}
 		if (changes['values'] && changes['values'].previousValue != changes['values'].currentValue) {
 			this.values = changes['values'].currentValue;
 			this.applyFilter();
 		}
 	}
 
+	ngOnInit(){
+		setTimeout(
+			() => {
+				var current = this.currentPreset();
+				if (current)
+					this.onPresetChange.emit(current);
+			},
+			500
+		)
+	}
+
     @Output() onAddItem: EventEmitter<any> = new EventEmitter();
     @Output() onLoadItems: EventEmitter<any> = new EventEmitter();
     @Output() onRowExpanded: EventEmitter<any> = new EventEmitter();
-	@Output() onLoadFilter: EventEmitter<FloatTableFilter> = new EventEmitter<FloatTableFilter>();
+	@Output() onPresetChange: EventEmitter<FloatTableSortFilterPreset | null> = new EventEmitter<FloatTableSortFilterPreset | null>();
 
     @Input() pageSize = signal<number>(25);
 	page = signal<number>(0);
@@ -214,16 +287,15 @@ export class FloatTable implements OnChanges {
 	applyFilter(){
 		var filtered = [...this.values]
 		for(var filter of this.filters())
-		{
-			if (filter.applied)
-				filtered = this.filter(filtered, filter);
-		}
+			filtered = this.filter(filtered, filter);
 		this.internalValues = filtered;
 		this.applySorts();
 		this.state = [];
 		this.page.set(0);
 		this.pages.set(Math.floor(this.internalValues.length / this.pageSize()) + 1)
 		this.processPage();
+
+		this.saveCurrentPreset();
 	}
 
 	state: Record<number, boolean> = {};
@@ -236,6 +308,8 @@ export class FloatTable implements OnChanges {
 		else
 			sorts.push(sort);
 		this.sorts.set(sorts);
+
+		this.applyFilter();
 	}
 
 	setFilter(filter : FloatTableFilter){
@@ -247,6 +321,18 @@ export class FloatTable implements OnChanges {
 		else
 			filters.push(filter);
 		this.filters.set(filters);
+
+		this.applyFilter();
+	}
+
+	clearFilter(column : string){
+		var filters = this.filters();
+		var target = filters.findIndex(x => x.column == column);
+		if (target != -1)
+			filters.splice(target, 1)
+		this.filters.set(filters);
+
+		this.applyFilter();
 	}
 
 	sort(values : any[], sort : FloatTableSort) : any[]{
@@ -272,13 +358,52 @@ export class FloatTable implements OnChanges {
 	}
 
 	filter(values : any[], filter : FloatTableFilter) : any[]{
-		switch(filter.type){
-			case 'text':
-			case 'select':
-				return this.textFilter(values, filter.filter, filter.column);
-			case 'date':
-				return this.dateFilter(values, filter.filter, filter.column);
+		var split = filter.expression.split(';');
+		switch(split[0]){
+			case 'str':
+				switch(split[1]){
+					case 'con':
+						return this.textFilter(values, (i : string) => i.includes(filter.value), filter.column);
+					case 'ncon':
+						return this.textFilter(values, (i : string) => !i.includes(filter.value), filter.column);
+					case 'sta':
+						return this.textFilter(values, (i : string) => i.startsWith(filter.value), filter.column);
+					case 'end':
+						return this.textFilter(values, (i : string) => i.endsWith(filter.value), filter.column);
+				}
+				break;
+			case 'sel':
+				switch(split[1]){
+					case 'con':
+						return this.textFilter(values, (i : string) => filter.value.includes(i), filter.column);
+					case 'ncon':
+						return this.textFilter(values, (i : string) => !filter.value.includes(i), filter.column);
+				}
+				break;
+			case 'dat':
+				switch(split[1]){
+					case 'bef':
+						return this.dateFilter(
+							values,
+							(i : Date) => {
+								var normal = filter.value[0].toLocalNativeDate()
+								normal.setMilliseconds(filter.value[1].toAbsoluteMilliseconds());
+								return i.getTime() < normal.getTime()
+							},
+							filter.column);
+					case 'aft':
+						return this.dateFilter(
+							values,
+							(i : Date) => {
+								var normal = filter.value[0].toLocalNativeDate()
+								normal.setMilliseconds(filter.value[1].toAbsoluteMilliseconds());
+								return i.getTime() > normal.getTime()
+							},
+							filter.column);
+				}
+				break;
 		}
+		return values;
 	}
 
 	textFilter(values: any[], fn : (i : string) => boolean, column : string) : any[]{
@@ -302,6 +427,103 @@ export class FloatTable implements OnChanges {
 		}
 		return filtered;
 	}
+
+	saveCurrentPreset(){
+		var currentPreset = this.currentPreset();
+		if (currentPreset){
+			currentPreset.sorts = [...this.sorts()];
+			currentPreset.filters = [...this.filters()];
+			this.currentPreset.set(currentPreset);
+
+			var presets = this.presets();
+			var target = this.presets().findIndex(x => x.id == currentPreset?.id)
+			if (target != -1)
+				presets[target] = currentPreset;
+			this.presets.set(presets);
+
+			this.savePresets();
+		}
+	}
+
+	selectPreset(id : string){
+		var presets = this.presets();
+		var target = presets.findIndex(x => x.id == id);
+		if (target != -1)
+		{
+			var preset = presets[target];
+			this.currentPreset.set(preset);
+			this.sorts.set(preset.sorts);
+			this.filters.set(preset.filters);
+			this.onPresetChange.emit(preset);
+			this.applyFilter();
+		}
+
+		this.savePresets();
+	}
+
+	createPreset(){
+		this.saveCurrentPreset();
+
+		var preset = {
+			id: crypto.randomUUID(),
+			name: 'New Preset',
+			sorts : [...this.sorts()],
+			filters: [...this.filters()]
+		} as FloatTableSortFilterPreset
+		this.currentPreset.set(preset);
+
+		var presets = this.presets();
+		presets.push(preset);
+		this.presets.set(presets);
+
+		this.savePresets();
+	}
+
+	removePreset(id : string){
+		var presets = this.presets();
+		var target = presets.findIndex(x => x.id == id);
+		if (target != -1)
+			presets.splice(target, 1);
+		this.presets.set(presets);
+
+		var current = this.currentPreset();
+		if (current?.id == id){
+			if (presets.length > 0)
+			{
+				this.currentPreset.set(presets[0]);
+				this.onPresetChange.emit(presets[0]);
+			}
+			else
+			{
+				this.currentPreset.set(null);
+				this.onPresetChange.emit(null);
+			}
+
+		}
+
+		this.savePresets();
+	}
+
+	savePresets(){
+		if(this.storageKey){
+			var saveBody = {
+				current: this.currentPreset()?.id,
+				presets: [...this.presets()]
+			} as FloatTableSortFilterPresetSave
+			localStorage.setItem(
+				this.storageKey,
+				JSON.stringify(saveBody));
+		}
+	}
+
+	clearFilters(){
+		this.currentPreset.set(null);
+		this.onPresetChange.emit(null);
+		this.sorts.set([])
+		this.filters.set([])
+		this.savePresets();
+		this.applyFilter();
+	}
 }
 
 export interface FloatTableSort {
@@ -311,9 +533,19 @@ export interface FloatTableSort {
 
 export interface FloatTableFilter {
 	column : string;
-	type : 'text' | 'select' | 'date';
 	value : any;
-	applied : boolean;
-	filterIndex : number;
-	filter(v : any) : boolean;
+	expression : string;
+}
+
+export interface FloatTableSortFilterPreset {
+	id : string;
+	name : string;
+	sorts : FloatTableSort[];
+	filters : FloatTableFilter[];
+	edit: boolean;
+}
+
+export interface FloatTableSortFilterPresetSave {
+	current : string | null;
+	presets : FloatTableSortFilterPreset[];
 }
