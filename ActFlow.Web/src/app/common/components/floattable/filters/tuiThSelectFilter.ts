@@ -1,16 +1,16 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TuiDay, TuiTime } from "@taiga-ui/cdk/date-time";
-import { TuiButton, TuiDropdown, TuiInput } from "@taiga-ui/core";
-import { TuiBadgeNotification, TuiBadgedContent, TuiButtonSelect, TuiDataListWrapper, TuiInputDateTime, TuiStringifyContentPipe } from "@taiga-ui/kit";
-import { FloatTable, FloatTableFilter } from "../floattable";
+import { TuiButton, TuiDataList, TuiDropdown, TuiInput } from "@taiga-ui/core";
+import { TuiBadgeNotification, TuiBadgedContent, TuiButtonSelect, TuiDataListWrapper, TuiMultiSelect, TuiStringifyContentPipe } from "@taiga-ui/kit";
+import { FloatTable } from "../floattable";
+import { FloatTableFilter } from "../models/FloatTableFilter";
 
 @Component({
-    selector: 'tuiThDateFilter',
-    imports: [CommonModule, FormsModule, TuiDropdown, TuiDataListWrapper, TuiButton, TuiButtonSelect, TuiStringifyContentPipe, TuiBadgeNotification, TuiBadgedContent, TuiInput, TuiInputDateTime],
+    selector: 'tuiThSelectFilter',
+    imports: [CommonModule, FormsModule, TuiDropdown, TuiDataListWrapper, TuiButton, TuiButtonSelect, TuiStringifyContentPipe, TuiBadgeNotification, TuiBadgedContent, TuiInput, TuiMultiSelect, TuiDataList],
     template: `
-		@if(tuiThDateFilter){
+		@if(tuiThSelectFilter){
 			<tui-badged-content>
 				@if(filterApplied()){
 					<tui-badge-notification
@@ -41,21 +41,40 @@ import { FloatTable, FloatTableFilter } from "../floattable";
 						[(ngModel)]="filterType"
 					>
 						{{ filterType.label }}
-						<tui-data-list-wrapper
+					<tui-data-list-wrapper
 							*tuiDropdown
 							[itemContent]="stringify | tuiStringifyContent"
 							[items]="filterTypes"
 						/>
 					</button>
 
-					<tui-textfield (keydown.enter)="applyFilter(filterType.expression)">
-						<label tuiLabel>Choose a date</label>
-						<input
-							tuiInputDateTime
-							[(ngModel)]="value"
-						/>
-						<tui-calendar *tuiDropdown />
-					</tui-textfield>
+					<button
+						appearance="secondary-grayscale"
+						size="s"
+						tuiButton
+						tuiButtonSelect
+						[(ngModel)]="selected"
+					>
+						{{selected.length === 1 ? selected[0] : 'Selected ' + selected.length}}
+
+						<tui-data-list *tuiDropdown>
+							<tui-opt-group
+								label="Options"
+								tuiMultiSelectGroup
+							>
+								@for (option of options; track option) {
+									<button
+										tuiOption
+										type="button"
+										[value]="option"
+									>
+										{{ option }}
+									</button>
+								}
+							</tui-opt-group>
+						</tui-data-list>
+					</button>
+
 					<button
 						tuiButton size="s"
 						iconStart="funnel"
@@ -80,15 +99,16 @@ import { FloatTable, FloatTableFilter } from "../floattable";
 		}
     `
 })
-export class TableDateFilter {
-    @Input() tuiThDateFilter!: string;
+export class TableSelectFilter {
+    @Input() tuiThSelectFilter!: string;
 
 	filterApplied = signal<boolean>(false);
 	filterVisible = signal<boolean>(false);
 
 	table : FloatTable;
 
-	value : [TuiDay, TuiTime] = [TuiDay.currentLocal(), TuiTime.currentLocal()];
+	@Input() options : string[] = [];
+	selected : string[] = [];
 	filterType : any;
 	filterTypes : any[];
 
@@ -99,12 +119,12 @@ export class TableDateFilter {
 
 		this.filterTypes = [
 			{
-				label: 'After',
-				expression: 'dat;aft'
+				label: 'Contains',
+				expression: 'sel;con'
 			},
 			{
-				label: 'Before',
-				expression: 'dat;bef'
+				label: 'Not Contains',
+				expression: 'sel;ncon'
 			}
 		];
 		this.filterType = this.filterTypes[0];
@@ -113,15 +133,15 @@ export class TableDateFilter {
 			if (!x)
 			{
 				this.filterType = this.filterTypes[0];
-				this.value = [TuiDay.currentLocal(), TuiTime.currentLocal()];
+				this.selected = [];
 				this.filterApplied.set(false);
 				return;
 			}
-			var filter = x.filters.find(x => x.column == this.tuiThDateFilter);
+			var filter = x.filters.find(x => x.column == this.tuiThSelectFilter);
 			if (!filter)
 			{
 				this.filterType = this.filterTypes[0];
-				this.value = [TuiDay.currentLocal(), TuiTime.currentLocal()];
+				this.selected = [];
 				this.filterApplied.set(false);
 				return;
 			}
@@ -129,21 +149,21 @@ export class TableDateFilter {
 			if (!type)
 			{
 				this.filterType = this.filterTypes[0];
-				this.value = [TuiDay.currentLocal(), TuiTime.currentLocal()];
+				this.selected = [];
 				this.filterApplied.set(false);
 				return;
 			}
 
 			this.filterType = type;
-			this.value = filter.value;
+			this.selected = filter.value;
 			this.filterApplied.set(true);
 		})
 	}
 
 	applyFilter(expression : string){
 		this.table.setFilter({
-			column: this.tuiThDateFilter,
-			value: this.value,
+			column: this.tuiThSelectFilter,
+			value: this.selected,
 			expression: expression,
 		} as FloatTableFilter);
 		this.filterVisible.set(false);
@@ -151,7 +171,7 @@ export class TableDateFilter {
 	}
 
 	clearFilter(){
-		this.table.clearFilter(this.tuiThDateFilter);
+		this.table.clearFilter(this.tuiThSelectFilter);
 		this.filterVisible.set(false);
 		this.filterApplied.set(false);
 	}

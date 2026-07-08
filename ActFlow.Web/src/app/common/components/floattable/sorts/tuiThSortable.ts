@@ -1,7 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, signal } from "@angular/core";
 import { TuiButton } from "@taiga-ui/core";
-import { FloatTable, FloatTableSort } from "../floattable";
+import { FloatTable } from "../floattable";
+import { FloatTableSort } from "../models/FloatTableSort";
 
 @Component({
     selector: 'tuiThSortable',

@@ -1,15 +1,17 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { TuiDay, TuiTime } from "@taiga-ui/cdk/date-time";
 import { TuiButton, TuiDropdown, TuiInput } from "@taiga-ui/core";
-import { TuiBadgeNotification, TuiBadgedContent, TuiButtonSelect, TuiDataListWrapper, TuiStringifyContentPipe } from "@taiga-ui/kit";
-import { FloatTable, FloatTableFilter } from "../floattable";
+import { TuiBadgeNotification, TuiBadgedContent, TuiButtonSelect, TuiDataListWrapper, TuiInputDateTime, TuiStringifyContentPipe } from "@taiga-ui/kit";
+import { FloatTable } from "../floattable";
+import { FloatTableFilter } from "../models/FloatTableFilter";
 
 @Component({
-    selector: 'tuiThTextFilter',
-    imports: [CommonModule, FormsModule, TuiDropdown, TuiDataListWrapper, TuiButton, TuiButtonSelect, TuiStringifyContentPipe, TuiBadgeNotification, TuiBadgedContent, TuiInput],
+    selector: 'tuiThDateFilter',
+    imports: [CommonModule, FormsModule, TuiDropdown, TuiDataListWrapper, TuiButton, TuiButtonSelect, TuiStringifyContentPipe, TuiBadgeNotification, TuiBadgedContent, TuiInput, TuiInputDateTime],
     template: `
-		@if(tuiThTextFilter){
+		@if(tuiThDateFilter){
 			<tui-badged-content>
 				@if(filterApplied()){
 					<tui-badge-notification
@@ -47,8 +49,13 @@ import { FloatTable, FloatTableFilter } from "../floattable";
 						/>
 					</button>
 
-					<tui-textfield tuiTextfieldSize="s" (keydown.enter)="applyFilter(filterType.expression)">
-						<input tuiInput [(ngModel)]="value"/>
+					<tui-textfield (keydown.enter)="applyFilter(filterType.expression)">
+						<label tuiLabel>Choose a date</label>
+						<input
+							tuiInputDateTime
+							[(ngModel)]="value"
+						/>
+						<tui-calendar *tuiDropdown />
 					</tui-textfield>
 					<button
 						tuiButton size="s"
@@ -74,15 +81,15 @@ import { FloatTable, FloatTableFilter } from "../floattable";
 		}
     `
 })
-export class TableTextFilter {
-    @Input() tuiThTextFilter!: string;
+export class TableDateFilter {
+    @Input() tuiThDateFilter!: string;
 
 	filterApplied = signal<boolean>(false);
 	filterVisible = signal<boolean>(false);
 
 	table : FloatTable;
 
-	value : string = '';
+	value : [TuiDay, TuiTime] = [TuiDay.currentLocal(), TuiTime.currentLocal()];
 	filterType : any;
 	filterTypes : any[];
 
@@ -93,20 +100,12 @@ export class TableTextFilter {
 
 		this.filterTypes = [
 			{
-				label: 'Contains',
-				expression: 'str;con'
+				label: 'After',
+				expression: 'dat;aft'
 			},
 			{
-				label: 'Not Contains',
-				expression: 'str;ncon'
-			},
-			{
-				label: 'Starts With',
-				expression: 'str;sta'
-			},
-			{
-				label: 'Ends With',
-				expression: 'str;end'
+				label: 'Before',
+				expression: 'dat;bef'
 			}
 		];
 		this.filterType = this.filterTypes[0];
@@ -115,15 +114,15 @@ export class TableTextFilter {
 			if (!x)
 			{
 				this.filterType = this.filterTypes[0];
-				this.value = "";
+				this.value = [TuiDay.currentLocal(), TuiTime.currentLocal()];
 				this.filterApplied.set(false);
 				return;
 			}
-			var filter = x.filters.find(x => x.column == this.tuiThTextFilter);
+			var filter = x.filters.find(x => x.column == this.tuiThDateFilter);
 			if (!filter)
 			{
 				this.filterType = this.filterTypes[0];
-				this.value = "";
+				this.value = [TuiDay.currentLocal(), TuiTime.currentLocal()];
 				this.filterApplied.set(false);
 				return;
 			}
@@ -131,7 +130,7 @@ export class TableTextFilter {
 			if (!type)
 			{
 				this.filterType = this.filterTypes[0];
-				this.value = "";
+				this.value = [TuiDay.currentLocal(), TuiTime.currentLocal()];
 				this.filterApplied.set(false);
 				return;
 			}
@@ -144,7 +143,7 @@ export class TableTextFilter {
 
 	applyFilter(expression : string){
 		this.table.setFilter({
-			column: this.tuiThTextFilter,
+			column: this.tuiThDateFilter,
 			value: this.value,
 			expression: expression,
 		} as FloatTableFilter);
@@ -153,7 +152,7 @@ export class TableTextFilter {
 	}
 
 	clearFilter(){
-		this.table.clearFilter(this.tuiThTextFilter);
+		this.table.clearFilter(this.tuiThDateFilter);
 		this.filterVisible.set(false);
 		this.filterApplied.set(false);
 	}

@@ -8,11 +8,11 @@ import { TuiButton, TuiExpand, TuiGroup, TuiNotificationService } from '@taiga-u
 import { TuiAccordion, TuiChip, TuiProgressBar } from '@taiga-ui/kit';
 import { EditorComponent } from "ngx-monaco-editor-v2";
 import { firstValueFrom } from 'rxjs';
-import { FloatTable } from "../../common/components/floattable";
-import { TableDateFilter } from "../../common/components/floattable/tuiThDateFilter";
-import { TableSelectFilter } from "../../common/components/floattable/tuiThSelectFilter";
-import { TableSortableColumn } from '../../common/components/floattable/tuiThSortable';
-import { TableTextFilter } from '../../common/components/floattable/tuiThTextFilter';
+import { TableDateFilter } from "../../common/components/floattable/filters/tuiThDateFilter";
+import { TableSelectFilter } from "../../common/components/floattable/filters/tuiThSelectFilter";
+import { TableTextFilter } from '../../common/components/floattable/filters/tuiThTextFilter';
+import { FloatTable } from "../../common/components/floattable/floattable";
+import { TableSortableColumn } from '../../common/components/floattable/sorts/tuiThSortable';
 import { WorkflowState } from '../../models/WorkflowState';
 import { WorkflowEditor } from "./components/wor.components.workfloweditor";
 import { WorkflowStateService } from './services/wor.stateservice';
