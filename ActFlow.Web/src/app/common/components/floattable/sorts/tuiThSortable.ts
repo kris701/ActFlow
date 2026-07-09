@@ -67,7 +67,7 @@ export class TableSortableColumn {
 				break;
 			case 'desc':
 				this.state = 'none';
-				this.table.setSort({ column: this.tuiThSortable, state: this.state } as FloatTableSort)
+				this.table.clearSort(this.tuiThSortable);
 				this.icon.set('text-align-justify');
 				break;
 		}

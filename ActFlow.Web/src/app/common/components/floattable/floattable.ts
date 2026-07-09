@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, ContentChild, EventEmitter, Input, OnChanges, Output, signal, SimpleChanges, TemplateRef } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, OnChanges, Output, signal, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TuiTable, TuiTablePagination } from '@taiga-ui/addon-table';
-import { TuiButton, TuiDropdown, TuiIcon, TuiInput, TuiLoader, TuiScrollbar } from "@taiga-ui/core";
+import { TuiButton, TuiDropdown, TuiHint, TuiIcon, TuiInput, TuiLoader, TuiScrollbar } from "@taiga-ui/core";
 import { TuiChevron, TuiDataListWrapper } from '@taiga-ui/kit';
 import { TuiBlockStatus } from '@taiga-ui/layout';
 import { FloatTablePresets } from './floattable.presets';
@@ -13,7 +13,7 @@ import { FloatTableFilterService } from './services/floattable.filterservice';
 
 @Component({
     selector: 'app-floattable',
-    imports: [FormsModule, CommonModule, TuiTable, TuiScrollbar, TuiButton, TuiChevron, TuiDropdown, TuiDataListWrapper, TuiTablePagination, TuiLoader, TuiBlockStatus, TuiIcon, TuiInput, FloatTablePresets],
+    imports: [FormsModule, CommonModule, TuiTable, TuiScrollbar, TuiButton, TuiChevron, TuiDropdown, TuiDataListWrapper, TuiTablePagination, TuiLoader, TuiBlockStatus, TuiIcon, TuiInput, FloatTablePresets, TuiHint],
     template: `
 		<div class="app-floattable">
 			<tui-loader [inheritColor]="true" [overlay]="true" size="xxl" [loading]="isLoading()">
@@ -30,13 +30,13 @@ import { FloatTableFilterService } from './services/floattable.filterservice';
 					@if(showAdd || showRefresh || showClearFilters){
 						<div class="flex flex-row gap-2 p-2" style="padding-bottom:0px">
 							@if(showRefresh){
-								<button tuiButton iconStart="rotate-cw" size="s" appearance="info" (click)="onLoadItems.emit()"></button>
+								<button tuiButton iconStart="rotate-cw" size="s" appearance="info" (click)="onLoadItems.emit()" tuiHint="Refresh the table"></button>
 							}
 							@if(showAdd){
-								<button tuiButton iconStart="plus" size="s" appearance="info" (click)="onAddItem.emit()"></button>
+								<button tuiButton iconStart="plus" size="s" appearance="info" (click)="onAddItem.emit()" tuiHint="Add new item"></button>
 							}
 							@if(showClearFilters){
-								<button tuiButton iconStart="funnel-x" size="s" appearance="info" (click)="clearFilters()"></button>
+								<button tuiButton iconStart="funnel-x" size="s" appearance="info" (click)="clearFilters()" tuiHint="Clear filters"></button>
 							}
 						</div>
 					}
@@ -182,7 +182,7 @@ export class FloatTable implements OnChanges {
     @ContentChild('tableRows', { static: false }) tableRows: TemplateRef<any> | undefined;
     @ContentChild('tableExpandedrow', { static: false }) tableExpandedrow: TemplateRef<any> | undefined;
 
-    @ContentChild('presetHeader', { static: false }) presetHeader: FloatTablePresets | undefined;
+    @ViewChild('presetHeader', { static: false }) presetHeader: FloatTablePresets | undefined;
 
     @Input() disabled: boolean = false;
     @Input() isLoading = signal<boolean>(false);
@@ -247,8 +247,7 @@ export class FloatTable implements OnChanges {
 		this.pages.set(Math.floor(this.internalValues.length / this.pageSize()) + 1)
 		this.processPage();
 
-		if (this.presetHeader)
-			this.presetHeader.saveCurrentPreset();
+		this.presetHeader?.saveCurrentPreset();
 	}
 
 	state: Record<number, boolean> = {};
@@ -260,6 +259,16 @@ export class FloatTable implements OnChanges {
 			sorts[target] = sort;
 		else
 			sorts.push(sort);
+		this.sorts.set(sorts);
+
+		this.applyFilter();
+	}
+
+	clearSort(column : string){
+		var sorts = this.sorts();
+		var target = sorts.findIndex(x => x.column == column);
+		if (target != -1)
+			sorts.splice(target, 1)
 		this.sorts.set(sorts);
 
 		this.applyFilter();
@@ -289,13 +298,11 @@ export class FloatTable implements OnChanges {
 	}
 
 	clearFilters(){
-		if (this.presetHeader)
-			this.presetHeader.currentPreset.set(null);
+		this.presetHeader?.currentPreset.set(null);
 		this.onPresetChange.emit(null);
 		this.sorts.set([])
 		this.filters.set([])
-		if (this.presetHeader)
-			this.presetHeader.savePresets();
+		this.presetHeader?.savePresets();
 		this.applyFilter();
 	}
 }

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, signal, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiButton, TuiGroup, TuiInput, TuiScrollbar } from "@taiga-ui/core";
+import { TuiButton, TuiGroup, TuiHint, TuiInput, TuiScrollbar } from "@taiga-ui/core";
 import { TuiBadge, TuiStatus } from '@taiga-ui/kit';
 import { v4 as uuidv4 } from 'uuid';
 import { FloatTable } from './floattable';
@@ -10,9 +10,9 @@ import { FloatTableSortFilterPresetSave } from './models/FloatTableSortFilterPre
 
 @Component({
     selector: 'app-floattable-presets',
-    imports: [FormsModule, CommonModule, TuiScrollbar, TuiButton, TuiGroup, TuiBadge, TuiStatus, TuiInput],
+    imports: [FormsModule, CommonModule, TuiScrollbar, TuiButton, TuiGroup, TuiBadge, TuiStatus, TuiInput, TuiHint],
     template: `
-		<button tuiButton iconStart="plus" size="s" appearance="secondary" (click)="createPreset()"></button>
+		<button tuiButton iconStart="plus" size="s" appearance="secondary" (click)="createPreset()" tuiHint="Create new preset from current filters"></button>
 
 		<tui-scrollbar class="w-full">
 			@let current = currentPreset();
@@ -24,15 +24,15 @@ import { FloatTableSortFilterPresetSave } from './models/FloatTableSortFilterPre
 							<tui-textfield style="width:10rem" tuiTextfieldSize="s" (keydown.enter)="preset.edit = false;saveCurrentPreset()">
 								<input tuiInput [(ngModel)]="preset.name"/>
 							</tui-textfield>
-							<button style="flex: 0 0 auto;" tuiButton iconStart="save" size="s" appearance="info" (click)="preset.edit = false;saveCurrentPreset()"></button>
+							<button style="flex: 0 0 auto;" tuiButton iconStart="save" size="s" appearance="info" (click)="preset.edit = false;saveCurrentPreset()" tuiHint="Save"></button>
 						}
 						@else {
 							<div class="h-full" appearance="positive" tuiBadge tuiStatus>
 								{{preset.name}}
 							</div>
-							<button style="flex: 0 0 auto;" tuiButton iconStart="square-pen" size="s" appearance="info" (click)="preset.edit = true"></button>
+							<button style="flex: 0 0 auto;" tuiButton iconStart="square-pen" size="s" appearance="info" (click)="preset.edit = true" tuiHint="Edit"></button>
 						}
-					<button style="flex: 0 0 auto;" tuiButton iconStart="x" size="s" appearance="negative" (click)="removePreset(preset.id)"></button>
+					<button style="flex: 0 0 auto;" tuiButton iconStart="x" size="s" appearance="negative" (click)="removePreset(preset.id)" tuiHint="Delete"></button>
 					}
 					@else {
 						<button style="flex: 0 0 auto;" tuiButton appearance="secondary" size="s"  (click)="selectPreset(preset.id)">{{preset.name}}</button>
