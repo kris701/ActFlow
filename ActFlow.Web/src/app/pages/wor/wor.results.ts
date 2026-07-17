@@ -3,16 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { EzUITable, EzUITableDateFilter, EzUITableSelectFilter, EzUITableTextFilter, EzUITTableSortableColumn } from '@kris701/ez-ui';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { TuiButton, TuiExpand, TuiGroup, TuiNotificationService } from '@taiga-ui/core';
 import { TuiAccordion, TuiChip, TuiProgressBar } from '@taiga-ui/kit';
 import { EditorComponent } from "ngx-monaco-editor-v2";
 import { firstValueFrom } from 'rxjs';
-import { TableDateFilter } from "../../common/components/floattable/filters/tuiThDateFilter";
-import { TableSelectFilter } from "../../common/components/floattable/filters/tuiThSelectFilter";
-import { TableTextFilter } from '../../common/components/floattable/filters/tuiThTextFilter';
-import { FloatTable } from "../../common/components/floattable/floattable";
-import { TableSortableColumn } from '../../common/components/floattable/sorts/tuiThSortable';
 import { WorkflowState } from '../../models/WorkflowState';
 import { WorkflowEditor } from "./components/wor.components.workfloweditor";
 import { WorkflowStateService } from './services/wor.stateservice';
@@ -22,7 +18,6 @@ import { WorkflowStateService } from './services/wor.stateservice';
     imports: [
     CommonModule,
     FormsModule,
-    FloatTable,
     TuiTable,
     TuiChip,
     TuiButton,
@@ -33,33 +28,34 @@ import { WorkflowStateService } from './services/wor.stateservice';
     TuiAccordion,
     TuiExpand,
     WorkflowEditor,
-    TableSortableColumn,
-    TableTextFilter,
-    TableSelectFilter,
-    TableDateFilter
+	EzUITable,
+	EzUITTableSortableColumn,
+	EzUITableDateFilter,
+	EzUITableTextFilter,
+	EzUITableSelectFilter
 ],
     template: `
-	<app-floattable [values]="workflowStateService.items()" [expandable]="true" [isLoading]="isLoading" (onRowExpanded)="checkCache($event.id)" (onLoadItems)="loadItems()" [showRefresh]="true" storageKey="wor-results" [allowPresets]="true" [showClearFilters]="true">
+	<ezui-table [values]="workflowStateService.items()" [expandable]="true" [isLoading]="isLoading" (onRowExpanded)="checkCache($event.id)" (onLoadItems)="loadItems()" [showRefresh]="true" storageKey="wor-results" [allowPresets]="true" [showClearFilters]="true">
 		<ng-template #tableHeader>
 			<th tuiTh>
 				Name
-				<tuiThSortable tuiThSortable="name"></tuiThSortable>
-				<tuiThTextFilter tuiThTextFilter="name"></tuiThTextFilter>
+				<ezui-table-sortable column="name"></ezui-table-sortable>
+				<ezui-table-textfilter column="name"></ezui-table-textfilter>
 			</th>
 			<th tuiTh>
 				Status
-				<tuiThSortable tuiThSortable="status"></tuiThSortable>
-				<tuiThSelectFilter tuiThSelectFilter="status" [options]="Object.keys(statusNameMap)"></tuiThSelectFilter>
+				<ezui-table-sortable column="status"></ezui-table-sortable>
+				<ezui-table-selectfilter column="status" [options]="Object.keys(statusNameMap)"></ezui-table-selectfilter>
 			</th>
 			<th tuiTh>
 				Started At
-				<tuiThSortable tuiThSortable="startedAt"></tuiThSortable>
-				<tuiThDateFilter tuiThDateFilter="startedAt"></tuiThDateFilter>
+				<ezui-table-sortable column="startedAt"></ezui-table-sortable>
+				<ezui-table-datefilter column="startedAt"></ezui-table-datefilter>
 			</th>
 			<th tuiTh>
 				Ended At
-				<tuiThSortable tuiThSortable="endedAt"></tuiThSortable>
-				<tuiThDateFilter tuiThDateFilter="endedAt"></tuiThDateFilter>
+				<ezui-table-sortable column="endedAt"></ezui-table-sortable>
+				<ezui-table-datefilter column="endedAt"></ezui-table-datefilter>
 			</th>
 			<th tuiTh style="width:2rem"></th>
 		</ng-template>
@@ -220,7 +216,7 @@ import { WorkflowStateService } from './services/wor.stateservice';
 				</div>
 			</td>
 		</ng-template>
-	</app-floattable>
+	</ezui-table>
     `,
     host:{
         class: 'base-view'
@@ -237,6 +233,17 @@ import { WorkflowStateService } from './services/wor.stateservice';
 			> div :first-child {
 				flex: 0 0 auto;
             }
+		}
+
+		::ng-deep tui-loader {
+			::ng-deep > .t-content {
+				display:flex;
+				height:100%;
+				width:100%;
+				flex-direction: column;
+				gap:0.5rem;
+				overflow-x:auto;
+			}
 		}
 	`
 })

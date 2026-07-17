@@ -5,10 +5,10 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { appRoutes } from './app.routes';
 import { LayoutService } from './layout/services/layoutService';
 
+import { EzUITableFilterService } from '@kris701/ez-ui';
 import indexToPosition from 'index-to-position';
 import * as monaco from 'monaco-editor';
 import { NgxMonacoEditorConfig, provideMonacoEditor } from 'ngx-monaco-editor-v2';
-import { FloatTableFilterService } from './common/components/floattable/services/floattable.filterservice';
 
 export var variableNames: { id: string; name: string; type: string }[] = [];
 
@@ -80,6 +80,6 @@ export const appConfig: ApplicationConfig = {
 		provideCharts(withDefaultRegisterables()),
 		provideMonacoEditor(monacoConfig),
 		tuiScrollbarOptionsProvider({mode: 'hover'}),
-		FloatTableFilterService
+		EzUITableFilterService
 	],
 };

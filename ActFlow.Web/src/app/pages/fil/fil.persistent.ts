@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EzUIFileInput } from '@kris701/ez-ui';
 import { TuiHandler } from '@taiga-ui/cdk/types';
 import { TuiButton, TuiDropdown, TuiHint, TuiIcon, TuiInput, TuiLoader, TuiNotificationService, TuiTextfieldComponent } from '@taiga-ui/core';
 import { TuiChip, TuiTree } from "@taiga-ui/kit";
 import { TuiBlockStatusComponent } from "@taiga-ui/layout";
 import { firstValueFrom } from 'rxjs';
-import FloatFileUpload from '../../common/components/floatfileupload';
 import { FileHelpers } from './Helpers/fil.helpers';
 import { DirectoryRoot } from './Models/DirectoryRoot';
 import { TreeNode } from './Models/TreeNode';
@@ -25,7 +25,7 @@ import { TreeNode } from './Models/TreeNode';
     TuiDropdown,
     TuiTextfieldComponent,
     TuiInput,
-    FloatFileUpload,
+    EzUIFileInput,
 	TuiHint
 ],
     template: `
@@ -172,7 +172,7 @@ import { TreeNode } from './Models/TreeNode';
 
 		<ng-template #uploadfilespop>
 			<div class="flex flex-col gap-2 p-4" style="width:40vw">
-                <app-floatfileupload #fu/>
+                <ezui-fileinput #fu/>
                 @if(fu.files().length > 0){
                     <button tuiButton iconStart="upload" (click)="uploadFiles(fu, uploadfilespopPath());fu.clear();uploadfilespopPath.set('')">Upload</button>
                 }
@@ -294,7 +294,7 @@ export class FILPersistent {
         this.isLoading.set(false);
     }
 
-    async uploadFiles(fu : FloatFileUpload, path : string){
+    async uploadFiles(fu : EzUIFileInput, path : string){
         this.isLoading.set(true);
         var files = fu.files();
         var file : File | null = null;

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BaseListService } from "../../../common/interfaces/baseListService";
+import { BaseListService } from "@kris701/ez-ui";
 import { ListWorkflowState } from "../../../models/ListWorkflowState";
 import { WorkflowState } from "../../../models/WorkflowState";
 

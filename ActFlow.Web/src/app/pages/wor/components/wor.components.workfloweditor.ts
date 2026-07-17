@@ -1,8 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, EventEmitter, Input, OnChanges, Output, signal, SimpleChanges } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { TuiButton, TuiDataList, TuiDropdown, TuiDropdownHover, TuiGroup, TuiIcon, TuiNotificationService } from "@taiga-ui/core";
-import { TuiChevron, TuiChip, TuiTooltip } from "@taiga-ui/kit";
+import { EzUIMenuBar, MenuBarItem } from "@kris701/ez-ui";
+import { TuiButton, TuiDataList, TuiDropdown, TuiGroup, TuiIcon, TuiNotificationService } from "@taiga-ui/core";
+import { TuiChip, TuiTooltip } from "@taiga-ui/kit";
 import { EditorComponent } from "ngx-monaco-editor-v2";
 import { firstValueFrom } from "rxjs";
 import { variableNames } from "../../../app.config";
@@ -17,49 +18,16 @@ import { WorkflowState } from "../../../models/WorkflowState";
     TuiChip,
     TuiButton,
     TuiGroup,
-    TuiChevron,
     TuiDropdown,
     TuiDataList,
-    TuiDropdownHover,
     TuiIcon,
-	TuiTooltip
+    TuiTooltip,
+    EzUIMenuBar
 ],
     template: `
         @if(!disabled){
 			@if(isWorkflowValid()){
-				<div
-					tuiGroup
-					[collapsed]="false"
-					[rounded]="true"
-					class="topbar w-full"
-					>
-					@for(item of items(); track item){
-						@if(item.items){
-							<button
-								tuiButton
-								tuiChevron
-								tuiDropdownHover
-								type="button"
-								size="m"
-								[iconStart]="item.icon"
-								[tuiDropdown]="content"
-								#parent
-							>
-								{{item.label}}
-								<ng-template #content>
-									<tui-data-list>
-										@for(subitem of item.items; track subitem){
-											<button tuiOption size="m" class="w-full h-full" [iconStart]="subitem.icon" (click)="subitem.command()">{{subitem.label}}</button>
-										}
-									</tui-data-list>
-								</ng-template>
-							</button>
-						}
-						@else {
-							<button tuiButton size="m" class="w-full h-full" [iconStart]="item.icon" (click)="item.command()">{{item.label}}</button>
-						}
-					}
-				</div>
+				<ezui-menubar [items]="items()"/>
 			}
 
             <div class="flex flex-col h-full flex-grow">
@@ -109,16 +77,6 @@ import { WorkflowState } from "../../../models/WorkflowState";
             height: 100% !important;
         }
 
-        ::ng-deep .topbar {
-            > :first-child {
-                border-bottom-left-radius: 0px !important;
-            }
-
-            > :last-child {
-                border-bottom-right-radius: 0px !important;
-            }
-        }
-
         ::ng-deep .bottombar {
             > :first-child {
                 border-top-left-radius: 0px !important;
@@ -145,7 +103,7 @@ export class WorkflowEditor implements OnChanges {
     isWorkflowValid = signal<boolean>(true);
     invalidReason = signal<string>("");
 
-    items = signal<MenuItem[]>([]);
+    items = signal<MenuBarItem[]>([]);
 
     workers = signal<ConfigWorkersResult[]>([])
     contexts = signal<BaseContext[]>([])
@@ -171,25 +129,26 @@ export class WorkflowEditor implements OnChanges {
         var contexts = await firstValueFrom(this.http.get<BaseContext[]>("api/config/contexts"));
         var activities = await firstValueFrom(this.http.get<BaseActivity[]>("api/config/activities"));
 
-        var newItems : MenuItem[] = []
+        var newItems : MenuBarItem[] = []
         newItems.push({
             label: 'Add Activity',
             items: activities.map(x => { return {
                 label: x.$type + " (" + x.workerID + ")",
                 command: () => this.addActivity(x)
-            } as MenuItem })
-        } as MenuItem);
+            } as MenuBarItem }),
+			style: 'border-bottom-left-radius: 0px !important;'
+        } as MenuBarItem);
         newItems.push({
             label: 'Add Context',
             items: contexts.map(x => { return {
                 label: x.$type,
                 command: () => this.copyContextToClipboard(x, undefined)
-            } as MenuItem })
-        } as MenuItem);
+            } as MenuBarItem })
+        } as MenuBarItem);
         newItems.push({
             label: 'Add Global',
             command: () => this.addGlobal()
-        } as MenuItem)
+        } as MenuBarItem)
         newItems.push({
             label: 'Add Constant',
             items: [
@@ -213,8 +172,9 @@ export class WorkflowEditor implements OnChanges {
                     label: 'State ID',
                     command: () => this.copyContextToClipboard(undefined, "${{constants.stateid}}")
                 },
-            ]
-        } as MenuItem)
+            ],
+			style: 'border-bottom-right-radius: 0px !important;'
+        } as MenuBarItem)
         this.items.set(newItems);
 
         this.workers.set(workers);
@@ -418,11 +378,4 @@ interface BaseActivity {
     $type : string,
     name : string,
     workerID : string;
-}
-
-interface MenuItem {
-	label: string,
-	icon: string | null,
-	command() : void;
-	items: MenuItem[] | null
 }
