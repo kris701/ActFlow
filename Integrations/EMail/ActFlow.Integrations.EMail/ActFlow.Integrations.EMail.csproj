@@ -34,7 +34,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Graph" Version="6.2.0" />
-		<PackageReference Include="Microsoft.Identity.Client" Version="4.85.1" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.86.1" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
 	</ItemGroup>
 

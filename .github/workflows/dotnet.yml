@@ -9,6 +9,10 @@ jobs:
   publishActFlow:
     runs-on: ubuntu-latest
     name: Publish "ActFlow"
+    permissions:
+      id-token: write
+      packages: write
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,9 +20,11 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
 
-      - name: Add nuget source
-        run: |
-          dotnet nuget add source --username kris701 --password ${{ secrets.API_KEY_GITHUB }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/kris701/index.json"
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: login_nuget
+        with:
+          user: kris701
 
       - name: Build (Release) and Publish [ActFlow]
         run: |  
@@ -27,8 +33,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.Core]
@@ -38,8 +44,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.DatabaseSharp]
@@ -49,8 +55,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.EMail]
@@ -60,8 +66,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.JSON]
@@ -71,8 +77,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.ML.NET]
@@ -82,8 +88,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.OpenWebUISharp]
@@ -93,8 +99,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.XML]
@@ -104,8 +110,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.Javascript]
@@ -115,8 +121,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.Time]
@@ -126,8 +132,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.SerializableHttps]
@@ -137,8 +143,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.Math]
@@ -148,8 +154,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.Integrations.Sharepoint]
@@ -159,8 +165,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../../../..
 
       - name: Build (Release) and Publish [ActFlow.CLI]
@@ -170,8 +176,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../..
 
       - name: Build (Release) and Publish [ActFlow.Archiver]
@@ -181,8 +187,8 @@ jobs:
           dotnet pack --configuration Release
           cd bin
           cd Release
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_GITHUB }} --source "github" --skip-duplicate
-          dotnet nuget push "*.nupkg" --api-key ${{ secrets.API_KEY_NUGET }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://nuget.pkg.github.com/kris701/index.json" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
+          dotnet nuget push "*.nupkg" --source "https://api.nuget.org/v3/index.json" --api-key ${{ steps.login_nuget.outputs.NUGET_API_KEY }} --skip-duplicate
           cd ../../..
 
   publishActFlowDocker:

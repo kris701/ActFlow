@@ -241,9 +241,12 @@ import { WorkflowStateService } from './services/wor.stateservice';
 				height:100%;
 				width:100%;
 				flex-direction: column;
-				gap:0.5rem;
 				overflow-x:auto;
 			}
+		}
+
+		::ng-deep tui-scrollbar {
+			height:100%;
 		}
 	`
 })
