@@ -38,7 +38,10 @@ import { TuiCardLarge, TuiHeader } from '@taiga-ui/layout';
 				</footer>
 			</div>
 		</div>
-    `
+    `,
+	host:{
+		class:'w-full'
+	}
 })
 export class Notfound {
 }

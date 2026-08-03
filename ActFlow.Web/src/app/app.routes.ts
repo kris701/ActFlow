@@ -1,18 +1,14 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { Routes } from '@angular/router';
 import { appHttpInterceptor } from './app.http.interceptor.ts';
-import { AppLayout } from './layout/app.layout';
 import { Notfound } from './pages/notfound/notfound';
 import { Status } from './pages/sta/sta';
-import { WorkflowStateService } from './pages/wor/services/wor.stateservice';
 
 export const appRoutes: Routes = [
     {
         path: '',
-        component: AppLayout,
         providers: [
-			provideHttpClient(withInterceptors([appHttpInterceptor])),
-			WorkflowStateService
+			provideHttpClient(withInterceptors([appHttpInterceptor]))
         ],
 		children: [
 			{ path: '', component: Status },

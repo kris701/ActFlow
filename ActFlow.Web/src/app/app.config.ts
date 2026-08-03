@@ -3,9 +3,8 @@ import { provideRouter } from '@angular/router';
 import { provideTaiga, tuiScrollbarOptionsProvider } from '@taiga-ui/core';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { appRoutes } from './app.routes';
-import { LayoutService } from './layout/services/layoutService';
 
-import { EzUITableFilterService } from '@kris701/ez-ui';
+import { EzUILayoutService, EzUITableFilterService } from '@kris701/ez-ui';
 import indexToPosition from 'index-to-position';
 import * as monaco from 'monaco-editor';
 import { NgxMonacoEditorConfig, provideMonacoEditor } from 'ngx-monaco-editor-v2';
@@ -76,7 +75,7 @@ export const appConfig: ApplicationConfig = {
 		provideBrowserGlobalErrorListeners(),
 		provideRouter(appRoutes),
 		provideTaiga(),
-		LayoutService,
+		EzUILayoutService,
 		provideCharts(withDefaultRegisterables()),
 		provideMonacoEditor(monacoConfig),
 		tuiScrollbarOptionsProvider({mode: 'hover'}),
