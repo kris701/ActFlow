@@ -2,6 +2,7 @@
 using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using DatabaseSharp;
+using DatabaseSharp.SQLServer;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Text;
@@ -20,7 +21,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 		public ExecuteSQLToFileWorker(string connectionString)
 		{
 			ConnectionString = connectionString;
-			_dBClient = new DBClient(ConnectionString);
+			_dBClient = new SQLServerClient(ConnectionString);
 		}
 
 		public ExecuteSQLToFileWorker(IDBClient dbClient)

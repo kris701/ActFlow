@@ -4,6 +4,7 @@ using ActFlow.Models.Workers;
 using ActFlow.Models.Workflows;
 using DatabaseSharp;
 using DatabaseSharp.Models;
+using DatabaseSharp.SQLServer;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -20,7 +21,7 @@ namespace ActFlow.Integrations.DatabaseSharp.Workers
 		public ExecuteSTPWorker(string connectionString)
 		{
 			ConnectionString = connectionString;
-			_dBClient = new DBClient(ConnectionString);
+			_dBClient = new SQLServerClient(ConnectionString);
 		}
 
 		public ExecuteSTPWorker(IDBClient dbClient)
