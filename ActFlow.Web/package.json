@@ -41,6 +41,6 @@
     "@types/file-saver": "^2.0.7",
     "jsdom": "^31.0.0",
     "less": "^4.2.0",
-    "typescript": "~6.0.2"
+    "typescript": "~7.0.2"
   }
 }
