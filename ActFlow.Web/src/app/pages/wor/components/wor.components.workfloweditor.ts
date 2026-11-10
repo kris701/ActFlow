@@ -134,45 +134,45 @@ export class WorkflowEditor implements OnChanges {
             label: 'Add Activity',
             items: activities.map(x => { return {
                 label: x.$type + " (" + x.workerID + ")",
-                command: () => this.addActivity(x)
-            } as MenuBarItem }),
+                command: async (s, i) => this.addActivity(x)
+            } as MenuBarItem }) as MenuBarItem[],
 			style: 'border-bottom-left-radius: 0px !important;'
         } as MenuBarItem);
         newItems.push({
             label: 'Add Context',
             items: contexts.map(x => { return {
                 label: x.$type,
-                command: () => this.copyContextToClipboard(x, undefined)
-            } as MenuBarItem })
+                command: async (s, i) => this.copyContextToClipboard(x, undefined)
+            } as MenuBarItem }) as MenuBarItem[]
         } as MenuBarItem);
         newItems.push({
             label: 'Add Global',
-            command: () => this.addGlobal()
+            command: async (s, i) => this.addGlobal()
         } as MenuBarItem)
         newItems.push({
             label: 'Add Constant',
             items: [
                 {
                     label: 'UTC Now (Datetime)',
-                    command: () => this.copyContextToClipboard(undefined, "${{constants.utcnow}}")
+                    command: async (s, i) => this.copyContextToClipboard(undefined, "${{constants.utcnow}}")
                 },
                 {
                     label: 'UTC Now (Datetime) (File save)',
-                    command: () => this.copyContextToClipboard(undefined, "${{constants.utcnow.safe}}")
+                    command: async (s, i) => this.copyContextToClipboard(undefined, "${{constants.utcnow.safe}}")
                 },
                 {
                     label: 'Now (Datetime)',
-                    command: () => this.copyContextToClipboard(undefined, "${{constants.now}}")
+                    command: async (s, i) => this.copyContextToClipboard(undefined, "${{constants.now}}")
                 },
                 {
                     label: 'Now (Datetime) (File save)',
-                    command: () => this.copyContextToClipboard(undefined, "${{constants.now.safe}}")
+                    command: async (s, i) => this.copyContextToClipboard(undefined, "${{constants.now.safe}}")
                 },
                 {
                     label: 'State ID',
-                    command: () => this.copyContextToClipboard(undefined, "${{constants.stateid}}")
+                    command: async (s, i) => this.copyContextToClipboard(undefined, "${{constants.stateid}}")
                 },
-            ],
+            ] as MenuBarItem[],
 			style: 'border-bottom-right-radius: 0px !important;'
         } as MenuBarItem)
         this.items.set(newItems);
