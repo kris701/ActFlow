@@ -55,6 +55,7 @@
     <Project Path="Integrations/XML/ActFlow.Integrations.XML/ActFlow.Integrations.XML.csproj" Id="719f3f88-b946-4478-9707-ca1513f61ea4" />
   </Folder>
   <Folder Name="/Solution Items/">
+    <File Path=".github/dependabot.yml" />
     <File Path=".github/workflows/dotnet.yml" />
     <File Path=".gitignore" />
     <File Path="docker-compose.yaml" />
