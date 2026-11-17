@@ -33,7 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DatabaseSharp" Version="1.7.2" />
+		<PackageReference Include="DatabaseSharp" Version="1.7.3" />
 		<PackageReference Include="DatabaseSharp.SQLServer" Version="1.0.2" />
 	</ItemGroup>
 
