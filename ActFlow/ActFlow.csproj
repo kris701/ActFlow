@@ -42,6 +42,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="11.0.0" />
+    <PackageReference Include="Microsoft.Graph" Version="6.11.1" />
     <PackageReference Include="ToolsSharp" Version="1.2.14" />
   </ItemGroup>
 </Project>
