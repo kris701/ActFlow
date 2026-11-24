@@ -15,7 +15,7 @@
 
 	<PropertyGroup>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -33,7 +33,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Graph" Version="6.10.0" />
+		<PackageReference Include="Microsoft.Graph" Version="6.11.1" />
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.92.0" />
 	</ItemGroup>
 
